@@ -7,17 +7,116 @@
 <body>
 
 <h1>Teksta modelis</h1>
+
+<label for="inputOperandsTotalCount">Programatūras garums, N:</label>
+<input id="inputOperandsTotalCount" type="number" min="0" step="1">
+<label for="inputUnitsCount">Moduļu skaits, n:</label>
+<input id="inputUnitsCount" type="number" min="0" step="1">
+<script src="../js/9.js"></script>
 <table>
     <tr>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th>Moduļu garumi</th>
+        <th>Kļūdu skaits moduļos</th>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
+        <td>
+            <textarea id="textareaCodeLengths"></textarea>
+        </td>
+        <td>
+            <textarea id="textareaErrorsCounts"></textarea>
+        </td>
         <td></td>
     </tr>
+    <button id="buttonCalculate">Aprēķināt</button>
 </table>
+<p id="pAvgCodeLength">
+<p id="pAvgErrorsCount">
+<p id="pInitialErrorsCount">
+
+
+    <!-- Put script after all DOM elements are initialized -->
+    <script>
+        var inputCodeLengthTotal = document.getElementById("inputOperandsTotalCount");
+        var inputUnitsCount = document.getElementById("inputUnitsCount");
+        var buttonCalculate = document.getElementById("buttonCalculate");
+        var textareaCodeLengths = document.getElementById("textareaCodeLengths");
+        var textareaErrorsCounts = document.getElementById("textareaErrorsCounts");
+        var pAvgCodeLength = document.getElementById("pAvgCodeLength");
+        var pAvgErrorsCount = document.getElementById("pAvgErrorsCount");
+        var pInitialErrorsCount = document.getElementById("pInitialErrorsCount");
+
+        var textModel = TextModel();
+
+        buttonCalculate.addEventListener("click", function (event) {
+            // Parse model data
+            var codeLengthTotal = parseInt(inputCodeLengthTotal.value);
+            var unitsCount = parseInt(inputUnitsCount.value);
+
+            if (codeLengthTotal < unitsCount) {
+                alert("Moduļu skaitam jābūt mazākam par programmatūras garumu");
+                return false;
+            }
+
+            var codeLengths = parseNaturalNonNullNumbers(textareaCodeLengths.value);
+            if (!codeLengths) {
+                alert("Koda garums var būt tikai vesels pozitīvs skaitlis");
+                return false;
+            }
+
+            var errorCounts = parseNaturalNonNullNumbers(textareaErrorsCounts.value);
+            if (!errorCounts) {
+                alert("Kļūdu skaits var būt tikai vesels pozitīvs skaitlis");
+                return false;
+            }
+
+            if (codeLengths.length != errorCounts.length) {
+                alert("Moduļu skaits nesakrīt starp moduļu garumu un kļūdu skaitu sarakstiem");
+                return false;
+            }
+
+            var codeLengthInTestedModules = 0;
+            for (var i = 0; i < codeLengths.length; i++) {
+                codeLengthInTestedModules += codeLengths[i];
+            }
+
+            if (codeLengthTotal < codeLengthInTestedModules) {
+                alert("Notestēto moduļu summārais garums nesakrit ar visu moduļu summāro garumu");
+                return false;
+            }
+
+            textModel.setup(codeLengthTotal, unitsCount, prepareModulesData(codeLengths, errorCounts));
+
+            pAvgCodeLength.innerHTML = "Vidējais moduļu garums: " + textModel.getAvgCodeLength();
+            pAvgErrorsCount.innerHTML = "Vidējais kļūdu skaits: " + textModel.getAvgErrorsCount();
+            pInitialErrorsCount.innerHTML = "Sakumkļūdu skaits programmatūrā: " + textModel.getInitialErrorsCount();
+        });
+
+        function parseNaturalNonNullNumbers(str) {
+            var naturalNumbers = str.split('\n');
+            for (var i = 0; i < naturalNumbers.length; i++) {
+                var naturalNumber = parseNatural(naturalNumbers[i]);
+                if (isNaN(naturalNumber) || naturalNumber <= 0) {
+                    return false;
+                } else {
+                    naturalNumbers[i] = naturalNumber;
+                }
+            }
+            return naturalNumbers;
+        }
+
+        // from here: https://stackoverflow.com/questions/16799469/how-to-check-if-a-string-is-a-natural-number
+        function parseNatural(n) {
+            n = n.toString();
+            var n1 = Math.abs(n),
+                n2 = parseInt(n, 10);
+
+            if (!isNaN(n1) && n2 === n1 && n1.toString() === n) {
+                return n2;
+            } else {
+                return NaN;
+            }
+        }
+
+    </script>
 </body>
 </html>
