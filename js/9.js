@@ -4,7 +4,7 @@ var TextModel = function () {
     var unitsCount;         // n
     var avgCodeLength;      // Nvid
     var avgErrorsCount;     // Bvid
-    var c;
+    var avgFaultRate;       // c
     var initialErrorsCount;
 
     function getAvgCodeLength() {
@@ -19,8 +19,38 @@ var TextModel = function () {
         return initialErrorsCount;
     }
 
-    function setup(code_length_total, units_count, tested_units) {
-        testedUnits = tested_units;
+    function InconsistentModelDataException(message) {
+        this.name = "InconsistentModelDataException";
+        this.message = message;
+    }
+
+    function setup(code_length_total, units_count, code_lengths, error_counts) {
+        if (codeLengthTotal < unitsCount) {
+            throw new InconsistentModelDataException("Moduļu skaitam jābūt mazākam par programmatūras garumu");
+        }
+
+        if (!code_lengths) {
+            throw new InconsistentModelDataException("Koda garums modulī var būt tikai vesels pozitīvs skaitlis");
+        }
+
+        if (!error_counts) {
+            throw new InconsistentModelDataException("Kļūdu skaits var būt tikai vesels pozitīvs skaitlis");
+        }
+
+        if (code_lengths.length != error_counts.length) {
+            throw new InconsistentModelDataException("Moduļu skaits nesakrīt starp moduļu garumu un kļūdu skaitu sarakstiem");
+        }
+
+        var codeLengthInTestedModules = 0;
+        for (var i = 0; i < code_lengths.length; i++) {
+            codeLengthInTestedModules += code_lengths[i];
+        }
+
+        if (codeLengthTotal < codeLengthInTestedModules) {
+            throw new InconsistentModelDataException("Notestēto moduļu summārais garums nesakrit ar visu moduļu summāro garumu");
+        }
+
+        testedUnits = prepareModulesData(code_lengths, error_counts);
         unitsCount = units_count;
         codeLengthTotal = code_length_total;
 
@@ -39,9 +69,9 @@ var TextModel = function () {
             }
         }
 
-        c = avgErrorsCount / avgCodeLength;
+        avgFaultRate = avgErrorsCount / avgCodeLength;
 
-        initialErrorsCount = Math.floor(c * codeLengthTotal);
+        initialErrorsCount = Math.floor(avgFaultRate * codeLengthTotal);
     }
 
     return {

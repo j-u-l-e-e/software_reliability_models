@@ -3,32 +3,44 @@
 <head>
     <title>Teksta modelis</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/9.js"></script>
 </head>
 <body>
 
 <h1>Teksta modelis</h1>
 
-<label for="inputOperandsTotalCount">Programatūras garums, N:</label>
-<input id="inputOperandsTotalCount" type="number" min="0" step="1">
-<label for="inputUnitsCount">Moduļu skaits, n:</label>
-<input id="inputUnitsCount" type="number" min="0" step="1">
-<script src="../js/9.js"></script>
-<table>
-    <tr>
-        <th>Moduļu garumi</th>
-        <th>Kļūdu skaits moduļos</th>
-    </tr>
-    <tr>
-        <td>
-            <textarea id="textareaCodeLengths"></textarea>
-        </td>
-        <td>
-            <textarea id="textareaErrorsCounts"></textarea>
-        </td>
-        <td></td>
-    </tr>
-    <button id="buttonCalculate">Aprēķināt</button>
-</table>
+<div>
+    <label for="inputOperandsTotalCount">Programatūras garums, N:</label>
+    <input id="inputOperandsTotalCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
+    <!--pattern="[0-9]" -->
+</div>
+<div>
+    <label for="inputUnitsCount">Moduļu skaits, n:</label>
+    <input id="inputUnitsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
+</div>
+<div>
+    <table>
+        <tr>
+            <th>Koda garums moduļos</th>
+            <th>Kļūdu skaits moduļos</th>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="textareaCodeLengths"></textarea>
+            </td>
+            <td>
+                <textarea id="textareaErrorsCounts"></textarea>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+    <div>
+        <button id="buttonCalculate">Aprēķināt</button>
+        <button id="buttonUploadUnitsData">Augšupieladēt datus par moduļiem</button>
+    </div>
+</div>
+
 <p id="pAvgCodeLength">
 <p id="pAvgErrorsCount">
 <p id="pInitialErrorsCount">
@@ -38,12 +50,13 @@
     <script>
         var inputCodeLengthTotal = document.getElementById("inputOperandsTotalCount");
         var inputUnitsCount = document.getElementById("inputUnitsCount");
-        var buttonCalculate = document.getElementById("buttonCalculate");
         var textareaCodeLengths = document.getElementById("textareaCodeLengths");
         var textareaErrorsCounts = document.getElementById("textareaErrorsCounts");
         var pAvgCodeLength = document.getElementById("pAvgCodeLength");
         var pAvgErrorsCount = document.getElementById("pAvgErrorsCount");
         var pInitialErrorsCount = document.getElementById("pInitialErrorsCount");
+        var buttonCalculate = document.getElementById("buttonCalculate");
+        var buttonUploadUnitsData = document.getElementById("buttonUploadUnitsData");
 
         var textModel = TextModel();
 
@@ -51,44 +64,31 @@
             // Parse model data
             var codeLengthTotal = parseInt(inputCodeLengthTotal.value);
             var unitsCount = parseInt(inputUnitsCount.value);
-
-            if (codeLengthTotal < unitsCount) {
-                alert("Moduļu skaitam jābūt mazākam par programmatūras garumu");
-                return false;
-            }
-
             var codeLengths = parseNaturalNonNullNumbers(textareaCodeLengths.value);
-            if (!codeLengths) {
-                alert("Koda garums var būt tikai vesels pozitīvs skaitlis");
-                return false;
-            }
-
             var errorCounts = parseNaturalNonNullNumbers(textareaErrorsCounts.value);
-            if (!errorCounts) {
-                alert("Kļūdu skaits var būt tikai vesels pozitīvs skaitlis");
+
+            try {
+                textModel.setup(codeLengthTotal, unitsCount, codeLengths, errorCounts);
+            } catch (e) {
+                alert(e.message);
                 return false;
             }
 
-            if (codeLengths.length != errorCounts.length) {
-                alert("Moduļu skaits nesakrīt starp moduļu garumu un kļūdu skaitu sarakstiem");
-                return false;
-            }
-
-            var codeLengthInTestedModules = 0;
-            for (var i = 0; i < codeLengths.length; i++) {
-                codeLengthInTestedModules += codeLengths[i];
-            }
-
-            if (codeLengthTotal < codeLengthInTestedModules) {
-                alert("Notestēto moduļu summārais garums nesakrit ar visu moduļu summāro garumu");
-                return false;
-            }
-
-            textModel.setup(codeLengthTotal, unitsCount, prepareModulesData(codeLengths, errorCounts));
-
+            // Data OK, show calculated data
             pAvgCodeLength.innerHTML = "Vidējais moduļu garums: " + textModel.getAvgCodeLength();
             pAvgErrorsCount.innerHTML = "Vidējais kļūdu skaits: " + textModel.getAvgErrorsCount();
             pInitialErrorsCount.innerHTML = "Sakumkļūdu skaits programmatūrā: " + textModel.getInitialErrorsCount();
+            return true;
+        });
+
+        buttonUploadUnitsData.addEventListener("click", function () {
+            // Check for the various File API support.
+            if (window.File && window.FileReader && window.FileList && window.Blob) {
+
+                // Great success! All the File APIs are supported.
+            } else {
+                alert('Pārlūkprogramma neatbalsta datņu sistēmas atvēršanu.');
+            }
         });
 
         function parseNaturalNonNullNumbers(str) {
