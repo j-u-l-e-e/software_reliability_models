@@ -4,7 +4,7 @@
     <title>Teksta modelis</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../css/style.css">
-    <script src="../js/9.js"></script>
+    <script src="../js/textmodel.js"></script>
     <script src="../js/util.js"></script>
     <script src="../js/papaparse.min.js"></script>
 </head>
@@ -79,9 +79,9 @@
             }
 
             // Data OK, show calculated data
-            pAvgCodeLength.innerHTML = "Vidējais moduļu garums: " + textModel.getAvgCodeLength();
-            pAvgErrorsCount.innerHTML = "Vidējais kļūdu skaits: " + textModel.getAvgErrorsCount();
-            pInitialErrorsCount.innerHTML = "Sakumkļūdu skaits programmatūrā: " + textModel.getInitialErrorsCount();
+            pAvgCodeLength.innerHTML = "Vidējais moduļu garums, Nvid: " + textModel.getAvgCodeLength();
+            pAvgErrorsCount.innerHTML = "Vidējais kļūdu skaits, Bvid: " + textModel.getAvgErrorsCount();
+            pInitialErrorsCount.innerHTML = "Sakumkļūdu skaits programmatūrā, B: " + textModel.getInitialErrorsCount();
             return true;
         });
 

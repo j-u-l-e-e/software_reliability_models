@@ -25,16 +25,19 @@ var TextModel = function () {
     }
 
     function setup(code_length_total, units_count, code_lengths, error_counts) {
+		codeLengthTotal = code_length_total;
+		unitsCount = units_count;
+		
         if (codeLengthTotal < unitsCount) {
             throw new InconsistentModelDataException("Moduļu skaitam jābūt mazākam par programmatūras garumu");
         }
 
         if (!code_lengths) {
-            throw new InconsistentModelDataException("Koda garums modulī var būt tikai vesels pozitīvs skaitlis");
+            throw new InconsistentModelDataException("Koda garums modulī var būt tikai vesels pozitīvs skaitlis lielāks par 0");
         }
 
         if (!error_counts) {
-            throw new InconsistentModelDataException("Kļūdu skaits var būt tikai vesels pozitīvs skaitlis");
+            throw new InconsistentModelDataException("Kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
         }
 
         if (code_lengths.length != error_counts.length) {
