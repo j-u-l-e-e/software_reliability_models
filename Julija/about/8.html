@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <title>Par Veibula modeli</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<h1>Par Veibula modeli</h1>
+
+<p>Modeļa pieņemumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
+<ol>
+    <li>
+        Testēšanas sākumā programmatūrā eksistē kļūdu skaits <math>N</math>;
+    </li>
+    <li>
+        <math>α</math>-tās atteices laiks <math>T<sub>a</sub></math> atbilst Veibula sadalījumam ar parametriem <math>α</math> un <math>β</math>. Varbūtību blīvuma funkcija no <math>T<sub>a</sub></math> ir <math>f<sub>a</sub>(t) = αβt<sup>α-1</sup>e<sup>-βt<sup>α</sup></sup></math>, kur <math>α</math>, <math>β > 0</math> un <math>t ≥ 0</math>;
+    </li>
+    <li>
+        Atteiču skaits <math>(f<sub>1</sub>, f<sub>2</sub>, ...., f<sub>n</sub>)</math> atklāto atbilstošos laika intervālos <math>[(t<sub>0</sub> = 0), (t<sub>1</sub>, t<sub>2</sub>), ..., (t<sub>n - 1</sub>, t<sub>n</sub>)]</math> ir neatkarīgs.
+    </li>
+</ol>
+</p>
+
+<p>Dati, kurus prāsa Veibula modelis:
+<ol>
+    <li>
+        Atteiču skaits katrā testēšanas posmā (apzīmē ar <math>f<sub>i</sub></math>);
+    </li>
+    <li>
+        Katra testēšanas posma pabeigšanas laiks (apzīmē ar <math>t<sub>i</sub></math>).
+    </li>
+</ol>
+</p>
+
+<p>Drošuma kvantitatīvo rādītāju formulas
+<table>
+    <tr>
+        <th>Nosaukums</th>
+        <th>Formula</th>
+    </tr>
+    <tr>
+        <td>Bezatteices darba varbūtība<sup id="cite-ref-3"><a href="#ref-3">[3]</a></sup></td>
+        <td><math>P(t) = e<sup>-βt<sup>α</sup></sup></math></td>
+    </tr>
+    <tr>
+        <td>Atteices varbūtība<sup><a href="#ref-3">[3]</a></sup></td>
+        <td><math>Q(t) = 1 - P(t)</sup></math></td>
+    </tr>
+    <tr>
+        <td>Atteiču intensitāte<sup><a href="#ref-3">[3]</a></sup></td>
+        <td><math>λ(t) = αβt<sup>α-1</sup></math></td>
+    </tr>
+    <tr>
+        <td>Vidējā uzstrāde līdz atteicei<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup></td>
+        <td><math>μ(t) = β<sup>1/α</sup>Γ(1+1/α)</math></td>
+    </tr>
+</table>
+</p>
+
+<p>Resūrsi:
+<ol>
+    <li id="ref-1"><a href="#cite-ref-1">↩</a>
+        Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
+    </li>
+    <li id="ref-2"><a href="#cite-ref-2">↩</a>
+        H. Pham. System Software Reliability. USA, Springer, 2006. 440 p.
+    </li>
+    <li id="ref-3"><a href="#cite-ref-3">↩</a>
+        Е. Г. Чекал, А. А. Чичев. Надежность информационных систем. Россия, Ульяновский государственный университет, 2012 г. 118 стр.
+    </li>
+</ol>
+</p>
+</body>
+</html>

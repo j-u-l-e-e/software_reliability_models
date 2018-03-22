@@ -7,6 +7,8 @@
 <body>
 
 <h1>Veibula modelis</h1>
+<button id="buttonAboutModel">Par Veibula modeli</button>
+<button id="buttonHelp">Palīdzība</button>
 <table>
     <tr>
         <th></th>
@@ -20,4 +22,12 @@
     </tr>
 </table>
 </body>
+<script>
+    var buttonAboutModel = document.getElementById("buttonAboutModel");
+    var buttonHelp = document.getElementById("buttonHelp");
+
+    buttonAboutModel.addEventListener("click", function () {
+        var myWindow = window.open("about/8.html", "Veibula modelis", "width=300,height=500");
+    })
+</script>
 </html>
