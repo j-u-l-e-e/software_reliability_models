@@ -23,3 +23,8 @@ function parseNaturalNonNullNumber(n) {
         return NaN;
     }
 }
+
+function InconsistentModelDataException(message) {
+    this.name = "InconsistentModelDataException";
+    this.message = message;
+}
