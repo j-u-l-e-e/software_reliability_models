@@ -2,7 +2,7 @@
 <html lang="lv">
 <script type="text/javascript">
 function precisionRound(number) {
-	  var factor = Math.pow(10, 2);
+	  var factor = Math.pow(10, 4);
 	  return Math.round(number * factor) / factor;
 	}
 
@@ -14,9 +14,10 @@ function MusaOkumoto() {
 		reliability=arrErrors[0]*Math.exp(-intensity*arrErrors[i]);
 		arrresult.push(precisionRound(reliability));
 	}
-	document.getElementById("result").innerHTML = arrresult[arrresult.length-1] + "(Errors per CPU hour)";
+	document.getElementById("result").innerHTML = arrresult[arrresult.length-1] + " (Errors per CPU hour)";
 }
 </script>
+
 <head>
     <title>Musa-Okumoto modelis</title>
     <meta charset="UTF-8">
@@ -24,9 +25,17 @@ function MusaOkumoto() {
 <body>
 
 <h1>Musa-Okumoto modelis</h1>
-Error count per CPU hour: <input type="text" id="arrErrors" value="10,50,60"><br>
-Error intensity: <input type="number" id="intensity" value="0.02"><br>
-<button onclick="MusaOkumoto()">Calculate</button><br><br>
+
+<label for="arrErrors">Error count per CPU hour:</label>
+<input id="arrErrors" type="text" value="10,50,60"><br>
+
+<label for="intensity">Error intensity:</label>
+<input id="intensity" type="number" value="0.02"><br>
+
+<button onclick="MusaOkumoto()">Calculate</button>
+<br>
+<br>
+
 Result: <span id="result"></span>
 
 </body>
