@@ -9,10 +9,10 @@
 
 <h1>Par Veibula divu parametru modeli</h1>
 
-<p>Modeļa pieņemumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
+<p>Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
 <ol>
     <li>
-        Atteiču skaits <math>(<i>f<sub>1</sub></i>, <i>f<sub>2</sub></i>, ...., <i>f<sub>n</sub></i>)</math> atklāto atbilstošos laika intervālos <math>[(<i>t<sub>0</sub></i> = 0), (<i>t<sub>1</sub></i>, <i>t<sub>2</sub></i>), ..., (<i>t<sub>n - 1</sub></i>, <i>t<sub>n</sub></i>)]</math> ir neatkarīgs.
+        Atteices ir neatkarīgas un tām ir vienāda varbūtība;
     </li>
     <li>
         Testēšanas sākumā programmatūrā eksistē galīgais kļūdu skaits <i>n</i>;
@@ -23,24 +23,15 @@
         Šeit <i>α</i> ir mēroga parametrs un <i>β</i> ir formas parametrs. <i>α</i> > 0, <i>β</i> > 0 un <i>t</i> ≥ 0;
     </li>
     <li>
-        Kļūdu labošana notiek momentāni un neizraisa jaunas kļūdas
+        Kļūdu labošana notiek momentāni un neizraisa jaunas kļūdas.
     </li>
 </ol>
 </p>
 
-<p>Dati, kurus prāsa Veibula modelis:
-<ol>
-    <li>
-        Atteiču skaits katrā testēšanas posmā (apzīmē ar <i>f<sub>i</sub></i>);
-    </li>
-    <li>
-        Katra testēšanas posma pabeigšanas laiks (apzīmē ar <i>t<sub>i</sub></i>).
-    </li>
-</ol>
-</p>
+<p>Dati, kurus prasa Veibula modelis ir atteiču laika momenti (apzīmē ar <i>t<sub>i</sub></i>).</p>
 
-<p>Drošuma kvantitatīvo rādītāju formulas<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup>
 <table border="1">
+    <caption>Drošuma kvantitatīvo rādītāju formulas<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup></caption>
     <tr>
         <th width="30%">Nosaukums</th>
         <th width="30%">Formula</th>
@@ -60,7 +51,7 @@
         <td>Atteiču intensitāte</td>
         <td>
             <div lang="latex">\lambda(t) = \frac{\beta}{\alpha} \times \frac{t}{\alpha }^{\beta - 1}</div>
-        <td>Kad <i>α</i> < 1, atteiču intensitāte monotoni dilst, bet kad <i>α</i> > 1 — monotoni aug. Ir ieteicams eksperimentāli piemeklēt <i>α</i> un <i>β</i> parametrus lai blīvuma funkcija dotu precizākus rezultātus</td>
+        <td>Kad <i>α</i> < 1, atteiču intensitāte monotoni dilst, bet kad <i>α</i> > 1 — monotoni aug. Ir ieteicams eksperimentāli piemeklēt <i>α</i> un <i>β</i> parametrus lai blīvuma funkcija dotu precīzākus rezultātus</td>
     </tr>
     <tr>
         <td>Vidējais laiks starp kļūmēm</td>
@@ -71,7 +62,7 @@
         <td><i>α</i> un <i>β</i> parametru aprēķins ar maksimālās paticamības metodi</td>
         <td><div lang="latex">\alpha = (\frac{1}{n} \sum_{i=1}^{n} ln(t_i))^{\frac{1}{\beta}}</div>
             <div lang="latex">\frac{1}{\beta} - \frac{ \sum_{i=1}^{n}t_i^{\beta} ln(t_i)}{\sum_{i=1}^{n}t_i^{\beta}} + \frac{1}{n} \sum_{i=1}^{n}ln(t_i) = 0</div>
-        <td></td>
+        <td>Parametrus var aprēķināt, pielietojot Ņūtona metodi</td>
     </tr>
 </table>
 </p>
