@@ -16,7 +16,15 @@ var WeibullModel = function () {
         return reliability;
     }
 
-    function setup(failure_times, time_curr) {
+    function getScale() {
+        return scale;
+    }
+
+    function getShape() {
+        return shape;
+    }
+
+    function setup(failure_times, time_curr, scale_, shape_) {
         timeCurr = parseNaturalNonNullNumber(time_curr);
 
         if (isNaN(timeCurr)) {
@@ -29,15 +37,20 @@ var WeibullModel = function () {
 
         failureTimes = failure_times;
 
-        calcShape();
-        calcScale();
+        if (!(scale_ || shape_)) {
+            calcShape();
+            calcScale();
+        } else {
+            scale = scale_;
+            shape = shape_;
+        }
 
         reliability = Math.exp(-Math.pow(timeCurr / scale, shape));
         failureRate = shape / scale * Math.pow(timeCurr / scale, shape - 1);
     }
     
     function calcShape() {
-        shape = 0.1;
+        shape = 0.01;
 
         while (true) {
             var s1 = 0;
@@ -63,7 +76,7 @@ var WeibullModel = function () {
                 break;
             }
 
-            shape += 0.1;
+            shape += 0.01;
         }
     }
 
@@ -80,6 +93,8 @@ var WeibullModel = function () {
     return {
         setup: setup,
         getReliability: getReliability,
-        getFailureRate: getFailureRate
+        getFailureRate: getFailureRate,
+        getScale: getScale,
+        getShape: getShape
     };
 };

@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="lv">
 <head>
-    <title>Par Veibula modeli</title>
+    <title>Par Veibula divu parametru modeli</title>
     <meta charset="UTF-8">
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
 </head>
 <body>
 
-<h1>Par Veibula modeli</h1>
+<h1>Par Veibula divu parametru modeli</h1>
 
 <p>Modeļa pieņemumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
 <ol>
     <li>
-        Testēšanas sākumā programmatūrā eksistē kļūdu skaits <math>N</math>;
+        Atteiču skaits <math>(<i>f<sub>1</sub></i>, <i>f<sub>2</sub></i>, ...., <i>f<sub>n</sub></i>)</math> atklāto atbilstošos laika intervālos <math>[(<i>t<sub>0</sub></i> = 0), (<i>t<sub>1</sub></i>, <i>t<sub>2</sub></i>), ..., (<i>t<sub>n - 1</sub></i>, <i>t<sub>n</sub></i>)]</math> ir neatkarīgs.
     </li>
     <li>
-        <math>α</math>-tās atteices laiks <math>T<sub>a</sub></math> atbilst Veibula sadalījumam ar parametriem <math>α</math> un <math>β</math>. Varbūtību blīvuma funkcija no <math>T<sub>a</sub></math> ir <math>f<sub>a</sub>(t) = αβt<sup>α-1</sup>e<sup>-βt<sup>α</sup></sup></math>, kur <math>α</math>, <math>β > 0</math> un <math>t ≥ 0</math>;
+        Testēšanas sākumā programmatūrā eksistē galīgais kļūdu skaits <i>n</i>;
     </li>
     <li>
-        Atteiču skaits <math>(f<sub>1</sub>, f<sub>2</sub>, ...., f<sub>n</sub>)</math> atklāto atbilstošos laika intervālos <math>[(t<sub>0</sub> = 0), (t<sub>1</sub>, t<sub>2</sub>), ..., (t<sub>n - 1</sub>, t<sub>n</sub>)]</math> ir neatkarīgs.
+        <i>α</i>-tās atteices laiks <i>t</i> atbilst Veibula sadalījumam ar parametriem <i>α</i> un <i>β</i>. Varbūtību blīvuma funkcija ir
+        <div lang="latex">f(t) = \frac{\beta}{\alpha} \times \frac{t}{\alpha }^{\beta - 1} \times e^{\frac{t}{\alpha}^{\beta}}</div>
+        Šeit <i>α</i> ir mēroga parametrs un <i>β</i> ir formas parametrs. <i>α</i> > 0, <i>β</i> > 0 un <i>t</i> ≥ 0;
+    </li>
+    <li>
+        Kļūdu labošana notiek momentāni un neizraisa jaunas kļūdas
     </li>
 </ol>
 </p>
@@ -25,15 +31,15 @@
 <p>Dati, kurus prāsa Veibula modelis:
 <ol>
     <li>
-        Atteiču skaits katrā testēšanas posmā (apzīmē ar <math>f<sub>i</sub></math>);
+        Atteiču skaits katrā testēšanas posmā (apzīmē ar <i>f<sub>i</sub></i>);
     </li>
     <li>
-        Katra testēšanas posma pabeigšanas laiks (apzīmē ar <math>t<sub>i</sub></math>).
+        Katra testēšanas posma pabeigšanas laiks (apzīmē ar <i>t<sub>i</sub></i>).
     </li>
 </ol>
 </p>
 
-<p>Drošuma kvantitatīvo rādītāju formulas
+<p>Drošuma kvantitatīvo rādītāju formulas<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup>
 <table border="1">
     <tr>
         <th width="30%">Nosaukums</th>
@@ -41,24 +47,31 @@
         <th width="40%">Piezīmes</th>
     </tr>
     <tr>
-        <td>Bezatteices darba varbūtība<sup id="cite-ref-3"><a href="#ref-3">[3]</a></sup></td>
-        <td><math>P(t) = e<sup>-βt<sup>α</sup></sup></math></td>
+        <td>Bezatteices darba varbūtība</td>
+        <td><div lang="latex">R(t) = e^-\frac{t}{\alpha}^{\beta}</div>
         <td></td>
     </tr>
     <tr>
-        <td>Atteices varbūtība<sup><a href="#ref-3">[3]</a></sup></td>
-        <td><math>Q(t) = 1 - P(t)</sup></math></td>
+        <td>Atteices varbūtība</td>
+        <td><div lang="latex">Q(t) = 1 - R(t)</div></td>
         <td></td>
     </tr>
     <tr>
-        <td>Atteiču intensitāte<sup><a href="#ref-3">[3]</a></sup></td>
-        <td><math>λ(t) = αβt<sup>α-1</sup></math></td>
-        <td>Kad β < 1, atteiču intensitāte monotoni dilst, bet kad β > 1 — monotoni aug. Ir ieteicams eksperimentāli piemeklēt α un β un parametrus lai blīvuma funkcija dotu precizākus rezultātus</td>
+        <td>Atteiču intensitāte</td>
+        <td>
+            <div lang="latex">\lambda(t) = \frac{\beta}{\alpha} \times \frac{t}{\alpha }^{\beta - 1}</div>
+        <td>Kad <i>α</i> < 1, atteiču intensitāte monotoni dilst, bet kad <i>α</i> > 1 — monotoni aug. Ir ieteicams eksperimentāli piemeklēt <i>α</i> un <i>β</i> parametrus lai blīvuma funkcija dotu precizākus rezultātus</td>
     </tr>
     <tr>
-        <td>Vidējā uzstrāde līdz atteicei<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup></td>
-        <td><math>μ(t) = β<sup>1/α</sup>Γ(1+1/α)</math></td>
+        <td>Vidējais laiks starp kļūmēm</td>
+        <td><div lang="latex">MTTF = \Gamma (\frac{1}{\beta} + 1)</div>
         <td>Γ - gamma funkcija</td>
+    </tr>
+    <tr>
+        <td><i>α</i> un <i>β</i> parametru aprēķins ar maksimālās paticamības metodi</td>
+        <td><div lang="latex">\alpha = (\frac{1}{n} \sum_{i=1}^{n} ln(t_i))^{\frac{1}{\beta}}</div>
+            <div lang="latex">\frac{1}{\beta} - \frac{ \sum_{i=1}^{n}t_i^{\beta} ln(t_i)}{\sum_{i=1}^{n}t_i^{\beta}} + \frac{1}{n} \sum_{i=1}^{n}ln(t_i) = 0</div>
+        <td></td>
     </tr>
 </table>
 </p>
@@ -69,10 +82,7 @@
         Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
     </li>
     <li id="ref-2"><a href="#cite-ref-2">↩</a>
-        H. Pham. System Software Reliability. USA, Springer, 2006. 440 p.
-    </li>
-    <li id="ref-3"><a href="#cite-ref-3">↩</a>
-        Е. Г. Чекал, А. А. Чичев. Надежность информационных систем. Россия, Ульяновский государственный университет, 2012 г. 118 стр.
+        P. K. Suri, P. Raheja. A Study on Weibull Distribution for Estimating the Reliability. International Journal Of Engineering And Computer Science, Volume 4 Issue 7 July 2015. 13447-13451 p.
     </li>
 </ol>
 </p>

@@ -11,7 +11,6 @@
 
 <h1>Veibula modelis</h1>
 <button id="buttonAboutModel">Par Veibula modeli</button>
-<button id="buttonHelp">Palīdzība</button>
 
 <div>
     <label for="inputTimeCurr">Laiks prognozēšanai, t</label>
@@ -30,6 +29,14 @@
 <div>
     <input id="inputFailuresDataFile" type="file" accept=".csv,.doc"/>
 </div>
+<label for="inputManualParameters">Patstavīgi izvēlēties parametru vērtības</label>
+<input type="checkbox" id="inputManualParameters">
+<div>
+    <label for="inputScale">α</label>
+    <input id="inputScale" type="number" min="0.001" step="0.001" disabled="disabled" onblur="this.value = Math.abs(this.value)">
+    <label for="inputShape">β</label>
+    <input id="inputShape" type="number" min="0.001" step="0.001" disabled="disabled" onblur="this.value = Math.abs(this.value)">
+</div>
 <div>
     <button id="buttonCalculate">Aprēķināt</button>
 </div>
@@ -38,39 +45,56 @@
 <p id="pFailureRate">
 </body>
 <script>
-    var inputTimeCurr = document.getElementById("inputTimeCurr");
-    var buttonAboutModel = document.getElementById("buttonAboutModel");
-    var buttonHelp = document.getElementById("buttonHelp");
-    var textareaFailureTimes = document.getElementById("textareaFailureTimes");
     var weibullModel = WeibullModel();
+    var buttonAboutModel = document.getElementById("buttonAboutModel");
     var buttonCalculate = document.getElementById("buttonCalculate");
     var inputFailuresDataFile = document.getElementById("inputFailuresDataFile");
-    var pReliability = document.getElementById("pReliability");
-    var pFailureRate = document.getElementById("pFailureRate");
+    var inputManualParameters = document.getElementById("inputManualParameters");
+    var manualParameters = false;
 
+    inputManualParameters.addEventListener("change", function () {
+        manualParameters = !manualParameters;
+        var inputScale = document.getElementById("inputScale");
+        var inputShape = document.getElementById("inputShape");
+        inputScale.disabled = !inputScale.disabled;
+        inputShape.disabled = !inputShape.disabled;
+    });
 
     buttonAboutModel.addEventListener("click", function () {
         var myWindow = window.open("about/8.html", "Veibula modelis", "width=300,height=500");
     });
 
     buttonCalculate.addEventListener("click", function (event) {
-
         // Parse model data
-        var timeCurr = parseInt(inputTimeCurr.value);
-        var failureTimes = parseNaturalNonNullNumbers(textareaFailureTimes.value);
+        var timeCurr = parseInt(document.getElementById("inputTimeCurr").value);
+        var failureTimes = parseNaturalNonNullNumbers(document.getElementById("textareaFailureTimes").value);
+        var scale = false;
+        var shape = false;
+
+        if (manualParameters) {
+            scale = parseFloat(document.getElementById("inputScale").value);
+            shape = parseFloat(document.getElementById("inputShape").value);
+            if (!scale || !shape) {
+                alert("α un β jābūt lielākiem par 0");
+                return false;
+            }
+        }
+
 
         try {
-            weibullModel.setup(failureTimes, timeCurr);
-
+            weibullModel.setup(failureTimes, timeCurr, scale, shape);
         } catch (e) {
             alert(e.message);
             return false;
         }
 
         // Data OK, show calculated data
-
-        pReliability.innerHTML = "Drošums, R(t): " + weibullModel.getReliability();
-        pFailureRate.innerHTML = "Atteiču intensitāte, λ(t): " + weibullModel.getFailureRate();
+        document.getElementById("pReliability").innerHTML = "Drošums, R(t): " + weibullModel.getReliability();
+        document.getElementById("pFailureRate").innerHTML = "Atteiču intensitāte, λ(t): " + weibullModel.getFailureRate();
+        if (!manualParameters) {
+            document.getElementById("inputScale").value = weibullModel.getScale();
+            document.getElementById("inputShape").value = weibullModel.getShape();
+        }
         return true;
     });
 
@@ -95,7 +119,7 @@
                     // Remove \n in the end of strings
                     failureTimes = failureTimes.slice(0, failureTimes.length - 1);
 
-                    textareaFailureTimes.value = failureTimes;
+                    document.getElementById("textareaFailureTimes").value = failureTimes;
                 }
             }
         });
