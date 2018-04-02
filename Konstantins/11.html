@@ -1,23 +1,120 @@
 <!DOCTYPE html>
 <html lang="lv">
+<script type="text/javascript">
+function rnd(number) {
+	  var factor = Math.pow(5, 2);
+	  return Math.round(number * factor) / factor;
+	}
+	
+function checkOne(N,n){
+	if (N >= n && n >= 0){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function checkTwo(M,m){
+	if (M >= m && m >= 0){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function checkThree(k,n,m){
+	if (k >= n+m && k >= 0){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function Lipova() {
+	N = document.getElementById("errCountInProg").value;
+	M = document.getElementById("overallBroughtErrorCount").value;
+	k = document.getElementById("testsCountUsedForTesting").value;
+	n = document.getElementById("ownErrorCount").value;
+	m = document.getElementById("broughtErrorCount").value;	
+	if (N == '' || M == '' || k == '' || n == '' || m == '' ){
+		document.getElementById("result").innerHTML = "Ievadiet visus nepieciešamus datus!!!";
+		return;
+	} else {
+		if (!checkOne(N,n)){
+			document.getElementById("result").innerHTML = "Pirmais nosacījums nav izpildīts!";
+			return;
+		}
+		if (!checkTwo(M,m)){
+			document.getElementById("result").innerHTML = "Otrais nosacījums nav izpildīts!";
+			return;
+		}
+		if (!checkThree(k,n,m)){
+			document.getElementById("result").innerHTML = "Trešais nosacījums nav izpildīts!";
+			return;
+		}
+		q = (n+m)/n;
+		res = k / (n+m);
+		res = res * Math.pow(q,n+m);
+		res = res * Math.pow((1-q),k-n-m)
+		res = res * ((N/n) * (M/m)) / ((N+M) / (n+m));
+		document.getElementById("result").innerHTML = rnd(res);
+		document.getElementById("qId").innerHTML = rnd(q);
+	}
+}
+</script>
+
 <head>
     <title>Lipova modelis</title>
     <meta charset="UTF-8">
+	<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
 </head>
 <body>
 
 <h1>Lipova modelis</h1>
+<div></div>
+<div lang="latex">Q(n,m) = ( \frac{k}{n+m} ) * q^{n+m} * (1-q)^{k-n-m} * \frac{ \frac{N}{n} \times \frac{M}{m} }{\frac{N+M}{n+m}}</div>
+<br/>
+<h2>Modeļa lietošanai ir jāievēro nosacījumi:</h2>
+<div lang="latex">N \geq n \geq 0,</div> 
+<div lang="latex">M \geq m \geq 0, </div> 
+<div lang="latex">k \geq n + m \geq 0</div>
+<br/>
+<h3>Lūdzu, ievadiet datus izskaitļošanai:</h3>
 <table>
     <tr>
-        <th></th>
-        <th></th>
-        <th></th>
+        <td><label for="errCountInProg">N - Dabīgo kļūdu skaits programmā:</label></td>
+        <td><input id="errCountInProg" type="number" min="0" step="1"></td>
     </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
+	
+	<tr>
+		<td><label for="overallBroughtErrorCount">M - Ienesto kļūdu skaits:</label></td>
+		<td><input id="overallBroughtErrorCount" type="number" min="0" step="1"></td>
+	</tr>
+	
+	<tr>
+		<td><label for="testsCountUsedForTesting">k - Testēšanai lietoto testu skaits:</label></td>
+		<td><input id="testsCountUsedForTesting" type="number" min="0" step="1"></td>
+	</tr>
+	
+	<tr>
+		<td><label for="ownErrorCount">n - Dabīgo kļūdu skaits:</label></td>
+		<td><input id="ownErrorCount" type="number" min="0" step="1"></td>
+	</tr>
+	
+	<tr>
+		<td><label for="broughtErrorCount">m - Mākslīgo kļūdu skaits:</label></td>
+		<td><input id="broughtErrorCount" type="number" min="0" step="1"></td>
+	</tr>
+	
+	<tr>
+		<td><label for="errorProbabilityCountKTest">q - Kļūdas atrašanas varbūtība katrā no k testiem, q= (n+m)/n:</label></td>
+		<td><span id="qId"></span></td>
+	</tr>
 </table>
+<br/>
+<button onclick="Lipova()">Atrisināt</button>
+<br />
+<br />
+Rezultāts: <span id="result"></span>
 </body>
 </html>
