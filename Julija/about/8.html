@@ -9,6 +9,8 @@
 
 <h1>Par Veibula divu parametru modeli</h1>
 
+<p>Dati, kurus prasa Veibula modelis, ir atteiču laika momenti (apzīmē ar <i>t<sub>i</sub></i>) vai laika intervālu garumi starp atteicēm (apzīmē ar <i>x<sub>i</sub></i>). Ja pirmā atteice notika laika momentā <i>t<sub>1</sub></i>, tad pirmā laika intervāla garums <i>x<sub>1</sub></i> = <i>t<sub>1</sub></i>. Ja otrā atteice notika laika momentā <i>t<sub>2</sub></i>, tad otrā laika intervāla garums <i>x<sub>2</sub></i> = <i>t<sub>2</sub></i> - <i>t<sub>1</sub></i>.</p>
+
 <p>Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
 <ol>
     <li>
@@ -19,16 +21,14 @@
     </li>
     <li>
         <i>α</i>-tās atteices laiks <i>t</i> atbilst Veibula sadalījumam ar parametriem <i>α</i> un <i>β</i>. Varbūtību blīvuma funkcija ir
-        <div lang="latex">f(t) = \frac{\beta}{\alpha} \times \frac{t}{\alpha }^{\beta - 1} \times e^{\frac{t}{\alpha}^{\beta}}</div>
-        Šeit <i>α</i> ir mēroga parametrs un <i>β</i> ir formas parametrs. <i>α</i> > 0, <i>β</i> > 0 un <i>t</i> ≥ 0;
+        <div lang="latex">f(x) = \alpha \beta (\alpha x)^{\beta - 1} e^{(\alpha x)^{\beta}}</div>
+        Šeit <i>α</i> ir mēroga parametrs un <i>β</i> ir formas parametrs. <i>α</i> > 0, <i>β</i> > 0 un <i>x</i> ≥ 0;
     </li>
     <li>
         Kļūdu labošana notiek momentāni un neizraisa jaunas kļūdas.
     </li>
 </ol>
 </p>
-
-<p>Dati, kurus prasa Veibula modelis ir atteiču laika momenti (apzīmē ar <i>t<sub>i</sub></i>).</p>
 
 <table border="1">
     <caption>Drošuma kvantitatīvo rādītāju formulas<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup></caption>
@@ -39,18 +39,18 @@
     </tr>
     <tr>
         <td>Bezatteices darba varbūtība</td>
-        <td><div lang="latex">R(t) = e^-\frac{t}{\alpha}^{\beta}</div>
+        <td><div lang="latex">R(x) = e^{-(\alpha x)^{\beta}}</div>
         <td></td>
     </tr>
     <tr>
         <td>Atteices varbūtība</td>
-        <td><div lang="latex">Q(t) = 1 - R(t)</div></td>
+        <td><div lang="latex">Q(x) = 1 - R(x)</div></td>
         <td></td>
     </tr>
     <tr>
         <td>Atteiču intensitāte</td>
         <td>
-            <div lang="latex">\lambda(t) = \frac{\beta}{\alpha} \times \frac{t}{\alpha }^{\beta - 1}</div>
+            <div lang="latex">\lambda(x) = \alpha \beta (\alpha x)^{\beta - 1}</div>
         <td>Kad <i>α</i> < 1, atteiču intensitāte monotoni dilst, bet kad <i>α</i> > 1 — monotoni aug. Ir ieteicams eksperimentāli piemeklēt <i>α</i> un <i>β</i> parametrus lai blīvuma funkcija dotu precīzākus rezultātus</td>
     </tr>
     <tr>
@@ -60,8 +60,8 @@
     </tr>
     <tr>
         <td><i>α</i> un <i>β</i> parametru aprēķins ar maksimālās paticamības metodi</td>
-        <td><div lang="latex">\alpha = (\frac{1}{n} \sum_{i=1}^{n} ln(t_i))^{\frac{1}{\beta}}</div>
-            <div lang="latex">\frac{1}{\beta} - \frac{ \sum_{i=1}^{n}t_i^{\beta} ln(t_i)}{\sum_{i=1}^{n}t_i^{\beta}} + \frac{1}{n} \sum_{i=1}^{n}ln(t_i) = 0</div>
+        <td><div lang="latex">\alpha = \frac{1}{(\frac{1}{n} \sum_{i=1}^{n} ln(x_i))^{\frac{1}{\beta}}}</div>
+            <div lang="latex">\frac{1}{\beta} - \frac{ \sum_{i=1}^{n}x_i^{\beta} ln(x_i)}{\sum_{i=1}^{n}x_i^{\beta}} + \frac{1}{n} \sum_{i=1}^{n}ln(x_i) = 0</div>
         <td>Parametrus var aprēķināt, pielietojot Ņūtona metodi</td>
     </tr>
 </table>
