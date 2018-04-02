@@ -11,20 +11,26 @@
 <body>
 
 <h1>Teksta modelis</h1>
+<button id="buttonAboutModel">Par Teksta modeli</button>
 
 <div>
-    <label for="inputOperandsTotalCount">Programatūras garums, N:</label>
+    <label for="inputOperandsTotalCount">Programatūras garums, <i>N</i>:</label>
     <input id="inputOperandsTotalCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
 </div>
 <div>
-    <label for="inputUnitsCount">Kopējais moduļu skaits, n:</label>
+    <label for="inputUnitsCount">Kopējais moduļu skaits,  <i>n</i>:</label>
     <input id="inputUnitsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
+</div>
+<div>
+    <label for="inputInitialFoundErrorsCount">Sākotnējais atrasto kļūdu skaits, <i>B<sub>0</sub></i>:</label>
+    <input id="inputInitialFoundErrorsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
 </div>
 <div>
     <table>
         <tr>
             <th>Koda garums moduļos</th>
             <th>Kļūdu skaits moduļos</th>
+            <th>Moduļu testēšanas pakāpes</th>
         </tr>
         <tr>
             <td>
@@ -33,7 +39,9 @@
             <td>
                 <textarea id="textareaErrorsCounts"></textarea>
             </td>
-            <td></td>
+            <td>
+                <textarea disabled="disabled" id="textareaTestCoverage"></textarea>
+            </td>
         </tr>
     </table>
     <div>
@@ -48,20 +56,26 @@
 <p id="pAvgErrorsCount">
 <p id="pInitialErrorsCount">
 
-
     <!-- Put script after all DOM elements are initialized -->
     <script>
         var inputCodeLengthTotal = document.getElementById("inputOperandsTotalCount");
         var inputUnitsCount = document.getElementById("inputUnitsCount");
+        var inputInitialFoundErrorsCount = document.getElementById("inputInitialFoundErrorsCount");
         var textareaCodeLengths = document.getElementById("textareaCodeLengths");
         var textareaErrorsCounts = document.getElementById("textareaErrorsCounts");
+        var textareaTestCoverage = document.getElementById("textareaTestCoverage");
         var pAvgCodeLength = document.getElementById("pAvgCodeLength");
         var pAvgErrorsCount = document.getElementById("pAvgErrorsCount");
         var pInitialErrorsCount = document.getElementById("pInitialErrorsCount");
         var buttonCalculate = document.getElementById("buttonCalculate");
         var inputUnitsDataFile = document.getElementById("inputUnitsDataFile");
+        var buttonAboutModel = document.getElementById("buttonAboutModel");
 
         var textModel = TextModel();
+
+        buttonAboutModel.addEventListener("click", function () {
+            var myWindow = window.open("about/19.html", "Teksta modelis", "width=300,height=500");
+        });
 
         buttonCalculate.addEventListener("click", function (event) {
             // Parse model data
@@ -69,9 +83,10 @@
             var unitsCount = parseInt(inputUnitsCount.value);
             var codeLengths = parseNaturalNonNullNumbers(textareaCodeLengths.value);
             var errorCounts = parseNaturalNonNullNumbers(textareaErrorsCounts.value);
+            var initialFoundErrorsCount = parseNaturalNonNullNumbers(inputInitialFoundErrorsCount.value);
 
             try {
-                textModel.setup(codeLengthTotal, unitsCount, codeLengths, errorCounts);
+                textModel.setup(codeLengthTotal, unitsCount, codeLengths, errorCounts, initialFoundErrorsCount);
             } catch (e) {
                 alert(e.message);
                 return false;
@@ -81,6 +96,7 @@
             pAvgCodeLength.innerHTML = "Vidējais moduļu garums, Nvid: " + textModel.getAvgCodeLength();
             pAvgErrorsCount.innerHTML = "Vidējais kļūdu skaits, Bvid: " + textModel.getAvgErrorsCount();
             pInitialErrorsCount.innerHTML = "Sakumkļūdu skaits programmatūrā, B: " + textModel.getInitialErrorsCount();
+            textareaTestCoverage.value = textModel.getTestCoverageString();
             return true;
         });
 

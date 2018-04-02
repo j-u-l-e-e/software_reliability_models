@@ -1,11 +1,13 @@
 var TextModel = function () {
-    var testedUnits = []; // contains objects {codeLength, errorsCount}
-    var codeLengthTotal;    // N
-    var unitsCount;         // n
-    var avgCodeLength;      // Nvid
-    var avgErrorsCount;     // Bvid
-    var avgFaultRate;       // c
-    var initialErrorsCount;
+    var testedUnits = [];           // contains objects {codeLength, errorsCount}
+    var codeLengthTotal;            // N
+    var unitsCount;                 // n
+    var avgCodeLength;              // Nvid
+    var avgErrorsCount;             // Bvid
+    var avgFaultRate;               // c
+    var initialErrorsCount;         // B
+    var initialFoundErrorsCount;    // B0
+    var testCoefficient;            // k
 
     function getAvgCodeLength() {
         return avgCodeLength;
@@ -24,7 +26,19 @@ var TextModel = function () {
         this.message = message;
     }
 
-    function setup(code_length_total, units_count, code_lengths, error_counts) {
+    function getTestCoverageString() {
+        var testCoverageStr = "";
+        for (var i = 0; i < testedUnits.length; i++) {
+            if (testedUnits[i].testCoverageLow) {
+                testCoverageStr += "Zema\n";
+            } else {
+                testCoverageStr += "Augsta\n";
+            }
+        }
+        return testCoverageStr;
+    }
+
+    function setup(code_length_total, units_count, code_lengths, error_counts, initial_found_errors_count) {
 		codeLengthTotal = parseNaturalNonNullNumber(code_length_total);
 		unitsCount = parseNaturalNonNullNumber(units_count);
 
@@ -87,19 +101,34 @@ var TextModel = function () {
         avgFaultRate = avgErrorsCount / avgCodeLength;
 
         initialErrorsCount = Math.floor(avgFaultRate * codeLengthTotal);
+
+        initialFoundErrorsCount = parseNaturalNonNullNumber(initial_found_errors_count);
+        if (!initialFoundErrorsCount) {
+            throw new InconsistentModelDataException("Sākotnēji atrasto kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0 un mazāks par vidējo kļūdu skaitu");
+        } else {
+            testCoefficient = initialFoundErrorsCount / avgErrorsCount;
+
+            for (var i = 0; i < testedUnits.length; i++) {
+                var bk = testedUnits[i].errorsCount / testCoefficient;
+                var cn = avgFaultRate * testedUnits[i].codeLength;
+                testedUnits[i].testCoverageLow = bk < cn;
+            }
+        }
     }
 
     return {
         setup: setup,
         getAvgCodeLength: getAvgCodeLength,
         getAvgErrorsCount: getAvgErrorsCount,
-        getInitialErrorsCount: getInitialErrorsCount
+        getInitialErrorsCount: getInitialErrorsCount,
+        getTestCoverageString: getTestCoverageString
     };
 };
 
 function UnitData(unit_length, errors_count) {
     this.codeLength = unit_length;
     this.errorsCount = errors_count;
+    this.testCoverageLow = true;
 }
 
 function prepareModulesData(units_lengths, units_errors) {

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <title>Par Teksta modeli</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+</head>
+<body>
+
+<h1>Par Teksta modeli</h1>
+
+<p>Dati, kurus prasa Teksta modelis, ir moduļu garumi <i>N<sub>i</sub></i> un kļūdu skaits moduļos <i>B<sub>i</sub></i>.</p>
+
+<p>Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
+<ol>
+    <li>
+        Atsevišķu moduļu garumi ir statistiski neatkarīgi;
+    </li>
+    <li>
+        Kļūdu sadalījums ir neatkarīgs katrā modulī.
+    </li>
+    <li>
+        Kļūdu parādīšanās moduļu robežās ir Puasona gadījumu process. Kļūdu skaits <i>B<sub>i</sub></i> modulī garumā <i>N<sub>i</sub></i> ir sadalīts pēc Puasona likuma:
+        <div lang="latex">P(B_i/N_i) = \frac{(c N_i)^{B_i}}{B_i!}e^{-c N_i}</div>
+        <i>c</i> ir kļūdu parādīšanas intensitāte uz vienu moduļa garuma vienību.
+    </li>
+</ol>
+</p>
+
+<table border="1">
+    <caption>Drošuma kvantitatīvo rādītāju formulas<sup><a href="#ref-1">[2]</a></sup></caption>
+    <tr>
+        <th width="30%">Nosaukums</th>
+        <th width="30%">Formula</th>
+        <th width="40%">Piezīmes</th>
+    </tr>
+    <tr>
+        <td>Vidējais kļūdu skaits modulī</td>
+        <td><div lang="latex">B_{vid} = c N_{vid}</div>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Kopējais kļūdu skaits programmā</td>
+        <td><div lang="latex">B = c N</div></td>
+        <td></td>
+    </tr>
+</table>
+</p>
+
+<p>Resūrsi:
+<ol>
+    <li id="ref-1"><a href="#cite-ref-1">↩</a>
+        L. Zaiceva. Prezentācija „Programmatūras drošuma teorija”.
+    </li>
+</ol>
+</p>
+</body>
+</html>
