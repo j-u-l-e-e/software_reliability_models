@@ -83,16 +83,12 @@ var TextModel = function () {
         unitsCount = units_count;
         codeLengthTotal = code_length_total;
 
-        avgCodeLength = 0;
-        for (var i = 0; i < testedUnits.length; i++) {
-            avgCodeLength += testedUnits[i].codeLength;
-        }
-        avgCodeLength /= testedUnits.length;
+        avgCodeLength = codeLengthTotal / unitsCount;
 
         var diffMin = NaN;
         for (var i = 0; i < testedUnits.length; i++) {
             var diffCurr = Math.abs(avgCodeLength - testedUnits[i].codeLength);
-            if (isNaN(diffMin) || diffCurr < diffMin) {
+            if (isNaN(diffMin) || diffCurr < diffMin || (diffCurr == diffMin && avgErrorsCount < testedUnits[i].errorsCount)) {
                 diffMin = diffCurr;
                 avgErrorsCount = testedUnits[i].errorsCount;
             }
