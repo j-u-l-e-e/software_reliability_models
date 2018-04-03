@@ -3,6 +3,10 @@
 <head>
     <title>Modelis programmas pabeigšanas laika noteikšanai</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/textmodel.js"></script>
+    <script src="../js/util.js"></script>
+    <script src="../js/papaparse.min.js"></script>
 </head>
 <body>
 
@@ -17,14 +21,22 @@
 		<tr>
             <th>Kļūdu skaits moduļos (vektors):</th>
 			<th>
-				<textarea id="textareaErrorsCounts"></textarea>
+				<textarea id="textareaErrorsCount"></textarea>
 			</th>    
         </tr>
+		<tr>
+		    <th>Stundu skaits priekš vienas kļūdas labošanai:</th>
+			<th>
+				<textarea id="textareaTimePerError"></textarea>
+			</th> 
+		</tr>
     </table>
 	<button id="buttonCalculate">Aprēķināt</button>
+	
 <script>
-	var dataStr = document.getElementById("textareaErrorProbability");
+	var buttonCalculate = document.getElementById("buttonCalculate");
 	var arr = []; // 2D array
+	function parseCsv(dataStr) {
 		Papa.parse(dataStr, {
 			complete: function (results) {
 				if (results.errors.length == 0) { // data ok
@@ -40,10 +52,37 @@
 				}
 			}
 		});
+		return arr;
+	}
 		
-	buttonCalculate.addEventListener("click", function (event) {
-					alert("test")
-        });
+    buttonCalculate.addEventListener("click", function (event) {
+			var ErrorProbability = parseCsv(document.getElementById("textareaErrorProbability").value);
+			var ErrorsCount = document.getElementById("textareaErrorsCount").value.split(",");
+			var TimePerError = document.getElementById("textareaTimePerError").value;
+			var ErrorSum = [];
+			var Summa = 0;
+			for (i=0; i<ErrorProbability.length; i++) {
+				for (j=0; j<ErrorProbability.length; j++) {
+					ErrorProbability[i][j] = ErrorProbability[i][j] * ErrorsCount[i]
+				}
+			}
+			
+			for (i=0; i<ErrorProbability.length; i++) {
+				Summa = Number(ErrorsCount[i]);
+				for (j=0; j<ErrorProbability.length; j++) {
+					Summa = Summa + ErrorProbability[i][j]
+				}
+				ErrorSum.push(Summa);
+				Summa = 0;
+			}
+			
+			for (i=0; i<ErrorSum.length; i++) {
+				ErrorSum[i] = ErrorSum[i] * TimePerError
+				console.log("Moduli " + i + " vajadzes " + ErrorSum[i] + " stundas prieks labosanai");
+			}
+			
+			ErrorProbability.length=0;
+	});
 </script>
 </body>
 </html>
