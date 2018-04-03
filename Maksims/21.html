@@ -7,17 +7,43 @@
 <body>
 
 <h1>Modelis programmas pabeigšanas laika noteikšanai</h1>
-<table>
-    <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-</table>
+    <table>
+        <tr>
+            <th>Moduļa ķlūdas labošanas varbūtības (2D matrica): </th>
+			<th>
+				<textarea id="textareaErrorProbability"></textarea>
+			</th>
+        </tr>
+		<tr>
+            <th>Kļūdu skaits moduļos (vektors):</th>
+			<th>
+				<textarea id="textareaErrorsCounts"></textarea>
+			</th>    
+        </tr>
+    </table>
+	<button id="buttonCalculate">Aprēķināt</button>
+<script>
+	var dataStr = document.getElementById("textareaErrorProbability");
+	var arr = []; // 2D array
+		Papa.parse(dataStr, {
+			complete: function (results) {
+				if (results.errors.length == 0) { // data ok
+				// Loop by rows
+					for (var i = 0; i < results.data.length; i++) {
+						arr.push([]);
+						var row = arr[arr.length - 1];
+							// Loop by columns
+							for (var j = 0; j < results.data[i].length; j++) {
+								row.push(results.data[i][j]);
+							}
+					}
+				}
+			}
+		});
+		
+	buttonCalculate.addEventListener("click", function (event) {
+					alert("test")
+        });
+</script>
 </body>
 </html>
