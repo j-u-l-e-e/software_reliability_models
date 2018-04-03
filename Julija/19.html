@@ -18,7 +18,7 @@
     <input id="inputOperandsTotalCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
 </div>
 <div>
-    <label for="inputUnitsCount">Kopējais moduļu skaits,  <i>n</i>:</label>
+    <label for="inputUnitsCount">Kopējais moduļu skaits, <i>n</i>:</label>
     <input id="inputUnitsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
 </div>
 <div>
@@ -28,19 +28,15 @@
 <div>
     <table>
         <tr>
-            <th>Koda garums moduļos</th>
-            <th>Kļūdu skaits moduļos</th>
-            <th>Moduļu testēšanas pakāpes</th>
+            <th>[Koda garums],[Kļūdu skaits]</th>
+            <th>[Testēšanas pakāpe]</th>
         </tr>
         <tr>
             <td>
-                <textarea id="textareaCodeLengths"></textarea>
+                <textarea id="textareaData" onmousemove="resize();"></textarea>
             </td>
             <td>
-                <textarea id="textareaErrorsCounts"></textarea>
-            </td>
-            <td>
-                <textarea disabled="disabled" id="textareaTestCoverage"></textarea>
+                <textarea id="textareaTestCoverage" disabled="disabled"></textarea>
             </td>
         </tr>
     </table>
@@ -61,8 +57,7 @@
         var inputCodeLengthTotal = document.getElementById("inputOperandsTotalCount");
         var inputUnitsCount = document.getElementById("inputUnitsCount");
         var inputInitialFoundErrorsCount = document.getElementById("inputInitialFoundErrorsCount");
-        var textareaCodeLengths = document.getElementById("textareaCodeLengths");
-        var textareaErrorsCounts = document.getElementById("textareaErrorsCounts");
+        var textareaData = document.getElementById("textareaData");
         var textareaTestCoverage = document.getElementById("textareaTestCoverage");
         var pAvgCodeLength = document.getElementById("pAvgCodeLength");
         var pAvgErrorsCount = document.getElementById("pAvgErrorsCount");
@@ -70,6 +65,10 @@
         var buttonCalculate = document.getElementById("buttonCalculate");
         var inputUnitsDataFile = document.getElementById("inputUnitsDataFile");
         var buttonAboutModel = document.getElementById("buttonAboutModel");
+
+        function resize() {
+            textareaTestCoverage.style.height = /*"2000px"*/textareaData.style.height;
+        }
 
         var textModel = TextModel();
 
@@ -81,12 +80,11 @@
             // Parse model data
             var codeLengthTotal = parseInt(inputCodeLengthTotal.value);
             var unitsCount = parseInt(inputUnitsCount.value);
-            var codeLengths = parseNaturalNonNullNumbers(textareaCodeLengths.value);
-            var errorCounts = parseNaturalNonNullNumbers(textareaErrorsCounts.value);
+            var unitsData = parseData(textareaData.value);
             var initialFoundErrorsCount = parseNaturalNonNullNumbers(inputInitialFoundErrorsCount.value);
 
             try {
-                textModel.setup(codeLengthTotal, unitsCount, codeLengths, errorCounts, initialFoundErrorsCount);
+                textModel.setup(codeLengthTotal, unitsCount, unitsData, initialFoundErrorsCount);
             } catch (e) {
                 alert(e.message);
                 return false;
@@ -100,14 +98,12 @@
             return true;
         });
 
-        inputUnitsDataFile.addEventListener("change", function (evt) {
-            var unitsDataFile = evt.target.files[0];
+        function parseData(dataStr) {
+            var unitsData = [];
 
-            Papa.parse(unitsDataFile, {
+            Papa.parse(dataStr, {
                 complete: function (results) {
                     if (results.errors.length == 0) { // data ok
-                        var codeLengths = "";
-                        var errorCounts = "";
 
                         if (results.data[0].length != 2) {
                             alert(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
@@ -115,20 +111,28 @@
                         }
 
                         for (var i = 0; i < results.data.length; i++) {
-                            if (results.data[i][0]) codeLengths += results.data[i][0] + "\n";
-                            else codeLengths += 0 + "\n";
-                            if (results.data[i][1]) errorCounts += results.data[i][1] + "\n";
-                            else errorCounts += 0 + "\n";
+                            try {
+                                unitsData.push(new UnitData(results.data[i][0], results.data[i][1]));
+                            } catch (e) {
+                                alert(e.message);
+                                return false;
+                            }
                         }
-                        // Remove \n in the end of strings
-                        codeLengths = codeLengths.slice(0, codeLengths.length - 1);
-                        errorCounts = errorCounts.slice(0, errorCounts.length - 1);
-
-                        textareaCodeLengths.value = codeLengths;
-                        textareaErrorsCounts.value = errorCounts;
                     }
                 }
             });
+
+            return unitsData;
+        }
+
+        inputUnitsDataFile.addEventListener("change", function (evt) {
+            var unitsDataFile = evt.target.files[0];
+
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                textareaData.value = event.target.result;
+            };
+            reader.readAsText(unitsDataFile);
         });
 
     </script>

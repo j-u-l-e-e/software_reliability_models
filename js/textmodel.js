@@ -38,7 +38,7 @@ var TextModel = function () {
         return testCoverageStr;
     }
 
-    function setup(code_length_total, units_count, code_lengths, error_counts, initial_found_errors_count) {
+    function setup(code_length_total, units_count, units_data, initial_found_errors_count) {
 		codeLengthTotal = parseNaturalNonNullNumber(code_length_total);
 		unitsCount = parseNaturalNonNullNumber(units_count);
 
@@ -54,32 +54,16 @@ var TextModel = function () {
             throw new InconsistentModelDataException("Moduļu skaitam jābūt mazākam par programmatūras garumu");
         }
 
-        if (!code_lengths) {
-            throw new InconsistentModelDataException("Koda garums modulī var būt tikai vesels pozitīvs skaitlis lielāks par 0");
-        }
-
-        if (!error_counts) {
-            throw new InconsistentModelDataException("Kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
-        }
-
-        if (code_lengths.length != error_counts.length) {
-            throw new InconsistentModelDataException("Moduļu skaits nesakrīt starp moduļu garumu un kļūdu skaitu sarakstiem");
-        }
-
-        if (unitsCount < code_lengths.length) {
-            throw new InconsistentModelDataException("Notestēto moduļu skaits nevar būt lielāks ar kopējo moduļu skaitu");
-        }
-
         var codeLengthInTestedModules = 0;
-        for (var i = 0; i < code_lengths.length; i++) {
-            codeLengthInTestedModules += code_lengths[i];
+        for (var i = 0; i < units_data.length; i++) {
+            codeLengthInTestedModules += units_data.codeLength;
         }
 
         if (codeLengthTotal < codeLengthInTestedModules) {
             throw new InconsistentModelDataException("Notestēto moduļu summārais garums nesakrit ar visu moduļu summāro garumu");
         }
 
-        testedUnits = prepareModulesData(code_lengths, error_counts);
+        testedUnits = units_data;
         unitsCount = units_count;
         codeLengthTotal = code_length_total;
 
@@ -122,15 +106,13 @@ var TextModel = function () {
 };
 
 function UnitData(unit_length, errors_count) {
-    this.codeLength = unit_length;
-    this.errorsCount = errors_count;
+    this.codeLength = parseNaturalNonNullNumber(unit_length);
+    this.errorsCount = parseNaturalNonNullNumber(errors_count);
     this.testCoverageLow = true;
-}
-
-function prepareModulesData(units_lengths, units_errors) {
-    var units = [];
-    for (var i = 0; i < units_lengths.length; i++) {
-        units.push(new UnitData(units_lengths[i], units_errors[i]));
+    if (isNaN(this.codeLength)) {
+        throw new InconsistentModelDataException("Koda garums modulī var būt tikai vesels pozitīvs skaitlis lielāks par 0");
     }
-    return units;
+    if (isNaN(this.errorsCount)) {
+        throw new InconsistentModelDataException("Kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+    }
 }
