@@ -27,11 +27,12 @@
 		<tr>
 		    <th>Stundu skaits priekš vienas kļūdas labošanai:</th>
 			<th>
-				<textarea id="textareaTimePerError"></textarea>
+				<textarea id="textareaTimePerError" type="number" required="required"></textarea>
 			</th> 
 		</tr>
     </table>
-	<button id="buttonCalculate">Aprēķināt</button>
+	<button id="buttonCalculate">Aprēķināt</button><br>
+	<p id="result"></p>
 	
 <script>
 	var buttonCalculate = document.getElementById("buttonCalculate");
@@ -61,26 +62,63 @@
 			var TimePerError = document.getElementById("textareaTimePerError").value;
 			var ErrorSum = [];
 			var Summa = 0;
+			var P = 0;
+			var columns = 0;
+			
+			//Check Matrix stucture correction
+			for (i=0; i<ErrorProbability.length; i++) {
+				for (j=0; j<ErrorProbability.length; j++) {
+					P = P + Number(ErrorProbability[i][j]);
+					columns = j+1;
+				}				
+			}
+			if (ErrorProbability.length != columns) {
+				alert("Nepareizi aizpildīts matrica, rindiņu un colonu skaits nav vienāds");
+			}	
+			
+			//Check typed Errors count
+			if (ErrorProbability.length != ErrorsCount.length) {
+				alert("Ievadītais kļūdas vertības skaits - " + ErrorsCount.length + " nav vienads ar matricas izmēru - " + ErrorProbability.length);
+			}
+			
+			//Check that Matrix was filled correctly
+			for (i=0; i<ErrorProbability.length; i++) {
+				P = 0;
+				for (j=0; j<ErrorProbability.length; j++) {
+					P = P + Number(ErrorProbability[i][j]);
+				}		
+				if (P != 1) {
+					alert("Nepareizi aizpildīts varbūtības matrica " + Number(i+1) + " rindā, varbūtības summa rindā jābūt vienāda 1="+ P);
+				}		
+			}
+				
+			//Check that Time Per Error not null
+			if (Number(TimePerError) <= 0) {
+				alert("Stundu skaiit jābūt lielāks par 0!")
+			}
+			
+			//Calculate error cound per Module depending from another Modules
 			for (i=0; i<ErrorProbability.length; i++) {
 				for (j=0; j<ErrorProbability.length; j++) {
 					ErrorProbability[i][j] = ErrorProbability[i][j] * ErrorsCount[i]
 				}
 			}
 			
-			for (i=0; i<ErrorProbability.length; i++) {
-				Summa = Number(ErrorsCount[i]);
-				for (j=0; j<ErrorProbability.length; j++) {
+			//Calculate error sum per Module
+			for (j=0; j<ErrorProbability.length; j++) {
+				for (i=0; i<ErrorProbability.length; i++) {
 					Summa = Summa + ErrorProbability[i][j]
 				}
+				Summa = Summa + Number(ErrorsCount[j]);
 				ErrorSum.push(Summa);
 				Summa = 0;
 			}
 			
+			//Calculate how much time will be necassary to fix each Module
 			for (i=0; i<ErrorSum.length; i++) {
-				ErrorSum[i] = ErrorSum[i] * TimePerError
-				console.log("Moduli " + i + " vajadzes " + ErrorSum[i] + " stundas prieks labosanai");
+				result = result + "Moduli " + Number(i+1) + " vajadzes " + ErrorSum[i] + " stundas prieks " + Math.ceil(ErrorSum[i] * TimePerError) + " kļūdas labosanai;";
 			}
-			
+			document.getElementById("result").innerHTML = result;
 			ErrorProbability.length=0;
 	});
 </script>
