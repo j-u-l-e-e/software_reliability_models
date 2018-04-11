@@ -13,7 +13,7 @@ var WeibullModel = function () {
     }
 
     function getFailureRate() {
-        return reliability;
+        return failureRate;
     }
 
     function getScale() {
@@ -31,13 +31,12 @@ var WeibullModel = function () {
             throw new InconsistentModelDataException("Laiks var būt tikai vesels pozitīvs skaitlis lielāks par 0");
         }
 
-        if (!failure_times || !Array.isArray(failure_times)) {
-            throw new InconsistentModelDataException("Kļūdas atklāšanas laiks var būt tikai vesels pozitīvs skaitlis lielāks par 0");
-        }
-
-        failureTimes = failure_times;
 
         if (!(scale_ || shape_)) {
+            if (!failure_times || !Array.isArray(failure_times)) {
+                throw new InconsistentModelDataException("Kļūdas atklāšanas laiks var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+            }
+            failureTimes = failure_times;
             calcShape();
             calcScale();
         } else {
@@ -46,7 +45,7 @@ var WeibullModel = function () {
         }
 
         reliability = Math.exp(-Math.pow(timeCurr / scale, shape));
-        failureRate = shape / scale * Math.pow(timeCurr / scale, shape - 1);
+        failureRate = (shape / scale) * Math.pow(timeCurr / scale, shape - 1);
     }
     
     function calcShape() {
