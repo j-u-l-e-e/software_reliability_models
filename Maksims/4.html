@@ -4,17 +4,31 @@
 function precisionRound(number) {
 	  var factor = Math.pow(10, 4);
 	  return Math.round(number * factor) / factor;
-	}
+}
 
 function MusaOkumoto() {
 	arrErrors = document.getElementById("arrErrors").value.split(",");
 	intensity = document.getElementById("intensity").value;
+	errorsperhour = document.getElementById("errorsperhour").value;
 	arrresult = [];
-	for (i=1; i<arrErrors.length; i++) {
-		reliability=arrErrors[0]*Math.exp(-intensity*arrErrors[i]);
+	if (Number(arrErrors) <= 0) {
+		alert("Kļūdas rādīšanas intensitāte nav ievadīta!")
+	}
+	if (Number(intensity) <= 0) {
+		alert("Kļūdas skaits par CPU stundu nav ievadīta")
+	}
+	if (Number(errorsperhour) <= 0) {
+		alert("Kļūdas samazināšanas intensitāte nav ievadīta")
+	}
+	for (i=0; i<arrErrors.length; i++) {
+		reliability=errorsperhour*Math.exp(-intensity*arrErrors[i]);
 		arrresult.push(precisionRound(reliability));
 	}
-	document.getElementById("result").innerHTML = arrresult[arrresult.length-1] + " (Errors per CPU hour)";
+	document.getElementById("result").innerHTML = arrresult[arrresult.length-1];
+}
+
+function goBack() {
+    window.history.back();
 }
 </script>
 
@@ -25,18 +39,36 @@ function MusaOkumoto() {
 <body>
 
 <h1>Musa-Okumoto modelis</h1>
+<input type="button" onclick="location.href='about/4.html';" value="Teorija" />
+<input type="button" onclick="location.href='guide/4.html';" value="Instrukcija" />
 
-<label for="arrErrors">Error count per CPU hour:</label>
-<input id="arrErrors" type="text" value="10,50,60"><br>
+    <table>
+         <tr>
+            <th align="Right">Kļūdas rādīšanas intensitāte: </th>
+			<th>
+				<textarea id="errorsperhour"></textarea>
+			</th>
+        </tr>
+        <tr>
+            <th align="Right">Kļūdas skaits par CPU stundu: </th>
+			<th>
+				<textarea id="arrErrors"></textarea>
+			</th>
+        </tr>
+		<tr>
+            <th align="Right">Kļūdas samazināšanas intensitāte: </th>
+			<th>
+				<textarea id="intensity"></textarea>
+			</th>    
+        </tr>
+    </table>
+<br>
 
-<label for="intensity">Error intensity:</label>
-<input id="intensity" type="number" value="0.02"><br>
-
-<button onclick="MusaOkumoto()">Calculate</button>
+<button onclick="MusaOkumoto()">Aprēķināt</button>
 <br>
 <br>
 
-Result: <span id="result"></span>
-
+λ = <span id="result"></span><br><br>
+<button onclick="goBack()">Atpakaļ</button>
 </body>
 </html>
