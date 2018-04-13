@@ -29,10 +29,14 @@ var TextModel = function () {
     function getTestCoverageString() {
         var testCoverageStr = "";
         for (var i = 0; i < testedUnits.length; i++) {
-            if (testedUnits[i].testCoverageLow) {
-                testCoverageStr += "Zema\n";
+            if (testedUnits[i].testCoverageLow === -1) {
+                testCoverageStr += "\n";
             } else {
-                testCoverageStr += "Augsta\n";
+                if (testedUnits[i].testCoverageLow) {
+                    testCoverageStr += "Zema\n";
+                } else {
+                    testCoverageStr += "Augsta\n";
+                }
             }
         }
         return testCoverageStr;
@@ -49,23 +53,23 @@ var TextModel = function () {
         if (isNaN(unitsCount)) {
             throw new InconsistentModelDataException("Kopējais moduļu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
         }
+
+        testedUnits = units_data;
+        unitsCount = units_count;
+        codeLengthTotal = code_length_total;
 		
         if (codeLengthTotal < unitsCount) {
             throw new InconsistentModelDataException("Moduļu skaitam jābūt mazākam par programmatūras garumu");
         }
 
         var codeLengthInTestedModules = 0;
-        for (var i = 0; i < units_data.length; i++) {
-            codeLengthInTestedModules += units_data.codeLength;
+        for (var i = 0; i < testedUnits.length; i++) {
+            codeLengthInTestedModules += testedUnits[i].codeLength;
         }
 
         if (codeLengthTotal < codeLengthInTestedModules) {
-            throw new InconsistentModelDataException("Notestēto moduļu summārais garums nesakrit ar visu moduļu summāro garumu");
+            throw new InconsistentModelDataException("Notestēto moduļu summārais garums nevar būt lielāks par visu moduļu summāro garumu");
         }
-
-        testedUnits = units_data;
-        unitsCount = units_count;
-        codeLengthTotal = code_length_total;
 
         avgCodeLength = codeLengthTotal / unitsCount;
 
@@ -82,16 +86,18 @@ var TextModel = function () {
 
         initialErrorsCount = Math.floor(avgFaultRate * codeLengthTotal);
 
-        initialFoundErrorsCount = parseNaturalNonNullNumber(initial_found_errors_count);
-        if (!initialFoundErrorsCount) {
-            throw new InconsistentModelDataException("Sākotnēji atrasto kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0 un mazāks par vidējo kļūdu skaitu");
-        } else {
-            testCoefficient = initialFoundErrorsCount / avgErrorsCount;
+        if (initial_found_errors_count !== "") {
+            initialFoundErrorsCount = parseNaturalNonNullNumber(initial_found_errors_count);
+            if (isNaN(initialFoundErrorsCount)) {
+                throw new InconsistentModelDataException("Sākotnēji atrasto kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0 un mazāks par vidējo kļūdu skaitu");
+            } else {
+                testCoefficient = initialFoundErrorsCount / avgErrorsCount;
 
-            for (var i = 0; i < testedUnits.length; i++) {
-                var bk = testedUnits[i].errorsCount / testCoefficient;
-                var cn = avgFaultRate * testedUnits[i].codeLength;
-                testedUnits[i].testCoverageLow = bk < cn;
+                for (var i = 0; i < testedUnits.length; i++) {
+                    var bk = testedUnits[i].errorsCount / testCoefficient;
+                    var cn = avgFaultRate * testedUnits[i].codeLength;
+                    testedUnits[i].testCoverageLow = bk < cn;
+                }
             }
         }
     }
@@ -108,7 +114,7 @@ var TextModel = function () {
 function UnitData(unit_length, errors_count) {
     this.codeLength = parseNaturalNonNullNumber(unit_length);
     this.errorsCount = parseNaturalNonNullNumber(errors_count);
-    this.testCoverageLow = true;
+    this.testCoverageLow = -1;
     if (isNaN(this.codeLength)) {
         throw new InconsistentModelDataException("Koda garums modulī var būt tikai vesels pozitīvs skaitlis lielāks par 0");
     }

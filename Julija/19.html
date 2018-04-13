@@ -80,8 +80,13 @@
             // Parse model data
             var codeLengthTotal = parseInt(inputCodeLengthTotal.value);
             var unitsCount = parseInt(inputUnitsCount.value);
-            var unitsData = parseData(textareaData.value);
-            var initialFoundErrorsCount = parseNaturalNonNullNumbers(inputInitialFoundErrorsCount.value);
+            try {
+                var unitsData = parseData(textareaData.value);
+            } catch (e) {
+                alert(e.message);
+                return false;
+            }
+            var initialFoundErrorsCount = inputInitialFoundErrorsCount.value;
 
             try {
                 textModel.setup(codeLengthTotal, unitsCount, unitsData, initialFoundErrorsCount);
@@ -106,8 +111,7 @@
                     if (results.errors.length == 0) { // data ok
 
                         if (results.data[0].length != 2) {
-                            alert(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
-                            return false;
+                            throw new InconsistentModelDataException(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
                         }
 
                         for (var i = 0; i < results.data.length; i++) {
@@ -118,6 +122,8 @@
                                 return false;
                             }
                         }
+                    } else {
+                        throw new InconsistentModelDataException(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
                     }
                 }
             });

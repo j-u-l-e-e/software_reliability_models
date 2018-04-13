@@ -9,9 +9,9 @@
 
 <h1>Par Veibula divu parametru modeli</h1>
 
-<p>Dati, kurus prasa Veibula modelis, ir atteiču laika momenti <i>t<sub>i</sub></i> vai laika intervālu garumi starp atteicēm <i>x<sub>i</sub></i>. Ja pirmā atteice notika laika momentā <i>t<sub>1</sub></i>, tad pirmā laika intervāla garums <i>x<sub>1</sub></i> = <i>t<sub>1</sub></i>. Ja otrā atteice notika laika momentā <i>t<sub>2</sub></i>, tad otrā laika intervāla garums <i>x<sub>2</sub></i> = <i>t<sub>2</sub></i> - <i>t<sub>1</sub></i>.</p>
-
-<p>Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
+Veibula modelis ir dinamiskais nepārtrauktais programmatūras drošuma novērtēšanas modelis.
+Dati, kurus prasa Veibula modelis, ir atteiču laika momenti <i>t<sub>i</sub></i>.
+Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
 <ol>
     <li>
         Atteices ir neatkarīgas un tām ir vienāda varbūtība;
@@ -28,7 +28,6 @@
         Kļūdu labošana notiek momentāni un neizraisa jaunas kļūdas.
     </li>
 </ol>
-</p>
 
 <table border="1">
     <caption>Drošuma kvantitatīvo rādītāju formulas<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup></caption>
@@ -51,7 +50,10 @@
         <td>Atteiču intensitāte</td>
         <td>
             <div lang="latex">\lambda(x) = \frac {\beta}{\alpha} (\frac{x}{\alpha})^{\beta - 1}</div>
-        <td>Kad <i>α</i> < 1, atteiču intensitāte monotoni dilst, bet kad <i>α</i> > 1 — monotoni aug. Ir ieteicams eksperimentāli piemeklēt <i>α</i> un <i>β</i> parametrus lai blīvuma funkcija dotu precīzākus rezultātus</td>
+        <td>Kad 0 < <i>β</i> < 1, atteiču intensitāte monotoni dilst.
+        Kad <i>β</i> = 1, atteiču intensitāte ir konstanta.
+        Kad <i>β</i> > 1, atteiču intensitāte monotoni aug.
+        Ir ieteicams eksperimentāli piemeklēt <i>α</i> un <i>β</i> parametrus lai blīvuma funkcija dotu precīzākus rezultātus</td>
     </tr>
     <tr>
         <td>Vidējais laiks starp kļūmēm</td>
@@ -65,7 +67,6 @@
         <td>Parametrus var aprēķināt, pielietojot Ņūtona metodi</td>
     </tr>
 </table>
-</p>
 
 <p>Resūrsi:
 <ol>

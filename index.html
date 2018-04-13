@@ -3,51 +3,57 @@
 <head>
     <title>Rīki programmatūras drošuma novērtēšanai</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script src="js/weibullmodel.js"></script>
+    <script src="js/textmodel.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/papaparse.min.js"></script>
 </head>
 <body>
 
 <h1>Rīki programmatūras drošuma novērtēšanai</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Autors</th>
-        <th>Varianta numurs</th>
-        <th>Modeļi</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>Maksīms Gusakovs</td>
-        <td>7</td>
-        <td>
-            <ul>
-                <li><a href="Maksims/4.html">Musa-Okumoto modelis</a></li>
-                <li><a href="Maksims/21.html">Modelis programmas pabeigšanas laika noteikšanai</a></li>
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <td>Konstantīns Kozirevs</td>
-        <td>8</td>
-        <td>
-            <ul>
-                <li><a href="Konstantins/11.html">Lipova modelis</a></li>
-                <li><a href="Konstantins/12.html">Šneidevinda modelis</a></li>
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <td>Jūlija Taraņenko</td>
-        <td>9</td>
-        <td>
-            <ul>
-                <li><a href="Julija/8.html">Veibula modelis</a></li>
-                <li><a href="Julija/19.html">Teksta modelis</a></li>
-            </ul>
-        </td>
-    </tr>
-    </tbody>
 
-</table>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Maksims/4.html')" id="defaultOpen">Musa-Okumoto modelis
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'Maksims/21.html')">Modelis programmas pabeigšanas laika
+            noteikšanai
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'Konstantins/11.html')">Lipova modelis</button>
+        <button class="tablinks" onclick="openTab(event, 'Konstantins/12.html')">Šneidevinda modeliss</button>
+        <button class="tablinks" onclick="openTab(event, 'Julija/8.html')">Veibula modelis</button>
+        <button class="tablinks" onclick="openTab(event, 'Julija/19.html')">Teksta modelis</button>
+    </div>
+
+    <iframe class="fill" id="iframeModel" ></iframe>
+
+<script>
+    function openTab(evt, pageName) {
+        document.getElementById("iframeModel").src = pageName;
+    }
+
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+
+//    var iframe = document.getElementById("iframeModel");
+//    var buffer = 20; //scroll bar buffer
+//
+//    function resizeIframe() {
+//        var height = document.documentElement.clientHeight;
+//        height -= pageY(document.getElementById('ifm'))+ buffer ;
+//        height = (height < 0) ? 0 : height;
+//        document.getElementById('ifm').style.height = height + 'px';
+//    }
+//
+//    // .onload doesn't work with IE8 and older.
+//    if (iframe.attachEvent) {
+//        iframe.attachEvent("onload", resizeIframe);
+//    } else {
+//        iframe.onload=resizeIframe;
+//    }
+//
+//    window.onresize = resizeIframe;
+</script>
+
 </body>
 </html>
