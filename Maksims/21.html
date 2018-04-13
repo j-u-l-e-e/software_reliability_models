@@ -11,28 +11,35 @@
 <body>
 
 <h1>Modelis programmas pabeigšanas laika noteikšanai</h1>
+<input type="button" onclick="location.href='about/21.html';" value="Teorija" />
+<input type="button" onclick="location.href='guide/21.html';" value="Instrukcija" />
+
     <table>
         <tr>
-            <th>Moduļa ķlūdas labošanas varbūtības (2D matrica): </th>
+            <th align="Right">Moduļa ķlūdas labošanas varbūtības (2D matrica): </th>
 			<th>
 				<textarea id="textareaErrorProbability"></textarea>
 			</th>
         </tr>
 		<tr>
-            <th>Kļūdu skaits moduļos (vektors):</th>
+            <th align="Right">Kļūdu skaits moduļos (vektors): </th>
 			<th>
 				<textarea id="textareaErrorsCount"></textarea>
 			</th>    
         </tr>
 		<tr>
-		    <th>Stundu skaits priekš vienas kļūdas labošanai:</th>
+		    <th align="Right">Stundu skaits priekš vienas kļūdas labošanai: </th>
 			<th>
-				<textarea id="textareaTimePerError" type="number" required="required"></textarea>
+				<textarea id="textareaTimePerError" required="required"></textarea>
 			</th> 
 		</tr>
     </table>
+    
 	<button id="buttonCalculate">Aprēķināt</button><br>
-	<p id="result"></p>
+	
+	<p id="result"></p><br><br>
+	
+	<button onclick="goBack()">Atpakaļ</button>
 	
 <script>
 	var buttonCalculate = document.getElementById("buttonCalculate");
@@ -115,12 +122,18 @@
 			}
 			
 			//Calculate how much time will be necassary to fix each Module
+			result = "";
 			for (i=0; i<ErrorSum.length; i++) {
-				result = result + "Moduli " + Number(i+1) + " vajadzes " + ErrorSum[i] + " stundas prieks " + Math.ceil(ErrorSum[i] * TimePerError) + " kļūdas labosanai;";
+			result = result + "Moduli " + Number(i+1) + " vajadzes " + ErrorSum[i] + " stundas prieks " + Math.ceil(ErrorSum[i] * TimePerError) + " kļūdas labosanai;" + "<br>";
 			}
 			document.getElementById("result").innerHTML = result;
 			ErrorProbability.length=0;
 	});
+	
+function goBack() {
+    window.history.back();
+}
+
 </script>
 </body>
 </html>
