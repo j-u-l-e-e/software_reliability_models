@@ -124,7 +124,7 @@
 			//Calculate how much time will be necassary to fix each Module
 			result = "";
 			for (i=0; i<ErrorSum.length; i++) {
-			result = result + "Moduli " + Number(i+1) + " vajadzes " + ErrorSum[i] + " stundas prieks " + Math.ceil(ErrorSum[i] * TimePerError) + " kļūdas labosanai;" + "<br>";
+			result = result + Number(i+1) + ". Modulīm vajadzes " + ErrorSum[i] + " stundas priekš " + Math.ceil(ErrorSum[i] * TimePerError) + " kļūdas labošanai;" + "<br>";
 			}
 			document.getElementById("result").innerHTML = result;
 			ErrorProbability.length=0;
