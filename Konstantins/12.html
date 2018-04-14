@@ -7,6 +7,9 @@
 <body>
 
 <h1>Šneidevinda modelis</h1>
+
+<button id="buttonAboutModel">Par Šneidevinda modeli</button>
+
 <table>
     <tr>
         <th></th>
@@ -19,5 +22,21 @@
         <td></td>
     </tr>
 </table>
+
+<script>
+    var buttonAboutModel = document.getElementById("buttonAboutModel");
+
+    buttonAboutModel.addEventListener("click", function () {
+        var myWindow = window.open("about/12.html", "Šneidevinda modelis", "width=300,height=500");
+    });
+</script>
+
+<p>Resūrsi:
+<ol>
+    <li id="ref-1"><a href="#cite-ref-1">↩</a>
+        Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
+    </li>
+</ol>
+</p>
 </body>
 </html>
