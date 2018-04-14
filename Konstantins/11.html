@@ -38,8 +38,10 @@ function Lipova() {
 	m = document.getElementById("broughtErrorCount").value;	
 	if (N == '' || M == '' || k == '' || n == '' || m == '' ){
 		document.getElementById("result").innerHTML = "Ievadiet visus nepieciešamus datus!!!";
+		document.getElementById("result").style.color = "red";
 		return;
 	} else {
+		document.getElementById("result").style.color = "black";
 		if (!checkOne(N,n)){
 			document.getElementById("result").innerHTML = "Pirmais nosacījums nav izpildīts!";
 			return;

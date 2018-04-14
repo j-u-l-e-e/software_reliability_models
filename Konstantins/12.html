@@ -1,27 +1,56 @@
 <!DOCTYPE html>
 <html lang="lv">
+<script type="text/javascript">
+function rnd(number) {
+	  var factor = Math.pow(5, 2);
+	  return Math.round(number * factor) / factor;
+	}
+	
+function checkOne(N,n){
+	if (N >= n && n >= 0){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function Sneidevinda() {
+	beta = document.getElementById("beta").value;
+	fN = document.getElementById("fN").value;
+	
+	//k = document.getElementById("testsCountUsedForTesting").value;
+	//n = document.getElementById("ownErrorCount").value;
+	//m = document.getElementById("broughtErrorCount").value;	
+	if (beta == '' || fN == ''){
+		document.getElementById("result").innerHTML = "Ievadiet visus nepieciešamus datus!!!";
+		document.getElementById("result").style.color = "red";
+		return;
+	} else {
+		document.getElementById("result").style.color = "black";
+		if (!checkOne(N,n)){
+			document.getElementById("result").innerHTML = "Pirmais nosacījums nav izpildīts!";
+			return;
+		}
+		q = (n+m)/n;
+		res = k / (n+m);
+		res = res * Math.pow(q,n+m);
+		res = res * Math.pow((1-q),k-n-m)
+		res = res * ((N/n) * (M/m)) / ((N+M) / (n+m));
+		document.getElementById("result").innerHTML = rnd(res);
+		document.getElementById("qId").innerHTML = rnd(q);
+	}
+}
+</script>
 <head>
     <title>Šneidevinda modelis</title>
     <meta charset="UTF-8">
+	<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
 </head>
 <body>
 
 <h1>Šneidevinda modelis</h1>
 
 <button id="buttonAboutModel">Par Šneidevinda modeli</button>
-
-<table>
-    <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-</table>
 
 <script>
     var buttonAboutModel = document.getElementById("buttonAboutModel");
@@ -32,11 +61,50 @@
 </script>
 
 <p>Resūrsi:
-<ol>
-    <li id="ref-1"><a href="#cite-ref-1">↩</a>
-        Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
-    </li>
-</ol>
+	<ol>
+		<li id="ref-1"><a href="#cite-ref-1">↩</a>
+			Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
+		</li>
+	</ol>
 </p>
+
+<h3>Lūdzu, ievadiet datus izskaitļošanai:</h3>
+<table>
+    <tr>
+        <td><label for="sNumber">s - kļūmes intervāls (no s līdz kļūmes skaitu):</label></td>
+        <td><input id="sNumber" type="number" min="0" step="1"></td>
+    </tr>
+	
+	<tr>
+		<td><label for="beta" lang="latex">\beta - :</label></td>
+		<td><input id="overallBroughtErrorCount" type="number" min="0" step="1"></td>
+	</tr>
+	
+	<tr>
+		<td><label for="fN" lang="latex">F_n - :</label></td>
+		<td><input id="testsCountUsedForTesting" type="number" min="0" step="1"></td>
+	</tr>
+	
+	<tr>
+		<td><label for="ownErrorCount">n - :</label></td>
+		<td><input id="ownErrorCount" type="number" min="0" step="1"></td>
+	</tr>
+	
+	<tr>
+		<td><label for="broughtErrorCount">m - :</label></td>
+		<td><input id="broughtErrorCount" type="number" min="0" step="1"></td>
+	</tr>
+	
+	<tr>
+		<td><label for="errorProbabilityCountKTest" lang="latex">\alpha - :</label></td>
+		<td><span id="qId"></span></td>
+	</tr>
+</table>
+
+<br/>
+<button onclick="Sneidevinda()">Atrisināt</button>
+<br />
+<br />
+Rezultāts: <span id="result"></span>
 </body>
 </html>
