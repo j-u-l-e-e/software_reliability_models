@@ -8,24 +8,56 @@
     <script src="js/textmodel.js"></script>
     <script src="js/util.js"></script>
     <script src="js/papaparse.min.js"></script>
+
+    <script>
+        function getDocHeight(doc) {
+            doc = doc || document;
+            // stackoverflow.com/questions/1145850/
+            var body = doc.body, html = doc.documentElement;
+            var height = Math.max( body.scrollHeight, body.offsetHeight,
+                html.clientHeight, html.scrollHeight, html.offsetHeight );
+            return height;
+        }
+
+        function resizeIframe(ifrm) {
+            // var doc = ifrm.contentDocument? ifrm.contentDocument: ifrm.contentWindow.document;
+            // ifrm.style.visibility = 'hidden';
+            // ifrm.style.height = "10px"; // reset to minimal height ...
+            // // IE opt. for bing/msn needs a bit added or scrollbar appears
+            // ifrm.style.height = getDocHeight( doc ) + 4 + "px";
+            // ifrm.style.visibility = 'visible';
+
+
+            ifrm.style.height = (window.innerHeight/*innerHeight*/ - document.getElementById("divTab").scrollHeight/*scrollTop*//*.offsetTop*/) + 'px';
+            console.log(ifrm.style.height);
+        }
+    </script>
 </head>
 <body>
 
 <h1>Rīki programmatūras drošuma novērtēšanai</h1>
 
+<div id="divTab" class="wrap">
     <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'Maksims/4.html')" id="defaultOpen">Musa-Okumoto modelis
-        </button>
-        <button class="tablinks" onclick="openTab(event, 'Maksims/21.html')">Modelis programmas pabeigšanas laika
-            noteikšanai
-        </button>
-        <button class="tablinks" onclick="openTab(event, 'Konstantins/11.html')">Lipova modelis</button>
-        <button class="tablinks" onclick="openTab(event, 'Konstantins/12.html')">Šneidevinda modeliss</button>
-        <button class="tablinks" onclick="openTab(event, 'Julija/8.html')">Veibula modelis</button>
-        <button class="tablinks" onclick="openTab(event, 'Julija/19.html')">Teksta modelis</button>
-    </div>
+    <button class="tablinks" onclick="openTab(event, 'Maksims/4.html')" id="defaultOpen">Musa-Okumoto modelis
+    </button>
+    <button class="tablinks" onclick="openTab(event, 'Maksims/21.html')">Modelis programmas pabeigšanas laika
+        noteikšanai
+    </button>
+    <button class="tablinks" onclick="openTab(event, 'Konstantins/11.html')">Lipova modelis</button>
+    <button class="tablinks" onclick="openTab(event, 'Konstantins/12.html')">Šneidevinda modeliss</button>
+    <button class="tablinks" onclick="openTab(event, 'Julija/8.html')">Veibula modelis</button>
+    <button class="tablinks" onclick="openTab(event, 'Julija/19.html')">Teksta modelis</button>
+</div>
+</div>
 
-    <iframe class="fill" id="iframeModel" ></iframe>
+
+
+<div id="divModel" class="wrap">
+    <iframe frameborder="0" id="iframeModel" width="100%" onload="resizeIframe(this)"></iframe>
+</div>
+
+<!--<iframe class="fill" id="iframeModel" frameborder="0"></iframe>-->
 
 <script>
     function openTab(evt, pageName) {
@@ -35,24 +67,9 @@
     // Get the element with id="defaultOpen" and click on it
     document.getElementById("defaultOpen").click();
 
-//    var iframe = document.getElementById("iframeModel");
-//    var buffer = 20; //scroll bar buffer
-//
-//    function resizeIframe() {
-//        var height = document.documentElement.clientHeight;
-//        height -= pageY(document.getElementById('ifm'))+ buffer ;
-//        height = (height < 0) ? 0 : height;
-//        document.getElementById('ifm').style.height = height + 'px';
-//    }
-//
-//    // .onload doesn't work with IE8 and older.
-//    if (iframe.attachEvent) {
-//        iframe.attachEvent("onload", resizeIframe);
-//    } else {
-//        iframe.onload=resizeIframe;
-//    }
-//
-//    window.onresize = resizeIframe;
+    window.addEventListener("resize", function () {
+        resizeIframe(document.getElementById("iframeModel"))
+    });
 </script>
 
 </body>
