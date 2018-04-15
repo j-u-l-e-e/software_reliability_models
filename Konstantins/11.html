@@ -25,11 +25,11 @@ function checkThree(k,n,m){
 }
 
 function Lipova() {
-	N = document.getElementById("errCountInProg").value;
-	M = document.getElementById("overallBroughtErrorCount").value;
-	k = document.getElementById("testsCountUsedForTesting").value;
-	n = document.getElementById("ownErrorCount").value;
-	m = document.getElementById("broughtErrorCount").value;	
+	N = parseInt(document.getElementById("errCountInProg").value);
+	M = parseInt(document.getElementById("overallBroughtErrorCount").value);
+	k = parseInt(document.getElementById("testsCountUsedForTesting").value);
+	n = parseInt(document.getElementById("ownErrorCount").value);
+	m = parseInt(document.getElementById("broughtErrorCount").value);
 	document.getElementById("result").style.color = "black";
 	
 	if (N < 0 ){
@@ -49,7 +49,7 @@ function Lipova() {
             return;
 	}
 	
-	if (n == 0){
+	if (n === 0){
 		document.getElementById("result").innerHTML = "Dalīšana uz nulli!!!";
 		document.getElementById("result").style.color = "red";
 		return;
@@ -67,7 +67,7 @@ function Lipova() {
             return;
 	}
 	
-	if (N == '' || M == '' || k == '' || n == '' || m == '' || k == ''){
+	if (N === '' || M === '' || k === '' || n === '' || m === '' || k === ''){
 		document.getElementById("result").style.color = "red";
 		document.getElementById("result").innerHTML = "Ievadiet visus nepieciešamus datus!!!";		
 		return;
@@ -87,11 +87,11 @@ function Lipova() {
 			document.getElementById("result").innerHTML = "Trešais nosacījums nav izpildīts!";
 			return;
 		}
-		q = (parseInt(n)+parseInt(m))/parseInt(n);
-		res = k / (parseInt(n)+parseInt(m));
-		res = res * Math.pow(q,parseInt(n)+parseInt(m));
-		res = res * Math.pow((1-q),k-n-m)
-		res = res * ((N/n) * (M/m)) / ((parseInt(N)+parseInt(M)) / (parseInt(n)+parseInt(m)));
+		q = (n+m)/n;
+		res = k / (n+m);
+		res = res * Math.pow(q,n+m);
+		res = res * Math.pow((1-q),k-n-m);
+		res = res * ((N/n) * (M/m)) / ((N+M) / (n+m));
 		document.getElementById("result").innerHTML = res.toFixed(2);
 		document.getElementById("qId").innerHTML = q.toFixed(2);
 	}
