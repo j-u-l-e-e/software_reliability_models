@@ -10,7 +10,7 @@
 			fN = +fN + +fi[i];
 		}
 		
-        n = document.getElementById("nTXT").value;
+        n = fi.length;
         if (beta < 0 ){
             document.getElementById("totNumFail").innerHTML = "beta nevar būt mazāk par nulli!!!";
             document.getElementById("totNumFail").style.color = "red";
@@ -77,11 +77,6 @@
     <tr>
         <td><label for="fi" lang="latex">f_i</label><label> - kļūmes skaits laika vienībā (diena, nedeļa, utt.): </label></td>
         <td><textarea id="fi"></textarea></td>
-    </tr>
-
-    <tr>
-        <td><label for="nTXT">n - laika intervālu skaits:</label></td>
-        <td><input id="nTXT" type="number" min="0" step="1"></td>
     </tr>
 
     <tr>
