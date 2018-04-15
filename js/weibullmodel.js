@@ -1,11 +1,10 @@
 var WeibullModel = function () {
-    var failureTimes;
+    var timesBetweenFailures;
     var timeCurr;
     var scale = 0; // β
     var shape = 0; // α
     var reliability;
     var failureRate;
-    var MTTF; // Mean Time to Failure
     var tolerance = 0.001;
 
     function getReliability() {
@@ -36,7 +35,18 @@ var WeibullModel = function () {
             if (!failure_times || !Array.isArray(failure_times)) {
                 throw new InconsistentModelDataException("Kļūdas atklāšanas laiks var būt tikai vesels pozitīvs skaitlis lielāks par 0");
             }
-            failureTimes = failure_times;
+            var failureTimes = failure_times;
+            failureTimes.sort(); // sort ascending
+            failureTimes = withoutCopies(failureTimes); // remove copies
+
+            timesBetweenFailures = [];
+            timesBetweenFailures.push(failureTimes[0]);
+            if (failureTimes.length > 1) {
+                for (var i = 1; i < failureTimes.length; i++) {
+                    timesBetweenFailures.push(failureTimes[i] - failureTimes[i -1]);
+                }
+            }
+
             calcShape();
             calcScale();
         } else {
@@ -56,18 +66,18 @@ var WeibullModel = function () {
             var s2 = 0;
             var s3 = 0;
 
-            for (var i = 0; i < failureTimes.length; i++) {
-                s1 += (Math.pow(failureTimes[i], shape) * Math.log(failureTimes[i]));
+            for (var i = 0; i < timesBetweenFailures.length; i++) {
+                s1 += (Math.pow(timesBetweenFailures[i], shape) * Math.log(timesBetweenFailures[i]));
             }
 
-            for (var i = 0; i < failureTimes.length; i++) {
-                s2 += Math.pow(failureTimes[i], shape);
+            for (var i = 0; i < timesBetweenFailures.length; i++) {
+                s2 += Math.pow(timesBetweenFailures[i], shape);
             }
 
-            for (var i = 0; i < failureTimes.length; i++) {
-                s3 += Math.log(failureTimes[i]);
+            for (var i = 0; i < timesBetweenFailures.length; i++) {
+                s3 += Math.log(timesBetweenFailures[i]);
             }
-            s3 /= failureTimes.length;
+            s3 /= timesBetweenFailures.length;
 
             var diff = 1.0 / shape - s1 / s2 + s3;
 
@@ -82,10 +92,10 @@ var WeibullModel = function () {
     function calcScale() {
         scale = 0;
 
-        for (var i = 0; i < failureTimes.length; i++) {
-            scale += Math.log(failureTimes[i]);
+        for (var i = 0; i < timesBetweenFailures.length; i++) {
+            scale += Math.log(timesBetweenFailures[i]);
         }
-        scale /= failureTimes.length;
+        scale /= timesBetweenFailures.length;
         scale = Math.pow(scale, 1.0 / shape);
     }
 

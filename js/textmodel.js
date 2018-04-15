@@ -1,29 +1,82 @@
-var TextModel = function () {
-    var testedUnits = [];           // contains objects {codeLength, errorsCount}
-    var codeLengthTotal;            // N
-    var unitsCount;                 // n
-    var avgCodeLength;              // Nvid
-    var avgErrorsCount;             // Bvid
-    var avgFaultRate;               // c
-    var initialErrorsCount;         // B
-    var initialFoundErrorsCount;    // B0
-    var testCoefficient;            // k
+var TextModel = (function () {
+    var testedUnits = -1;               // contains objects {codeLength, errorsCount}
+    var codeLengthTotal = -1;           // N
+    var unitsCount = -1;                // n
+    var avgCodeLength = -1;             // Nvid
+    var avgModuleErrorsCount = -1;      // Bvid
+    var avgFaultRate = -1;              // c
+    var initialErrorsCount = -1;        // B
+    var initialFoundErrorsCount = -1;   // B0
+    var testCoefficient = -1;           // k
+    var avgLengthUnitId = -1;
+
+    function setCodeLengthTotal(code_length_total) {
+        codeLengthTotal = parseNaturalNonNullNumber(code_length_total);
+        if (isNaN(codeLengthTotal)) {
+            throw new InconsistentModelDataException("Programatūras garums var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+        }
+        chooseAvgLengthUnitId();
+    }
+
+    function setUnitsCount(units_count) {
+        unitsCount = parseNaturalNonNullNumber(units_count);
+        if (isNaN(unitsCount)) {
+            throw new InconsistentModelDataException("Kopējais moduļu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+        }
+        chooseAvgLengthUnitId();
+    }
+
+    function setTestedUnits(tested_units) {
+        testedUnits = tested_units;
+        chooseAvgLengthUnitId();
+    }
+
+    function chooseAvgLengthUnitId() {
+        avgCodeLength = -1;
+        avgLengthUnitId = -1;
+        initialFoundErrorsCount = -1;
+        if (testedUnits !== -1) {
+            if (!isNaN(codeLengthTotal) && !isNaN(unitsCount)&& (codeLengthTotal >= unitsCount)) {
+                var codeLengthInTestedModules = 0;
+                for (var i = 0; i < testedUnits.length; i++) {
+                    codeLengthInTestedModules += testedUnits[i].codeLength;
+                }
+
+                if (codeLengthTotal >= codeLengthInTestedModules) {
+                    avgCodeLength = codeLengthTotal / unitsCount;
+                    var diffMin = NaN;
+                    for (var i = 0; i < testedUnits.length; i++) {
+                        var diffCurr = Math.abs(avgCodeLength - testedUnits[i].codeLength);
+                        if (isNaN(diffMin) || diffCurr < diffMin || (diffCurr === diffMin && avgModuleErrorsCount < testedUnits[i].errorsCount)) {
+                            diffMin = diffCurr;
+                            avgLengthUnitId = i;
+                            initialFoundErrorsCount = testedUnits[i].errorsCount;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function setAvgErrorsCount(avg_module_errors_count) {
+        if (avgLengthUnitId >= 0) {
+            avgModuleErrorsCount = avg_module_errors_count;
+        } else {
+            throw new InconsistentModelDataException("Nav zināms vidēja garuma modulis");
+        }
+    }
+
+    function getAvgLengthUnitId() {
+        if (avgLengthUnitId >= 0) return avgLengthUnitId + 1; // make index starting from 1
+        else return avgLengthUnitId;
+    }
 
     function getAvgCodeLength() {
         return avgCodeLength;
     }
 
-    function getAvgErrorsCount() {
-        return avgErrorsCount;
-    }
-
     function getInitialErrorsCount() {
         return initialErrorsCount;
-    }
-
-    function InconsistentModelDataException(message) {
-        this.name = "InconsistentModelDataException";
-        this.message = message;
     }
 
     function getTestCoverageString() {
@@ -42,56 +95,24 @@ var TextModel = function () {
         return testCoverageStr;
     }
 
-    function setup(code_length_total, units_count, units_data, initial_found_errors_count) {
-		codeLengthTotal = parseNaturalNonNullNumber(code_length_total);
-		unitsCount = parseNaturalNonNullNumber(units_count);
-
-		if (isNaN(codeLengthTotal)) {
-            throw new InconsistentModelDataException("Programatūras garums var būt tikai vesels pozitīvs skaitlis lielāks par 0");
-        }
-
-        if (isNaN(unitsCount)) {
-            throw new InconsistentModelDataException("Kopējais moduļu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
-        }
-
-        testedUnits = units_data;
-        unitsCount = units_count;
-        codeLengthTotal = code_length_total;
-		
+    function calc() {
         if (codeLengthTotal < unitsCount) {
             throw new InconsistentModelDataException("Moduļu skaitam jābūt mazākam par programmatūras garumu");
         }
 
-        var codeLengthInTestedModules = 0;
-        for (var i = 0; i < testedUnits.length; i++) {
-            codeLengthInTestedModules += testedUnits[i].codeLength;
+        if (testedUnits.length > unitsCount) {
+            throw new InconsistentModelDataException("Notestēto moduļu skaits nevar būt lielāks par kopējo moduļu skaitu");
         }
 
-        if (codeLengthTotal < codeLengthInTestedModules) {
-            throw new InconsistentModelDataException("Notestēto moduļu summārais garums nevar būt lielāks par visu moduļu summāro garumu");
-        }
-
-        avgCodeLength = codeLengthTotal / unitsCount;
-
-        var diffMin = NaN;
-        for (var i = 0; i < testedUnits.length; i++) {
-            var diffCurr = Math.abs(avgCodeLength - testedUnits[i].codeLength);
-            if (isNaN(diffMin) || diffCurr < diffMin || (diffCurr == diffMin && avgErrorsCount < testedUnits[i].errorsCount)) {
-                diffMin = diffCurr;
-                avgErrorsCount = testedUnits[i].errorsCount;
-            }
-        }
-
-        avgFaultRate = avgErrorsCount / avgCodeLength;
+        avgFaultRate = avgModuleErrorsCount / avgCodeLength;
 
         initialErrorsCount = Math.floor(avgFaultRate * codeLengthTotal);
 
-        if (initial_found_errors_count !== "") {
-            initialFoundErrorsCount = parseNaturalNonNullNumber(initial_found_errors_count);
+        if (initialFoundErrorsCount >= 0) {
             if (isNaN(initialFoundErrorsCount)) {
                 throw new InconsistentModelDataException("Sākotnēji atrasto kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0 un mazāks par vidējo kļūdu skaitu");
             } else {
-                testCoefficient = initialFoundErrorsCount / avgErrorsCount;
+                testCoefficient = initialFoundErrorsCount / avgModuleErrorsCount;
 
                 for (var i = 0; i < testedUnits.length; i++) {
                     var bk = testedUnits[i].errorsCount / testCoefficient;
@@ -103,13 +124,17 @@ var TextModel = function () {
     }
 
     return {
-        setup: setup,
+        calc: calc,
+        getAvgLengthUnitId: getAvgLengthUnitId,
         getAvgCodeLength: getAvgCodeLength,
-        getAvgErrorsCount: getAvgErrorsCount,
         getInitialErrorsCount: getInitialErrorsCount,
-        getTestCoverageString: getTestCoverageString
+        getTestCoverageString: getTestCoverageString,
+        setCodeLengthTotal: setCodeLengthTotal,
+        setUnitsCount: setUnitsCount,
+        setTestedUnits: setTestedUnits,
+        setAvgErrorsCount: setAvgErrorsCount
     };
-};
+})();
 
 function UnitData(unit_length, errors_count) {
     this.codeLength = parseNaturalNonNullNumber(unit_length);

@@ -28,3 +28,25 @@ function InconsistentModelDataException(message) {
     this.name = "InconsistentModelDataException";
     this.message = message;
 }
+
+function withoutCopies(arr) {
+    var tmp = [];
+
+    for (var i = 0; i < arr.length; i++) {
+        if (!contains(tmp, arr[i])) {
+            tmp.push(arr[i])
+        }
+    }
+
+    return tmp;
+}
+
+function contains(a, obj) {
+    var i = a.length;
+    while (i--) {
+        if (a[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
