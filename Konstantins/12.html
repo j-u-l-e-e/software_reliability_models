@@ -1,50 +1,51 @@
 <!DOCTYPE html>
 <html lang="lv">
 <script type="text/javascript">
-function rnd(number) {
-	  var factor = Math.pow(5, 2);
-	  return Math.round(number * factor) / factor;
-	}
-	
-function checkOne(N,n){
-	if (N >= n && n >= 0){
-		return true;
-	} else {
-		return false;
-	}
-}
+    function Sneid() {
+        document.getElementById("totNumFail").style.color = "black";
+        beta = document.getElementById("beta").value;
+        fN = document.getElementById("fN").value;
+        n = document.getElementById("nTXT").value;
+        if (beta < 0 ){
+            document.getElementById("totNumFail").innerHTML = "beta nevar būt mazāk par nulli!!!";
+            document.getElementById("totNumFail").style.color = "red";
+            return;
+        }
+        if (fN < 0){
+            document.getElementById("totNumFail").innerHTML = "Kļūmes skaitu summa mazāk par nulli!!!";
+            document.getElementById("totNumFail").style.color = "red";
+            return;
+        }
 
-function Sneidevinda() {
-	beta = document.getElementById("beta").value;
-	fN = document.getElementById("fN").value;
-	
-	//k = document.getElementById("testsCountUsedForTesting").value;
-	//n = document.getElementById("ownErrorCount").value;
-	//m = document.getElementById("broughtErrorCount").value;	
-	if (beta == '' || fN == ''){
-		document.getElementById("result").innerHTML = "Ievadiet visus nepieciešamus datus!!!";
-		document.getElementById("result").style.color = "red";
-		return;
-	} else {
-		document.getElementById("result").style.color = "black";
-		if (!checkOne(N,n)){
-			document.getElementById("result").innerHTML = "Pirmais nosacījums nav izpildīts!";
-			return;
-		}
-		q = (n+m)/n;
-		res = k / (n+m);
-		res = res * Math.pow(q,n+m);
-		res = res * Math.pow((1-q),k-n-m)
-		res = res * ((N/n) * (M/m)) / ((N+M) / (n+m));
-		document.getElementById("result").innerHTML = rnd(res);
-		document.getElementById("qId").innerHTML = rnd(q);
-	}
-}
+        if (n < 0){
+            document.getElementById("totNumFail").innerHTML = "Laika intervāli nevar būt mazāk par nulli!!!";
+            document.getElementById("totNumFail").style.color = "red";
+            return;
+        }
+
+        if (n == 0){
+            document.getElementById("totNumFail").innerHTML = "Dalīšana uz nulli!!! Izvēlēties n, kurš lielāk par nulli!";
+            document.getElementById("totNumFail").style.color = "red";
+            return;
+        }
+
+        if (beta == '' || fN == '' || n == ''){
+            document.getElementById("totNumFail").innerHTML = "Ievadiet visus nepieciešamus datus!!!";
+            document.getElementById("totNumFail").style.color = "red";
+        	return;
+        } else {
+            alpha = (beta * fN)/(1 - Math.exp(-1 * beta * n));
+
+            document.getElementById("alphaTXT").innerHTML = alpha.toFixed(2);
+            totFail = alpha / beta;
+            document.getElementById("totNumFail").innerHTML = totFail.toFixed(2);
+        }
+    }
 </script>
 <head>
     <title>Šneidevinda modelis</title>
     <meta charset="UTF-8">
-	<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
 </head>
 <body>
 
@@ -61,50 +62,41 @@ function Sneidevinda() {
 </script>
 
 <p>Resūrsi:
-	<ol>
-		<li id="ref-1"><a href="#cite-ref-1">↩</a>
-			Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
-		</li>
-	</ol>
+<ol>
+    <li id="ref-1"><a href="#cite-ref-1">↩</a>
+        Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
+    </li>
+</ol>
 </p>
 
 <h3>Lūdzu, ievadiet datus izskaitļošanai:</h3>
 <table>
     <tr>
-        <td><label for="sNumber">s - kļūmes intervāls (no s līdz kļūmes skaitu):</label></td>
-        <td><input id="sNumber" type="number" min="0" step="1"></td>
+    <tr>
+        <td><label for="beta" lang="latex">\beta :</label></td>
+        <td><input id="beta" type="number" min="0"></td>
     </tr>
-	
-	<tr>
-		<td><label for="beta" lang="latex">\beta - :</label></td>
-		<td><input id="overallBroughtErrorCount" type="number" min="0" step="1"></td>
-	</tr>
-	
-	<tr>
-		<td><label for="fN" lang="latex">F_n - :</label></td>
-		<td><input id="testsCountUsedForTesting" type="number" min="0" step="1"></td>
-	</tr>
-	
-	<tr>
-		<td><label for="ownErrorCount">n - :</label></td>
-		<td><input id="ownErrorCount" type="number" min="0" step="1"></td>
-	</tr>
-	
-	<tr>
-		<td><label for="broughtErrorCount">m - :</label></td>
-		<td><input id="broughtErrorCount" type="number" min="0" step="1"></td>
-	</tr>
-	
-	<tr>
-		<td><label for="errorProbabilityCountKTest" lang="latex">\alpha - :</label></td>
-		<td><span id="qId"></span></td>
-	</tr>
+
+    <tr>
+        <td><label for="fN" lang="latex">F_n</label><label> - kļūmes skaitu summa: </label></td>
+        <td><input id="fN" type="number" min="0" step="1"></td>
+    </tr>
+
+    <tr>
+        <td><label for="nTXT">n - laika intervāli:</label></td>
+        <td><input id="nTXT" type="number" min="0" step="1"></td>
+    </tr>
+
+    <tr>
+        <td><label for="alphaTXT" lang="latex">\alpha :</label></td>
+        <td><span id="alphaTXT"></span></td>
+    </tr>
 </table>
 
 <br/>
-<button onclick="Sneidevinda()">Atrisināt</button>
-<br />
-<br />
-Rezultāts: <span id="result"></span>
+<button onclick="Sneid()">Atrisināt</button>
+<br/>
+<br/>
+Izkaitļots kļūmes skaits: <span id="totNumFail"></span>
 </body>
 </html>

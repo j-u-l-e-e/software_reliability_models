@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="lv">
 <script type="text/javascript">
-function rnd(number) {
-	  var factor = Math.pow(5, 2);
-	  return Math.round(number * factor) / factor;
-	}
-	
 function checkOne(N,n){
 	if (N >= n && n >= 0){
 		return true;
@@ -23,11 +18,10 @@ function checkTwo(M,m){
 }
 
 function checkThree(k,n,m){
-	if (k >= n+m && k >= 0){
-		return true;
-	} else {
-		return false;
+	if (k >= 0 && k >= parseInt(n)+parseInt(m)){
+			return true;
 	}
+	return false;
 }
 
 function Lipova() {
@@ -36,21 +30,60 @@ function Lipova() {
 	k = document.getElementById("testsCountUsedForTesting").value;
 	n = document.getElementById("ownErrorCount").value;
 	m = document.getElementById("broughtErrorCount").value;	
-	if (N == '' || M == '' || k == '' || n == '' || m == '' ){
-		document.getElementById("result").innerHTML = "Ievadiet visus nepieciešamus datus!!!";
+	document.getElementById("result").style.color = "black";
+	
+	if (N < 0 ){
+            document.getElementById("result").innerHTML = "Dabīgo kļūdu skaits programmā nevar būt mazāk par nulli!!!";
+            document.getElementById("result").style.color = "red";
+            return;
+        }
+    if (M < 0){
+            document.getElementById("result").innerHTML = "Ienesto kļūdu skaits mazāk par nulli!!!";
+            document.getElementById("result").style.color = "red";
+            return;
+        }
+
+    if (n < 0){
+            document.getElementById("result").innerHTML = "Dabīgo kļūdu skaits nevar būt mazāk par nulli!!!";
+            document.getElementById("result").style.color = "red";
+            return;
+	}
+	
+	if (n == 0){
+		document.getElementById("result").innerHTML = "Dalīšana uz nulli!!!";
 		document.getElementById("result").style.color = "red";
 		return;
+	}
+
+    if (m < 0){
+            document.getElementById("result").innerHTML = "Mākslīgo kļūdu skaits nevar būt mazāk par nulli!!!";
+            document.getElementById("result").style.color = "red";
+            return;
+	}
+
+    if (k < 0){
+            document.getElementById("result").innerHTML = "Testēšanai lietoto testu skaits nevar būt mazāk par nulli!!!";
+            document.getElementById("result").style.color = "red";
+            return;
+	}
+	
+	if (N == '' || M == '' || k == '' || n == '' || m == '' || k == ''){
+		document.getElementById("result").style.color = "red";
+		document.getElementById("result").innerHTML = "Ievadiet visus nepieciešamus datus!!!";		
+		return;
 	} else {
-		document.getElementById("result").style.color = "black";
 		if (!checkOne(N,n)){
+			document.getElementById("result").style.color = "red";
 			document.getElementById("result").innerHTML = "Pirmais nosacījums nav izpildīts!";
 			return;
 		}
 		if (!checkTwo(M,m)){
+			document.getElementById("result").style.color = "red";
 			document.getElementById("result").innerHTML = "Otrais nosacījums nav izpildīts!";
 			return;
 		}
 		if (!checkThree(k,n,m)){
+			document.getElementById("result").style.color = "red";
 			document.getElementById("result").innerHTML = "Trešais nosacījums nav izpildīts!";
 			return;
 		}
@@ -59,8 +92,8 @@ function Lipova() {
 		res = res * Math.pow(q,n+m);
 		res = res * Math.pow((1-q),k-n-m)
 		res = res * ((N/n) * (M/m)) / ((N+M) / (n+m));
-		document.getElementById("result").innerHTML = rnd(res);
-		document.getElementById("qId").innerHTML = rnd(q);
+		document.getElementById("result").innerHTML = res.toFixed(2);
+		document.getElementById("qId").innerHTML = q.toFixed(2);
 	}
 }
 </script>
