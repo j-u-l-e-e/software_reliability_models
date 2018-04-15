@@ -87,11 +87,11 @@ function Lipova() {
 			document.getElementById("result").innerHTML = "Trešais nosacījums nav izpildīts!";
 			return;
 		}
-		q = (n+m)/n;
-		res = k / (n+m);
-		res = res * Math.pow(q,n+m);
+		q = (parseInt(n)+parseInt(m))/parseInt(n);
+		res = k / (parseInt(n)+parseInt(m));
+		res = res * Math.pow(q,parseInt(n)+parseInt(m));
 		res = res * Math.pow((1-q),k-n-m)
-		res = res * ((N/n) * (M/m)) / ((N+M) / (n+m));
+		res = res * ((N/n) * (M/m)) / ((parseInt(N)+parseInt(M)) / (parseInt(n)+parseInt(m)));
 		document.getElementById("result").innerHTML = res.toFixed(2);
 		document.getElementById("qId").innerHTML = q.toFixed(2);
 	}
