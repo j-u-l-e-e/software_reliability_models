@@ -38,7 +38,7 @@
 
             document.getElementById("alphaTXT").innerHTML = alpha.toFixed(2);
             totFail = alpha / beta;
-            document.getElementById("totNumFail").innerHTML = totFail.toFixed(2);
+            document.getElementById("totNumFail").innerHTML = Math.floor(totFail);
         }
     }
 </script>
@@ -75,7 +75,7 @@
     </tr>
 
     <tr>
-        <td><label for="nTXT">n - laika intervāli:</label></td>
+        <td><label for="nTXT">n - laika intervālu skaits:</label></td>
         <td><input id="nTXT" type="number" min="0" step="1"></td>
     </tr>
 

@@ -112,9 +112,17 @@ function Lipova() {
 <font lang="latex">Q(n,m) = ( \frac{k}{n+m} ) * q^{n+m} * (1-q)^{k-n-m} * \frac{ \frac{N}{n} \times \frac{M}{m} }{\frac{N+M}{n+m}}</font>
 <br/>
 <h2>Modeļa lietošanai ir jāievēro nosacījumi:</h2>
-<div lang="latex">N \geq n \geq 0,</div> 
-<div lang="latex">M \geq m \geq 0, </div> 
-<div lang="latex">k \geq n + m \geq 0</div>
+<ol>
+	<li>
+		<div lang="latex">N \geq n \geq 0,</div>
+	</li>
+	<li>
+		<div lang="latex">M \geq m \geq 0, </div>
+	</li>
+	<li>
+		<div lang="latex">k \geq n + m \geq 0</div>
+	</li>
+</ol>
 <br/>
 <h3>Lūdzu, ievadiet datus izskaitļošanai:</h3>
 <table>
@@ -144,7 +152,7 @@ function Lipova() {
 	</tr>
 	
 	<tr>
-		<td><label for="errorProbabilityCountKTest">q - Kļūdas atrašanas varbūtība katrā no k testiem, q= (n+m)/n:</label></td>
+		<td><label for="qId">q - Kļūdas atrašanas varbūtība katrā no k testiem, q= (n+m)/n:</label></td>
 		<td><span id="qId"></span></td>
 	</tr>
 </table>
