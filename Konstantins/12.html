@@ -4,18 +4,23 @@
     function Sneid() {
         document.getElementById("totNumFail").style.color = "black";
         beta = document.getElementById("beta").value;
-        fN = document.getElementById("fN").value;
+        fi = document.getElementById("fi").value.split(",");
+		var fN = 0;
+		for (i=0; i < fi.length; i++) {
+			fN = +fN + +fi[i];
+		}
+		
         n = document.getElementById("nTXT").value;
         if (beta < 0 ){
             document.getElementById("totNumFail").innerHTML = "beta nevar būt mazāk par nulli!!!";
             document.getElementById("totNumFail").style.color = "red";
             return;
         }
-        if (fN < 0){
-            document.getElementById("totNumFail").innerHTML = "Kļūmes skaitu summa mazāk par nulli!!!";
-            document.getElementById("totNumFail").style.color = "red";
-            return;
-        }
+        // if (fi < 0){
+            // document.getElementById("totNumFail").innerHTML = "Kļūmes skaitu summa mazāk par nulli!!!";
+            // document.getElementById("totNumFail").style.color = "red";
+            // return;
+        // }
 
         if (n < 0){
             document.getElementById("totNumFail").innerHTML = "Laika intervāli nevar būt mazāk par nulli!!!";
@@ -70,8 +75,8 @@
     </tr>
 
     <tr>
-        <td><label for="fN" lang="latex">F_n</label><label> - kļūmes skaitu summa: </label></td>
-        <td><input id="fN" type="number" min="0" step="1"></td>
+        <td><label for="fi" lang="latex">f_i</label><label> - kļūmes skaits laika vienībā (diena, nedeļa, utt.): </label></td>
+        <td><textarea id="fi"></textarea></td>
     </tr>
 
     <tr>
