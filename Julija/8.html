@@ -11,25 +11,22 @@
 
 <h1>Veibula modelis</h1>
 <button id="buttonAboutModel">Par Veibula modeli</button>
+<button id="buttonGuide">Instrukcija</button>
 
 <div>
     <label for="inputTimeCurr">Laiks prognozēšanai, t</label>
     <input id="inputTimeCurr" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
 </div>
-<table>
-    <tr>
-        <th>Kļudu atklāšanas laiki</th>
-    </tr>
-    <tr>
-        <td>
-            <textarea id="textareaFailureTimes"></textarea>
-        </td>
-    </tr>
-</table>
+
+
+<label for="textareaFailureTimes">Kļudu atklāšanas laiki, <i>t<sub>i</sub></i>;</label>
+<textarea id="textareaFailureTimes"></textarea>
+
 <div>
-    <input id="inputFailuresDataFile" type="file" accept=".csv,.doc"/>
+    <button style="display:block;" onclick="document.getElementById('inputFailuresDataFile').click()">Importēt no .csv</button>
+    <input type='file' id="inputFailuresDataFile" style="display:none" accept=".csv">
 </div>
-<label for="inputManualParameters">Patstavīgi izvēlēties parametru vērtības</label>
+<label for="inputManualParameters">Patstāvīgi  izvēlēties parametru vērtības</label>
 <input type="checkbox" id="inputManualParameters">
 <div>
     <label for="inputScale">α</label>
@@ -46,7 +43,6 @@
 </body>
 <script>
     var weibullModel = WeibullModel();
-    var buttonAboutModel = document.getElementById("buttonAboutModel");
     var buttonCalculate = document.getElementById("buttonCalculate");
     var inputFailuresDataFile = document.getElementById("inputFailuresDataFile");
     var inputManualParameters = document.getElementById("inputManualParameters");
@@ -60,8 +56,13 @@
         inputShape.disabled = !inputShape.disabled;
     });
 
-    buttonAboutModel.addEventListener("click", function () {
+    document.getElementById("buttonAboutModel").addEventListener("click", function () {
         var myWindow = window.open("about/8.html", "Veibula modelis", "width=300,height=500");
+    });
+
+
+    document.getElementById("buttonGuide").addEventListener("click", function () {
+        var myWindow = window.open("guide/8.html", "Instrukcija Veibula modeļa lietošanai", "width=300,height=500");
     });
 
     buttonCalculate.addEventListener("click", function (event) {

@@ -20,8 +20,12 @@ Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
         Testēšanas sākumā programmatūrā eksistē galīgais kļūdu skaits <i>n</i>;
     </li>
     <li>
-        <i>α</i>-tās atteices laiks <i>t</i> atbilst Veibula sadalījumam ar parametriem <i>α</i> un <i>β</i>. Varbūtību blīvuma funkcija <i>f(x)</i> parāda, cik daudz atteču notiks laika momentā <i>x</i>. To aprēķina pēc sekojošas formulas:
-        <div lang="latex">f(x) = \frac {\beta}{\alpha} (\frac{x}{\alpha})^{\beta - 1} e^{-(\frac{x}{\alpha})^{\beta}} = R(x) \lambda (x)</div>
+        <i>α</i>-tās atteices laiks <i>t</i> atbilst Veibula sadalījumam ar parametriem <i>α</i> un <i>β</i>. Varbūtību
+        blīvuma funkcija <i>f(x)</i> parāda, cik daudz atteču notiks laika momentā <i>x</i>. To aprēķina pēc sekojošas
+        formulas:
+        <div lang="latex">f(x) = \frac {\beta}{\alpha} (\frac{x}{\alpha})^{\beta - 1} e^{-(\frac{x}{\alpha})^{\beta}} =
+            R(x) \lambda (x)
+        </div>
         Šeit <i>α</i> ir mēroga parametrs un <i>β</i> ir formas parametrs. <i>α</i> > 0, <i>β</i> > 0 un <i>x</i> ≥ 0;
     </li>
     <li>
@@ -38,12 +42,15 @@ Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
     </tr>
     <tr>
         <td>Bezatteices darba varbūtība</td>
-        <td><div lang="latex">R(x) = e^{-\frac{x}{\alpha}^{\beta}}</div>
+        <td>
+            <div lang="latex">R(x) = e^{-\frac{x}{\alpha}^{\beta}}</div>
         <td></td>
     </tr>
     <tr>
         <td>Atteices varbūtība</td>
-        <td><div lang="latex">Q(x) = 1 - R(x)</div></td>
+        <td>
+            <div lang="latex">Q(x) = 1 - R(x)</div>
+        </td>
         <td></td>
     </tr>
     <tr>
@@ -51,19 +58,19 @@ Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
         <td>
             <div lang="latex">\lambda(x) = \frac {\beta}{\alpha} (\frac{x}{\alpha})^{\beta - 1}</div>
         <td>Kad 0 < <i>β</i> < 1, atteiču intensitāte monotoni dilst.
-        Kad <i>β</i> = 1, atteiču intensitāte ir konstanta.
-        Kad <i>β</i> > 1, atteiču intensitāte monotoni aug.
-        Ir ieteicams eksperimentāli piemeklēt <i>α</i> un <i>β</i> parametrus lai blīvuma funkcija dotu precīzākus rezultātus</td>
-    </tr>
-    <tr>
-        <td>Vidējais laiks starp kļūmēm</td>
-        <td><div lang="latex">MTTF = \Gamma (\frac{1}{\beta} + 1)</div>
-        <td>Γ - gamma funkcija</td>
+            Kad <i>β</i> = 1, atteiču intensitāte ir konstanta.
+            Kad <i>β</i> > 1, atteiču intensitāte monotoni aug.
+            Ir ieteicams eksperimentāli piemeklēt <i>α</i> un <i>β</i> parametrus lai blīvuma funkcija dotu precīzākus
+            rezultātus
+        </td>
     </tr>
     <tr>
         <td><i>α</i> un <i>β</i> parametru aprēķins ar maksimālās paticamības metodi</td>
-        <td><div lang="latex">\alpha = (\frac{1}{n} \sum_{i=1}^{n} ln(x_i))^{\frac{1}{\beta}}</div>
-            <div lang="latex">\frac{1}{\beta} - \frac{ \sum_{i=1}^{n}x_i^{\beta} ln(x_i)}{\sum_{i=1}^{n}x_i^{\beta}} + \frac{1}{n} \sum_{i=1}^{n}ln(x_i) = 0</div>
+        <td>
+            <div lang="latex">\alpha = (\frac{1}{n} \sum_{i=1}^{n} ln(x_i))^{\frac{1}{\beta}}</div>
+            <div lang="latex">\frac{1}{\beta} - \frac{ \sum_{i=1}^{n}x_i^{\beta} ln(x_i)}{\sum_{i=1}^{n}x_i^{\beta}} +
+                \frac{1}{n} \sum_{i=1}^{n}ln(x_i) = 0
+            </div>
         <td>Parametrus var aprēķināt, pielietojot Ņūtona metodi</td>
     </tr>
 </table>
@@ -74,7 +81,8 @@ Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
         Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
     </li>
     <li id="ref-2"><a href="#cite-ref-2">↩</a>
-        P. K. Suri, P. Raheja. A Study on Weibull Distribution for Estimating the Reliability. International Journal Of Engineering And Computer Science, Volume 4 Issue 7 July 2015. 13447-13451 p.
+        P. K. Suri, P. Raheja. A Study on Weibull Distribution for Estimating the Reliability. International Journal Of
+        Engineering And Computer Science, Volume 4 Issue 7 July 2015. 13447-13451 p.
     </li>
 </ol>
 </p>

@@ -13,6 +13,7 @@ var TextModel = (function () {
     function setCodeLengthTotal(code_length_total) {
         codeLengthTotal = parseNaturalNonNullNumber(code_length_total);
         if (isNaN(codeLengthTotal)) {
+            codeLengthTotal = -1;
             throw new InconsistentModelDataException("Programatūras garums var būt tikai vesels pozitīvs skaitlis lielāks par 0");
         }
         chooseAvgLengthUnitId();
@@ -21,6 +22,7 @@ var TextModel = (function () {
     function setUnitsCount(units_count) {
         unitsCount = parseNaturalNonNullNumber(units_count);
         if (isNaN(unitsCount)) {
+            codeLengthTotal = -1;
             throw new InconsistentModelDataException("Kopējais moduļu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
         }
         chooseAvgLengthUnitId();
@@ -36,7 +38,7 @@ var TextModel = (function () {
         avgLengthUnitId = -1;
         initialFoundErrorsCount = -1;
         if (testedUnits !== -1) {
-            if (!isNaN(codeLengthTotal) && !isNaN(unitsCount)&& (codeLengthTotal >= unitsCount)) {
+            if (codeLengthTotal > 0 && unitsCount > 0 && (codeLengthTotal >= unitsCount)) {
                 var codeLengthInTestedModules = 0;
                 for (var i = 0; i < testedUnits.length; i++) {
                     codeLengthInTestedModules += testedUnits[i].codeLength;
@@ -96,12 +98,24 @@ var TextModel = (function () {
     }
 
     function calc() {
+        if (codeLengthTotal === -1) {
+            throw new InconsistentModelDataException("N jābūt lielākam par 0");
+        }
+
+        if (unitsCount === -1) {
+            throw new InconsistentModelDataException("n jābūt lielākam par 0");
+        }
+
         if (codeLengthTotal < unitsCount) {
             throw new InconsistentModelDataException("Moduļu skaitam jābūt mazākam par programmatūras garumu");
         }
 
         if (testedUnits.length > unitsCount) {
             throw new InconsistentModelDataException("Notestēto moduļu skaits nevar būt lielāks par kopējo moduļu skaitu");
+        }
+
+        if (avgModuleErrorsCount === -1) {
+            throw new InconsistentModelDataException("Bvid jābūt lielākam par 0");
         }
 
         avgFaultRate = avgModuleErrorsCount / avgCodeLength;

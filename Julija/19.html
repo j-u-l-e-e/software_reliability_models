@@ -12,6 +12,7 @@
 
 <h1>Teksta modelis</h1>
 <button id="buttonAboutModel">Par Teksta modeli</button>
+<button id="buttonGuide">Instrukcija</button>
 
 <div>
     <label for="inputOperandsTotalCount">Programatūras garums, <i>N</i>:</label>
@@ -20,10 +21,6 @@
 <div>
     <label for="inputUnitsCount">Kopējais moduļu skaits, <i>n</i>:</label>
     <input id="inputUnitsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
-</div>
-<div>
-    <label for="inputInitialFoundErrorsCount">Sākotnējais atrasto kļūdu skaits, <i>B<sub>0</sub></i>:</label>
-    <input id="inputInitialFoundErrorsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
 </div>
 <div>
     <table>
@@ -40,12 +37,17 @@
             </td>
         </tr>
     </table>
-    <div>
-        <input id="inputUnitsDataFile" type="file" accept=".csv,.doc">
-    </div>
-    <div>
-        <button id="buttonCalculate">Aprēķināt</button>
-    </div>
+</div>
+<div>
+    <label id="labelInputAvgErrorsCount" for="inputAvgErrorsCount" style="display:none">Vidējais kļūdu skaits moduļos, <i>B<sub>vid</sub></i>:</label>
+    <input id="inputAvgErrorsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)" style="display:none">
+</div>
+<div>
+    <button style="display:block;" onclick="document.getElementById('inputUnitsDataFile').click()">Importēt no .csv</button>
+    <input type='file' id="inputUnitsDataFile" style="display:none" accept=".csv">
+</div>
+<div>
+    <button id="buttonCalculate">Aprēķināt</button>
 </div>
 
 <p id="pAvgCodeLength">
@@ -56,90 +58,146 @@
     <script>
         var inputCodeLengthTotal = document.getElementById("inputOperandsTotalCount");
         var inputUnitsCount = document.getElementById("inputUnitsCount");
-        var inputInitialFoundErrorsCount = document.getElementById("inputInitialFoundErrorsCount");
+        var inputAvgErrorsCount = document.getElementById("inputAvgErrorsCount");
+        var labelInputAvgErrorsCount = document.getElementById("labelInputAvgErrorsCount");
         var textareaData = document.getElementById("textareaData");
         var textareaTestCoverage = document.getElementById("textareaTestCoverage");
         var pAvgCodeLength = document.getElementById("pAvgCodeLength");
-        var pAvgErrorsCount = document.getElementById("pAvgErrorsCount");
         var pInitialErrorsCount = document.getElementById("pInitialErrorsCount");
         var buttonCalculate = document.getElementById("buttonCalculate");
         var inputUnitsDataFile = document.getElementById("inputUnitsDataFile");
-        var buttonAboutModel = document.getElementById("buttonAboutModel");
 
         function resize() {
-            textareaTestCoverage.style.height = /*"2000px"*/textareaData.style.height;
+            textareaTestCoverage.style.height = textareaData.style.height;
         }
 
-        var textModel = TextModel();
+        var textModel = TextModel;
 
-        buttonAboutModel.addEventListener("click", function () {
+        document.getElementById("buttonAboutModel").addEventListener("click", function () {
             var myWindow = window.open("about/19.html", "Teksta modelis", "width=300,height=500");
         });
 
+        document.getElementById("buttonGuide").addEventListener("click", function () {
+            var myWindow = window.open("guide/19.html", "Instrukcija Teksta modeļa lietošanai", "width=300,height=500");
+        });
+
         buttonCalculate.addEventListener("click", function (event) {
-            // Parse model data
-            var codeLengthTotal = parseInt(inputCodeLengthTotal.value);
-            var unitsCount = parseInt(inputUnitsCount.value);
-            try {
-                var unitsData = parseData(textareaData.value);
-            } catch (e) {
-                alert(e.message);
-                return false;
-            }
-            var initialFoundErrorsCount = inputInitialFoundErrorsCount.value;
 
             try {
-                textModel.setup(codeLengthTotal, unitsCount, unitsData, initialFoundErrorsCount);
+                textModel.calc();
+                // Data OK, show calculated data
+                pAvgCodeLength.innerHTML = "Vidējais moduļu garums, Nvid: " + textModel.getAvgCodeLength();
+                pInitialErrorsCount.innerHTML = "Sakumkļūdu skaits programmatūrā, B: " + textModel.getInitialErrorsCount();
+                textareaTestCoverage.value = textModel.getTestCoverageString();
             } catch (e) {
                 alert(e.message);
+                pAvgCodeLength.innerHTML = "";
+                pInitialErrorsCount.innerHTML = "";
+                textareaTestCoverage.value = "";
                 return false;
             }
 
-            // Data OK, show calculated data
-            pAvgCodeLength.innerHTML = "Vidējais moduļu garums, Nvid: " + textModel.getAvgCodeLength();
-            pAvgErrorsCount.innerHTML = "Vidējais kļūdu skaits, Bvid: " + textModel.getAvgErrorsCount();
-            pInitialErrorsCount.innerHTML = "Sakumkļūdu skaits programmatūrā, B: " + textModel.getInitialErrorsCount();
-            textareaTestCoverage.value = textModel.getTestCoverageString();
             return true;
         });
+
+        inputCodeLengthTotal.addEventListener("change", function (evt) {
+            textModel.setCodeLengthTotal(parseInt(inputCodeLengthTotal.value));
+            updateAvgLengthUnitId();
+        });
+
+        inputUnitsCount.addEventListener("change", function (evt) {
+            textModel.setUnitsCount(parseInt(inputUnitsCount.value));
+            updateAvgLengthUnitId();
+        });
+
+        textareaData.addEventListener("change", function (ev) {
+            prepareUnitsData(textareaData.value);
+        });
+
+        function updateAvgLengthUnitId() {
+            var avgLengthUnitId = textModel.getAvgLengthUnitId();
+            if (avgLengthUnitId >= 0) {
+                // labelInputAvgErrorsCount.innerText = "Vidējais kļūdu skaits moduļos, <i>B<sub>vid<//sub><//i> (atklāto kļūdu skaits " + avgLengthUnitId + "-tā modulī pēc \'trieciena\' metodes lietošanas):";
+                labelInputAvgErrorsCount.innerHTML  = "Atklāto kļūdu skaits " + avgLengthUnitId + ". modulī ar \'Trieciena\' metodi, B<sub>vid<\sub>:";
+                labelInputAvgErrorsCount.style.display = "block";
+                inputAvgErrorsCount.style.display = "block";
+                pAvgCodeLength.innerHTML = "";
+                pInitialErrorsCount.innerHTML = "";
+                textareaTestCoverage.value = "";
+            } else {
+                labelInputAvgErrorsCount.style.display = "none";
+                inputAvgErrorsCount.style.display = "none";
+                pAvgCodeLength.innerHTML = "";
+                pInitialErrorsCount.innerHTML = "";
+                textareaTestCoverage.value = "";
+            }
+        }
+
+        inputAvgErrorsCount.addEventListener("change", function (evt) {
+            textModel.setAvgErrorsCount(parseInt(inputAvgErrorsCount.value));
+        });
+
+        // Read units data from .csv
+        inputUnitsDataFile.addEventListener("change", function (evt) {
+            var unitsDataFile = evt.target.files[0];
+            if (unitsDataFile) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    if (prepareUnitsData(event.target.result)) {
+                        textareaData.value = event.target.result;
+                    } else {
+                        textareaData.value = "";
+                    }
+                };
+                reader.readAsText(unitsDataFile);
+            }
+        });
+
+        function prepareUnitsData(strData) {
+            var unitsData = parseData(strData);
+            if (unitsData === -1) {
+                textModel.setTestedUnits(-1);
+                return false;
+            } else {
+                textModel.setTestedUnits(unitsData);
+                updateAvgLengthUnitId();
+                return true;
+            }
+        }
 
         function parseData(dataStr) {
             var unitsData = [];
 
             Papa.parse(dataStr, {
                 complete: function (results) {
-                    if (results.errors.length == 0) { // data ok
-
-                        if (results.data[0].length != 2) {
-                            throw new InconsistentModelDataException(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
-                        }
+                    if (results.errors.length === 0) { // data ok
 
                         for (var i = 0; i < results.data.length; i++) {
+                            if (results.data[i].length !== 2) {
+                                alert(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
+                                unitsData = -1;
+                                return false;
+                            }
                             try {
                                 unitsData.push(new UnitData(results.data[i][0], results.data[i][1]));
                             } catch (e) {
                                 alert(e.message);
+                                unitsData = -1;
                                 return false;
                             }
                         }
                     } else {
-                        throw new InconsistentModelDataException(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
+                        alert(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
+                        unitsData = -1;
+                        return false;
                     }
-                }
+                },
+                delimiter: ",",
+                header: false
             });
 
             return unitsData;
         }
-
-        inputUnitsDataFile.addEventListener("change", function (evt) {
-            var unitsDataFile = evt.target.files[0];
-
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                textareaData.value = event.target.result;
-            };
-            reader.readAsText(unitsDataFile);
-        });
 
     </script>
 </body>

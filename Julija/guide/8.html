@@ -9,10 +9,55 @@
 
 <h1>Veibula modeļa izmantošanas insstrukcija</h1>
 
-<p>Veibula modeļa izmantošanas soļi:</p>
-<ol>
-
-</ol>
+<ul>
+    Veibula modeļa izmantošanas soļi:
+    <li>ja vēlaties, lai parametri tiktu aprēķināti automātiski
+        <ol>
+            <li>
+                Atstājiet ‘Patstāvīgi izvēlēties parametru vērtības’ izvēles rūtiņu tukšu
+            </li>
+            <li>
+                Ievadiet laukā ‘Laiks prognozēšanai, t’ laika momentu <i>t</i>, kuram jāaprēķina drošuma rādītāji.
+                <i>t</i> ir naturāls skaitlis lielāks par 0
+            </li>
+            <li>
+                Ievadiet kļūdu atklāšanas laikus <i>t<sub>i</sub></i> ievadlaukā ‘Kļūdu atklāšanas laiki’. Katru laiku
+                jāraksta jaunā rindā. <i>t<sub>i</sub></i> ir naturālie skaitļi lielākie par 0
+            </li>
+            <li>
+                Nospiediet uz pogu “Aprēķināt”. Tad lauki ar <i>α</i> un  <i>β</i> parametriem tiks automātiski aizpildīti un zem
+                formas parādīsies aprēķināti drošuma rādītāji: drošums un atteiču intensitāte
+            </li>
+        </ol>
+    </li>
+    <li>ja vēlaties manuāli izvelēties α un β parametrus
+        <ol>
+            <li>
+                Atzīmējiet ‘Patstāvīgi izvēlēties parametru vērtības’ izvēles rūtiņu
+            </li>
+            <li>
+                Ievadiet laukā ‘Laiks prognozēšanai, t’ laika momentu, kuram jāaprēķina drošuma rādītāji.
+                <i>t</i> ir naturāls skaitlis lielāks par 0
+            </li>
+            <li>
+                Ievadiet α un β parametrus atbilstošos laukos: ‘α’ un ‘β’. Abi šie parametri ir naturālie skaitļi lielākie par 0
+            </li>
+            <li>
+                Nospiediet uz pogu “Aprēķināt”. Tad zem formas parādīsies aprēķināti drošuma rādītāji: drošums un
+                atteiču intensitāte
+            </li>
+        </ol>
+    </li>
+</ul>
+<p>
+    RPDN nav izvelēta noteikta laika mērvienība, tāpēc lietotājs var izvelēties to patstāvīgi (piem. minūtes vai
+    stundas). Laiku prognozēšanai un kļūdu atklāšanas laikus obligāti jāievada, pielietojot vienu un to pati laika
+    mērvienību.
+</p>
+<p>
+    Kad lietotājs noklikšķina uz pogu “Apreķināt”, bet ievadītie dati neatbilst nosacījumiem, tiek atvērts
+    ziņojumlodziņš ar kļūdas aprakstu.
+</p>
 
 </body>
 </html>

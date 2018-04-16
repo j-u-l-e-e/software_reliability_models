@@ -9,10 +9,51 @@
 
 <h1>Teksta modeļa izmantošanas instrukcija</h1>
 
-<p>Teksta modeļa izmantošanas soļi::</p>
 <ol>
-
+    Teksta modeļa izmantošanas soļi:
+    <li>
+        Ievadiet sekojošos datus:
+        <ul>
+            <li>
+                kopējo programmatūras garumu jeb <i>N</i> laukā ‘Programatūras garums, N’. Šī rīkā nav izvelēta noteikta garuma
+                mērvienība, tāpēc lietotājs var izvelēties to patstāvīgi.  <i>N</i> ir naturālais skaitlis lielāks par 0
+            </li>
+            <li>
+                kopējo programmatūras moduļu skaitu jeb  <i>n</i> laukā ‘Kopējais moduļu skaits, n’.  <i>n</i> ir naturālais skaitlis
+                lielāks par 0
+            </li>
+            <li>
+                datus ar sākotnējiem moduļu testēšanas rezultātam laukā ‘[Koda garums],[Kļūdu skaits]’. Pirmais atribūts
+                ir moduļa garums, bet otrais – sākotnējais atklāto kļūdu skaits modulī. Šos atribūtus jāatdala ar
+                komatu, bet jaunu ierakstu jāraksta jaunā rindā. Visi atribūti ir naturālie skaitļi lielākie par 0
+            </li>
+        </ul>
+    </li>
+    <li>
+        Ja dati ir ievadīti bez kļūdām, paradīsies vidējā garuma moduļa numurs. Šo moduli jānotestē visai programmētāju
+        komandai, un iegūto kļūdu skaitu jāievada laukā ‘Atklāto kļūdu skaits #. modulī ar 'Trieciena' metodi’ (# -
+        moduļa numurs).
+    </li>
+    <li>
+        Noklikšķiniet uz pogu ‘Aprēķināt’. Tad zem formas būs izvadīts moduļu vidējais garums, sākumkļūdu skaits
+        programmatūrā. Pa labi no ierakstiem par moduļiem tiks izvadīta moduļa testēšanas pakāpe. Moduļiem ar zemu
+        testēšanas pakāpi ir jāpievērš papildus uzmanība
+    </li>
 </ol>
+<p>
+    RPDN nav izvelēta noteikta programmatūras garuma mērvienība, tāpēc lietotājs var izvelēties to patstāvīgi (piem.
+    operatoru skaits vai rindu skaits). Kopējo programmatūras garumu un moduļu garumus obligāti jāievada, pielietojot
+    vienu un to pati mērvienību.
+</p>
+<p>
+    Ja lietotājs noklikšķina uz pogu “Aprēķināt’”, bet ievadītie dati neatbilst nosacījumiem, tiks atvērts
+    ziņojumlodziņš ar kļūdas aprakstu.
+</p>
+<p>
+    Rīkā ir iespējams ielādēt moduļu testēšanas datus no .csv datnes. Tad jānoklikšķina uz pogu ‘Importēt no .csv’.
+    Ierakstus jāraksta tā pati, ka ‘[Koda garums],[Kļūdu skaits]’ laukā. Ja datnei ir nepareiza struktūra, tiks izvadīts
+    ziņojumlodziņš ar kļūdas aprakstu.
+</p>
 
 </body>
 </html>
