@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <title>Šneidevinda modelis</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+</head>
+<body>
+
+<h1>Par Šneidevinda modeli</h1>
+
+<p>
+    Šneidervinda modelis ir diskrētais dinamiskais drošuma modelis. Tas pamatā ir ideja,
+    ka jaunākie dati par atteicēm dod precīzāko prognozi par sistēmas uzvedību nākotnē, salīdzinot ar agrākiem datiem.
+    Atteiču intensitāte var mainīties testēšanas gaitā un jaunākie dati labāk raksturo pašreizējo programmatūras drošuma
+    līmeni.
+    Modelis izmanto atteiču skaitu laikā vienībā vienāda garuma laika intervālos. Pieņemsim, ka tiek aplukoti <i>n</i>
+    laika
+    periodi. Šneidervinda modelī dati par katru no laika intervāliem ir vienādi svarīgi un drošuma novērtēšanā tiek ņemts vērā atteiču skaits katrā laika intervālā
+</p>
+<img src="Formula.jpg" alt="Sneidevinda modelis">,
+<br/>
+kur n - intervālu skaits;
+<br/>
+Fn - kļūmes summa; 
+<ul>
+        
+</ul>
+
+<p>Dati, kurus prasa Šneidevinda modelis, ir kļūdu skaits <i>f<sub>i</sub></i> vienāda garuma <i>n</i> laika intervālos.
+</p>
+
+<p>Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
+<ol>
+    <li>
+        Kumulatīvais kļūdu skaits <i>M(t)</i> laikā <i>t</i> atbilst Puassona procesam ar vidējas vērtības funkciju
+        μ(t).
+        Vidējas vērtības funkcijas pamatā ir ideja, ka gaidāmais identificēto atteiču skaits ir proporcionāls gaidāmām
+        neidentificēto atteiču skaitam.
+        Tas ir ierobežota nedilstoša laika funkcija
+        <div lang="latex">lim_{t\rightarrow\infty}\mu(t)=\frac{\alpha}{\beta}<\infty</div>
+        ,
+        kur <i>α</i> > 0 un <i>β</i> > 0;
+    </li>
+    <li>
+        Atteiču intensitātes funkcija ir eksponenciāli dilstoša:
+        <div lang="latex">\lambda(t) = \alpha e^{-\beta t}</div>
+        Laika momentā <i>t</i>=0 atteiču intensitāte ir vienāda ar <i>α</i> jeb <i>λ</i>(0)=<i>α</i>. Jo lielāka ir
+        <i>β</i> vērtība, jo zemāka ir atteiču intensitate;
+    </li>
+    <li>
+        Atteiču skaits <i>f<sub>i</sub></i> katrā testēšanas laika intervāla ir neatkarīgs;
+    </li>
+    <li>
+        Atteiču intensitāte ir proporcionāla neidentificēto atteiču skaitam;
+    </li>
+    <li>
+        Testēšana notiek vairākos laika intervālos ar vienādu fiksētu garumu <i>l</i>. Tas nozīmē, ka <i>t<sub>i</sub></i>=<i>il</i> pie <i>i</i>= 1, 2, ..., n.
+    </li>
+</ol>
+</p>
+
+<p>Resūrsi:
+<ol>
+    <li id="ref-1"><a href="#cite-ref-1">↩</a>
+        Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
+    </li>
+</ol>
+
+
+</body>
+</html>
