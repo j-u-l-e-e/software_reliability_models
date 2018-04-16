@@ -1,5 +1,5 @@
 var TextModel = (function () {
-    var testedUnits = -1;               // contains objects {codeLength, errorsCount}
+    var unitsData = -1;               // contains objects {codeLength, errorsCount}
     var codeLengthTotal = -1;           // N
     var unitsCount = -1;                // n
     var avgCodeLength = -1;             // Nvid
@@ -29,7 +29,7 @@ var TextModel = (function () {
     }
 
     function setTestedUnits(tested_units) {
-        testedUnits = tested_units;
+        unitsData = tested_units;
         chooseAvgLengthUnitId();
     }
 
@@ -37,22 +37,22 @@ var TextModel = (function () {
         avgCodeLength = -1;
         avgLengthUnitId = -1;
         initialFoundErrorsCount = -1;
-        if (testedUnits !== -1) {
+        if (unitsData !== -1) {
             if (codeLengthTotal > 0 && unitsCount > 0 && (codeLengthTotal >= unitsCount)) {
                 var codeLengthInTestedModules = 0;
-                for (var i = 0; i < testedUnits.length; i++) {
-                    codeLengthInTestedModules += testedUnits[i].codeLength;
+                for (var i = 0; i < unitsData.length; i++) {
+                    codeLengthInTestedModules += unitsData[i].codeLength;
                 }
 
                 if (codeLengthTotal >= codeLengthInTestedModules) {
                     avgCodeLength = codeLengthTotal / unitsCount;
                     var diffMin = NaN;
-                    for (var i = 0; i < testedUnits.length; i++) {
-                        var diffCurr = Math.abs(avgCodeLength - testedUnits[i].codeLength);
-                        if (isNaN(diffMin) || diffCurr < diffMin || (diffCurr === diffMin && avgModuleErrorsCount < testedUnits[i].errorsCount)) {
+                    for (var i = 0; i < unitsData.length; i++) {
+                        var diffCurr = Math.abs(avgCodeLength - unitsData[i].codeLength);
+                        if (isNaN(diffMin) || diffCurr < diffMin || (diffCurr === diffMin && avgModuleErrorsCount < unitsData[i].errorsCount)) {
                             diffMin = diffCurr;
                             avgLengthUnitId = i;
-                            initialFoundErrorsCount = testedUnits[i].errorsCount;
+                            initialFoundErrorsCount = unitsData[i].errorsCount;
                         }
                     }
                 }
@@ -83,11 +83,11 @@ var TextModel = (function () {
 
     function getTestCoverageString() {
         var testCoverageStr = "";
-        for (var i = 0; i < testedUnits.length; i++) {
-            if (testedUnits[i].testCoverageLow === -1) {
+        for (var i = 0; i < unitsData.length; i++) {
+            if (unitsData[i].testCoverageLow === -1) {
                 testCoverageStr += "\n";
             } else {
-                if (testedUnits[i].testCoverageLow) {
+                if (unitsData[i].testCoverageLow) {
                     testCoverageStr += "Zema\n";
                 } else {
                     testCoverageStr += "Augsta\n";
@@ -95,6 +95,10 @@ var TextModel = (function () {
             }
         }
         return testCoverageStr;
+    }
+
+    function getUnitsData() {
+        return unitsData;
     }
 
     function calc() {
@@ -110,7 +114,7 @@ var TextModel = (function () {
             throw new InconsistentModelDataException("Moduļu skaitam jābūt mazākam par programmatūras garumu");
         }
 
-        if (testedUnits.length > unitsCount) {
+        if (unitsData.length > unitsCount) {
             throw new InconsistentModelDataException("Notestēto moduļu skaits nevar būt lielāks par kopējo moduļu skaitu");
         }
 
@@ -128,10 +132,10 @@ var TextModel = (function () {
             } else {
                 testCoefficient = initialFoundErrorsCount / avgModuleErrorsCount;
 
-                for (var i = 0; i < testedUnits.length; i++) {
-                    var bk = testedUnits[i].errorsCount / testCoefficient;
-                    var cn = avgFaultRate * testedUnits[i].codeLength;
-                    testedUnits[i].testCoverageLow = bk < cn;
+                for (var i = 0; i < unitsData.length; i++) {
+                    var bk = unitsData[i].errorsCount / testCoefficient;
+                    var cn = avgFaultRate * unitsData[i].codeLength;
+                    unitsData[i].testCoverageLow = bk < cn;
                 }
             }
         }
@@ -143,6 +147,7 @@ var TextModel = (function () {
         getAvgCodeLength: getAvgCodeLength,
         getInitialErrorsCount: getInitialErrorsCount,
         getTestCoverageString: getTestCoverageString,
+        getUnitsData: getUnitsData,
         setCodeLengthTotal: setCodeLengthTotal,
         setUnitsCount: setUnitsCount,
         setTestedUnits: setTestedUnits,

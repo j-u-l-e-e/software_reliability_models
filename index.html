@@ -8,68 +8,887 @@
     <script src="js/textmodel.js"></script>
     <script src="js/util.js"></script>
     <script src="js/papaparse.min.js"></script>
+    <script src="js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="js/latexit.js"></script>
 
-    <script>
-        function getDocHeight(doc) {
-            doc = doc || document;
-            // stackoverflow.com/questions/1145850/
-            var body = doc.body, html = doc.documentElement;
-            var height = Math.max( body.scrollHeight, body.offsetHeight,
-                html.clientHeight, html.scrollHeight, html.offsetHeight );
-            return height;
-        }
-
-        function resizeIframe(ifrm) {
-            // var doc = ifrm.contentDocument? ifrm.contentDocument: ifrm.contentWindow.document;
-            // ifrm.style.visibility = 'hidden';
-            // ifrm.style.height = "10px"; // reset to minimal height ...
-            // // IE opt. for bing/msn needs a bit added or scrollbar appears
-            // ifrm.style.height = getDocHeight( doc ) + 4 + "px";
-            // ifrm.style.visibility = 'visible';
-
-
-            ifrm.style.height = (window.innerHeight/*innerHeight*/ - document.getElementById("divTab").scrollHeight/*scrollTop*//*.offsetTop*/) + 'px';
-            console.log(ifrm.style.height);
-        }
-    </script>
 </head>
 <body>
 
 <h1>Rīki programmatūras drošuma novērtēšanai</h1>
 
-<div id="divTab" class="wrap">
-    <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'Maksims/4.html')" id="defaultOpen">Musa-Okumoto modelis
+<div>
+    <label for="inputSoftwareTitle">Programmatūras nosaukums</label>
+    <input id="inputSoftwareTitle" type="text">
+    <button id="buttonSaveResults">Saglabāt rezultātu</button>
+
+    <script>
+        // Object with current results for current software tested
+        var results = {
+            title: null,
+            MusaOkumoto: {failureRate : null},
+            EndTime: {debugTime: null},
+            Lipov: {failureProbability: null},
+            Schneidewind:  {failuresCount: null},
+            Weibull: {
+                reliability: null,
+                failureRate: null
+            },
+            Text: {
+                initialErrorsCount: null,
+                unitsData: null
+            }
+        };
+
+        document.getElementById('inputSoftwareTitle').addEventListener("change", function (ev) {
+            results.title = document.getElementById('inputSoftwareTitle').value;
+            document.getElementById("headingResults").innerHTML = "Rezultātu kopsavilkums programmatūrai: " + results.title;
+        });
+
+        document.getElementById("buttonSaveResults").addEventListener("click", function (ev) {
+            var blob = new Blob([JSON.stringify(results)], {type: 'text/plain;charset=utf-8'});
+            anchor = document.createElement('a');
+            anchor.download = results.title + '.json';
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.dataset.downloadurl = ['text/plain', anchor.download, anchor.href].join(':');
+            anchor.click();
+        })
+    </script>
+</div>
+
+<div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'MusaOkumoto')" id="defaultTab">Musa-Okumoto modelis</button>
+    <button class="tablinks" onclick="openTab(event, 'EndTime')">Modelis programmas pabeigšanas laika noteikšanai
     </button>
-    <button class="tablinks" onclick="openTab(event, 'Maksims/21.html')">Modelis programmas pabeigšanas laika
-        noteikšanai
+    <button class="tablinks" onclick="openTab(event, 'Lipov')">Lipova modelis</button>
+    <button class="tablinks" onclick="openTab(event, 'Schneidewind')">Šneidevinda modelis</button>
+    <button class="tablinks" onclick="openTab(event, 'Weibull')">Veibula modelis</button>
+    <button class="tablinks" onclick="openTab(event, 'Text')">Teksta modelis</button>
+    <button class="tablinks" onclick="openTab(event, 'divResults')" id="buttonResults">Rezultātu kopsavilkums</button>
+
+</div>
+
+<div id="MusaOkumoto" class="tabcontent">
+    <script type="text/javascript">
+        function precisionRound(number) {
+            var factor = Math.pow(10, 4);
+            return Math.round(number * factor) / factor;
+        }
+
+        function MusaOkumoto() {
+            arrErrors = document.getElementById("arrErrors").value.split(",");
+            intensity = document.getElementById("intensity").value;
+            errorsperhour = document.getElementById("errorsperhour").value;
+            arrresult = [];
+            if (Number(arrErrors) <= 0) {
+                alert("Kļūdas rādīšanas intensitāte nav ievadīta!")
+            }
+            if (Number(intensity) <= 0) {
+                alert("Kļūdas skaits par CPU stundu nav ievadīta")
+            }
+            if (Number(errorsperhour) <= 0) {
+                alert("Kļūdas samazināšanas intensitāte nav ievadīta")
+            }
+            for (i = 0; i < arrErrors.length; i++) {
+                reliability = errorsperhour * Math.exp(-intensity * arrErrors[i]);
+                arrresult.push(precisionRound(reliability));
+            }
+            document.getElementById("result1").innerHTML = arrresult[arrresult.length - 1];
+            updateMusaOkumotoResult();
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function updateMusaOkumotoResult() {
+            results.MusaOkumoto.failureRate = arrresult[arrresult.length - 1];
+        }
+    </script>
+    <h1>Musa-Okumoto modelis</h1>
+    <input type="button" onclick="location.href='about/4.html';" value="Teorija"/>
+    <input type="button" onclick="location.href='guide/4.html';" value="Instrukcija"/>
+
+    <table>
+        <tr>
+            <th align="Right">Kļūdas rādīšanas intensitāte:</th>
+            <th>
+                <textarea id="errorsperhour"></textarea>
+            </th>
+        </tr>
+        <tr>
+            <th align="Right">Kļūdas skaits par CPU stundu:</th>
+            <th>
+                <textarea id="arrErrors"></textarea>
+            </th>
+        </tr>
+        <tr>
+            <th align="Right">Kļūdas samazināšanas intensitāte:</th>
+            <th>
+                <textarea id="intensity"></textarea>
+            </th>
+        </tr>
+    </table>
+    <br>
+
+    <button onclick="MusaOkumoto()">Aprēķināt</button>
+    <br>
+    <br>
+
+    λ = <span id="result1"></span><br><br>
+    <button onclick="goBack()">Atpakaļ</button>
+</div>
+
+<div id="EndTime" class="tabcontent">
+    <h1>Modelis programmas pabeigšanas laika noteikšanai</h1>
+    <input type="button" onclick="location.href='about/21.html';" value="Teorija"/>
+    <input type="button" onclick="location.href='guide/21.html';" value="Instrukcija"/>
+
+    <table>
+        <tr>
+            <th align="Right">Moduļa ķlūdas labošanas varbūtības (2D matrica):</th>
+            <th>
+                <textarea id="textareaErrorProbability"></textarea>
+            </th>
+        </tr>
+        <tr>
+            <th align="Right">Kļūdu skaits moduļos (vektors):</th>
+            <th>
+                <textarea id="textareaErrorsCount"></textarea>
+            </th>
+        </tr>
+        <tr>
+            <th align="Right">Stundu skaits priekš vienas kļūdas labošanai:</th>
+            <th>
+                <textarea id="textareaTimePerError" required="required"></textarea>
+            </th>
+        </tr>
+    </table>
+
+    <button onclick="calc()">Aprēķināt</button>
+    <br>
+
+    <p id="result2"></p><br><br>
+
+    <button onclick="goBack()">Atpakaļ</button>
+
+    <script>
+        var arr = []; // 2D array
+        function parseCsv(dataStr) {
+            Papa.parse(dataStr, {
+                complete: function (results) {
+                    if (results.errors.length == 0) { // data ok
+                        // Loop by rows
+                        for (var i = 0; i < results.data.length; i++) {
+                            arr.push([]);
+                            var row = arr[arr.length - 1];
+                            // Loop by columns
+                            for (var j = 0; j < results.data[i].length; j++) {
+                                row.push(results.data[i][j]);
+                            }
+                        }
+                    }
+                }
+            });
+            return arr;
+        }
+
+        function calc(event) {
+            var ErrorProbability = parseCsv(document.getElementById("textareaErrorProbability").value);
+            var ErrorsCount = document.getElementById("textareaErrorsCount").value.split(",");
+            var TimePerError = document.getElementById("textareaTimePerError").value;
+            var ErrorSum = [];
+            var Summa = 0;
+            var P = 0;
+            var columns = 0;
+
+            //Check Matrix stucture correction
+            for (i = 0; i < ErrorProbability.length; i++) {
+                for (j = 0; j < ErrorProbability.length; j++) {
+                    P = P + Number(ErrorProbability[i][j]);
+                    columns = j + 1;
+                }
+            }
+            if (ErrorProbability.length != columns) {
+                alert("Nepareizi aizpildīts matrica, rindiņu un colonu skaits nav vienāds");
+            }
+
+            //Check typed Errors count
+            if (ErrorProbability.length != ErrorsCount.length) {
+                alert("Ievadītais kļūdas vertības skaits - " + ErrorsCount.length + " nav vienads ar matricas izmēru - " + ErrorProbability.length);
+            }
+
+            //Check that Matrix was filled correctly
+            for (i = 0; i < ErrorProbability.length; i++) {
+                P = 0;
+                for (j = 0; j < ErrorProbability.length; j++) {
+                    P = P + Number(ErrorProbability[i][j]);
+                }
+                if (P != 1) {
+                    alert("Nepareizi aizpildīts varbūtības matrica " + Number(i + 1) + " rindā, varbūtības summa rindā jābūt vienāda 1=" + P);
+                }
+            }
+
+            //Check that Time Per Error not null
+            if (Number(TimePerError) <= 0) {
+                alert("Stundu skaitam jābūt lielākam par 0!")
+            }
+
+            //Calculate error cound per Module depending from another Modules
+            for (i = 0; i < ErrorProbability.length; i++) {
+                for (j = 0; j < ErrorProbability.length; j++) {
+                    ErrorProbability[i][j] = ErrorProbability[i][j] * ErrorsCount[i]
+                }
+            }
+
+            //Calculate error sum per Module
+            for (j = 0; j < ErrorProbability.length; j++) {
+                for (i = 0; i < ErrorProbability.length; i++) {
+                    Summa = Summa + ErrorProbability[i][j]
+                }
+                Summa = Summa + Number(ErrorsCount[j]);
+                ErrorSum.push(Summa);
+                Summa = 0;
+            }
+
+            //Calculate how much time will be necassary to fix each Module
+            result2 = "";
+            for (i = 0; i < ErrorSum.length; i++) {
+                result2 = result2 + Number(i + 1) + ". Modulīm vajadzes " + ErrorSum[i] + " stundas priekš " + Math.ceil(ErrorSum[i] * TimePerError) + " kļūdas labošanai;" + "<br>";
+            }
+            document.getElementById("result2").innerHTML = result2;
+            ErrorProbability.length = 0;
+            updateEndTimeResult();
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function updateEndTimeResult() {
+            results.EndTime = {debugTime: result2};
+        }
+
+    </script>
+</div>
+
+<div id="Lipov" class="tabcontent">
+    <script type="text/javascript">
+        function checkOne(N, n) {
+            return N >= n && n >= 0;
+        }
+
+        function checkTwo(M, m) {
+            return M >= m && m >= 0;
+        }
+
+        function checkThree(k, n, m) {
+            return k >= 0 && k >= parseInt(n) + parseInt(m);
+        }
+
+        function Lipova() {
+            N = parseInt(document.getElementById("errCountInProg").value);
+            M = parseInt(document.getElementById("overallBroughtErrorCount").value);
+            k = parseInt(document.getElementById("testsCountUsedForTesting").value);
+            n = parseInt(document.getElementById("ownErrorCount").value);
+            m = parseInt(document.getElementById("broughtErrorCount").value);
+            document.getElementById("result3").style.color = "black";
+
+            if (N < 0) {
+                document.getElementById("result3").innerHTML = "Dabīgo kļūdu skaits programmā nevar būt mazāk par nulli!!!";
+                document.getElementById("result3").style.color = "red";
+                return;
+            }
+            if (M < 0) {
+                document.getElementById("result3").innerHTML = "Ienesto kļūdu skaits mazāk par nulli!!!";
+                document.getElementById("result3").style.color = "red";
+                return;
+            }
+
+            if (n < 0) {
+                document.getElementById("result3").innerHTML = "Dabīgo kļūdu skaits nevar būt mazāk par nulli!!!";
+                document.getElementById("result3").style.color = "red";
+                return;
+            }
+
+            if (n === 0) {
+                document.getElementById("result3").innerHTML = "Dalīšana uz nulli!!!";
+                document.getElementById("result3").style.color = "red";
+                return;
+            }
+
+            if (m < 0) {
+                document.getElementById("result3").innerHTML = "Mākslīgo kļūdu skaits nevar būt mazāk par nulli!!!";
+                document.getElementById("result3").style.color = "red";
+                return;
+            }
+
+            if (k < 0) {
+                document.getElementById("result3").innerHTML = "Testēšanai lietoto testu skaits nevar būt mazāk par nulli!!!";
+                document.getElementById("result3").style.color = "red";
+                return;
+            }
+
+            if (N === '' || M === '' || k === '' || n === '' || m === '' || k === '') {
+                document.getElementById("result3").style.color = "red";
+                document.getElementById("result3").innerHTML = "Ievadiet visus nepieciešamus datus!!!";
+                return;
+            } else {
+                if (!checkOne(N, n)) {
+                    document.getElementById("result3").style.color = "red";
+                    document.getElementById("result3").innerHTML = "Pirmais nosacījums nav izpildīts!";
+                    return;
+                }
+                if (!checkTwo(M, m)) {
+                    document.getElementById("result3").style.color = "red";
+                    document.getElementById("result3").innerHTML = "Otrais nosacījums nav izpildīts!";
+                    return;
+                }
+                if (!checkThree(k, n, m)) {
+                    document.getElementById("result3").style.color = "red";
+                    document.getElementById("result3").innerHTML = "Trešais nosacījums nav izpildīts!";
+                    return;
+                }
+                q = (n + m) / n;
+                res = k / (n + m);
+                res = res * Math.pow(q, n + m);
+                res = res * Math.pow((1 - q), k - n - m);
+                res = res * ((N / n) * (M / m)) / ((N + M) / (n + m));
+                document.getElementById("result3").innerHTML = res.toFixed(2);
+                document.getElementById("qId").innerHTML = q.toFixed(2);
+
+                updateLipovResult();
+            }
+
+            function updateLipovResult() {
+                results.Lipov = {failureProbability: res.toFixed(2)};
+            }
+        }
+    </script>
+
+    <h1>Lipova modelis</h1>
+    <br/>
+    <div>Dabīgu <b>n</b> un mākslīgu <b>m</b> kļūdu atrašanas varbūtība:</div>
+    <div lang="latex">Q(n,m) = ( \frac{k}{n+m} ) * q^{n+m} * (1-q)^{k-n-m} * \frac{ \frac{N}{n} \times \frac{M}{m}
+        }{\frac{N+M}{n+m}}
+    </div>
+    <h2>Modeļa lietošanai ir jāievēro nosacījumi:</h2>
+    <ol>
+        <li>
+            <div lang="latex">N \geq n \geq 0,</div>
+        </li>
+        <li>
+            <div lang="latex">M \geq m \geq 0,</div>
+        </li>
+        <li>
+            <div lang="latex">k \geq n + m \geq 0</div>
+        </li>
+    </ol>
+    <br/>
+    <h3>Lūdzu, ievadiet datus izskaitļošanai:</h3>
+    <table>
+        <tr>
+            <td><label for="errCountInProg">N - Dabīgo kļūdu skaits programmā:</label></td>
+            <td><input id="errCountInProg" type="number" min="0" step="1"></td>
+        </tr>
+
+        <tr>
+            <td><label for="overallBroughtErrorCount">M - Ienesto kļūdu skaits:</label></td>
+            <td><input id="overallBroughtErrorCount" type="number" min="0" step="1"></td>
+        </tr>
+
+        <tr>
+            <td><label for="testsCountUsedForTesting">k - Testēšanai lietoto testu skaits:</label></td>
+            <td><input id="testsCountUsedForTesting" type="number" min="0" step="1"></td>
+        </tr>
+
+        <tr>
+            <td><label for="ownErrorCount">n - Dabīgo kļūdu skaits:</label></td>
+            <td><input id="ownErrorCount" type="number" min="0" step="1"></td>
+        </tr>
+
+        <tr>
+            <td><label for="broughtErrorCount">m - Mākslīgo kļūdu skaits:</label></td>
+            <td><input id="broughtErrorCount" type="number" min="0" step="1"></td>
+        </tr>
+
+        <tr>
+            <td><label for="qId">q - Kļūdas atrašanas varbūtība katrā no k testiem, q= (n+m)/n:</label></td>
+            <td><span id="qId"></span></td>
+        </tr>
+    </table>
+    <br/>
+    <button onclick="Lipova()">Atrisināt</button>
+    <br/>
+    <br/>
+    Rezultāts: <span id="result3"></span>
+</div>
+
+<div id="Schneidewind" class="tabcontent">
+    <script type="text/javascript">
+        function Sneid() {
+            document.getElementById("totNumFail").style.color = "black";
+            beta = document.getElementById("beta").value;
+            fi = document.getElementById("fi").value.split(",");
+            var fN = 0;
+            for (i = 0; i < fi.length; i++) {
+                fN = +fN + +fi[i];
+            }
+
+            n = fi.length;
+            if (beta < 0) {
+                document.getElementById("totNumFail").innerHTML = "beta nevar būt mazāk par nulli!!!";
+                document.getElementById("totNumFail").style.color = "red";
+                return;
+            }
+            // if (fi < 0){
+            // document.getElementById("totNumFail").innerHTML = "Kļūmes skaitu summa mazāk par nulli!!!";
+            // document.getElementById("totNumFail").style.color = "red";
+            // return;
+            // }
+
+            if (n < 0) {
+                document.getElementById("totNumFail").innerHTML = "Laika intervāli nevar būt mazāk par nulli!!!";
+                document.getElementById("totNumFail").style.color = "red";
+                return;
+            }
+
+            if (n == 0) {
+                document.getElementById("totNumFail").innerHTML = "Dalīšana uz nulli!!! Izvēlēties n, kurš lielāk par nulli!";
+                document.getElementById("totNumFail").style.color = "red";
+                return;
+            }
+
+            if (beta == '' || fN == '' || n == '') {
+                document.getElementById("totNumFail").innerHTML = "Ievadiet visus nepieciešamus datus!!!";
+                document.getElementById("totNumFail").style.color = "red";
+                return;
+            } else {
+                alpha = (beta * fN) / (1 - Math.exp(-1 * beta * n));
+
+                document.getElementById("alphaTXT").innerHTML = alpha.toFixed(2);
+                totFail = alpha / beta;
+                document.getElementById("totNumFail").innerHTML = Math.floor(totFail);
+                updateSchneidewindResult();
+            }
+        }
+
+        function updateSchneidewindResult() {
+            results.Schneidewind = {failuresCount: Math.floor(totFail)};
+        }
+    </script>
+
+    <h1>Šneidevinda modelis</h1>
+
+    <button onclick="window.open('about/12.html', 'Šneidevinda modelis', 'width=300,height=500')">Par Šneidevinda
+        modeli
     </button>
-    <button class="tablinks" onclick="openTab(event, 'Konstantins/11.html')">Lipova modelis</button>
-    <button class="tablinks" onclick="openTab(event, 'Konstantins/12.html')">Šneidevinda modeliss</button>
-    <button class="tablinks" onclick="openTab(event, 'Julija/8.html')">Veibula modelis</button>
-    <button class="tablinks" onclick="openTab(event, 'Julija/19.html')">Teksta modelis</button>
+
+    <h3>Lūdzu, ievadiet datus izskaitļošanai:</h3>
+    <table>
+        <tr>
+        <tr>
+            <td><label for="beta" lang="latex">\beta -</label><font> parametrs: </font></td>
+            <td><input id="beta" type="number" min="0"></td>
+        </tr>
+
+        <tr>
+            <td><label for="fi" lang="latex">f_i</label><label> - kļūdu skaits laika intervālos (diena, nedeļa,
+                utt.): </label></td>
+            <td><textarea id="fi"></textarea></td>
+        </tr>
+
+        <tr>
+            <td><label for="alphaTXT" lang="latex">\alpha -</label><font> parametrs: </font></td>
+            <td><span id="alphaTXT"></span></td>
+        </tr>
+    </table>
+
+    <br/>
+    <button onclick="Sneid()">Atrisināt</button>
+    <br/>
+    <br/>
+    Novērtēts kļūmes skaits: <span id="totNumFail"></span>
 </div>
+
+<div id="Weibull" class="tabcontent">
+    <h1>Veibula modelis</h1>
+    <button onclick="var myWindow = window.open('about/8.html', 'Veibula modelis', 'width=300,height=500')">Par Veibula
+        modeli
+    </button>
+    <button onclick="window.open('guide/8.html', 'Instrukcijas Veibula modeļa lietošanai', 'width=300,height=500');">
+        Instrukcija
+    </button>
+
+    <div>
+        <label for="inputTimeCurr">Laiks prognozēšanai, t</label>
+        <input id="inputTimeCurr" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
+    </div>
+
+
+    <label for="textareaFailureTimes">Kļudu atklāšanas laiki, <i>t<sub>i</sub></i>;</label>
+    <textarea id="textareaFailureTimes"></textarea>
+
+    <div>
+        <button style="display:block;" onclick="document.getElementById('inputFailuresDataFile').click()">Importēt no
+            .csv
+        </button>
+        <input type='file' id="inputFailuresDataFile" style="display:none" accept=".csv">
+    </div>
+    <label for="inputManualParameters">Patstāvīgi izvēlēties parametru vērtības</label>
+    <input type="checkbox" id="inputManualParameters">
+    <div>
+        <label for="inputScale">α</label>
+        <input id="inputScale" type="number" min="0.001" step="0.001" disabled="disabled"
+               onblur="this.value = Math.abs(this.value)">
+        <label for="inputShape">β</label>
+        <input id="inputShape" type="number" min="0.001" step="0.001" disabled="disabled"
+               onblur="this.value = Math.abs(this.value)">
+    </div>
+    <div>
+        <button onclick="calcWeibull()">Aprēķināt</button>
+    </div>
+
+    <p id="pReliability">
+    <p id="pFailureRate">
+        <script>
+            var weibullModel = WeibullModel();
+            var inputFailuresDataFile = document.getElementById("inputFailuresDataFile");
+            var inputManualParameters = document.getElementById("inputManualParameters");
+            var manualParameters = false;
+
+            inputManualParameters.addEventListener("change", function () {
+                manualParameters = !manualParameters;
+                var inputScale = document.getElementById("inputScale");
+                var inputShape = document.getElementById("inputShape");
+                inputScale.disabled = !inputScale.disabled;
+                inputShape.disabled = !inputShape.disabled;
+            });
+
+            function calcWeibull(event) {
+                // Parse model data
+                var timeCurr = parseInt(document.getElementById("inputTimeCurr").value);
+                var failureTimes = parseNaturalNonNullNumbers(document.getElementById("textareaFailureTimes").value);
+                var scale = false;
+                var shape = false;
+
+                if (manualParameters) {
+                    scale = parseFloat(document.getElementById("inputScale").value);
+                    shape = parseFloat(document.getElementById("inputShape").value);
+                    if (!scale || !shape) {
+                        alert("α un β jābūt lielākiem par 0");
+                        return false;
+                    }
+                }
+
+                try {
+                    weibullModel.setup(failureTimes, timeCurr, scale, shape);
+                } catch (e) {
+                    alert(e.message);
+                    return false;
+                }
+
+                // Data OK, show calculated data
+                document.getElementById("pReliability").innerHTML = "Drošums, R(t): " + weibullModel.getReliability();
+                document.getElementById("pFailureRate").innerHTML = "Atteiču intensitāte, λ(t): " + weibullModel.getFailureRate();
+                if (!manualParameters) {
+                    document.getElementById("inputScale").value = weibullModel.getScale();
+                    document.getElementById("inputShape").value = weibullModel.getShape();
+                }
+                updateWeibullResult();
+                return true;
+            }
+
+            function updateWeibullResult() {
+                results.Weibull = {
+                    reliability: weibullModel.getReliability(),
+                    failureRate: weibullModel.getFailureRate()
+                }
+            }
+
+            inputFailuresDataFile.addEventListener("change", function (evt) {
+                var failuresDataFile = evt.target.files[0];
+
+                Papa.parse(failuresDataFile, {
+                    delimiter: ",", // to avoid error "Unable to auto-detect delimiting character" when one column
+                    complete: function (results) {
+                        if (results.errors.length === 0) { // data ok
+                            var failureTimes = "";
+
+                            for (var i = 0; i < results.data.length; i++) {
+                                if (results.data[i].length !== 1) {
+                                    alert(".csv datnes struktūra neatbilst šablonām: [kļūdu atklāšanas laiks]");
+                                    document.getElementById("textareaFailureTimes").value = "";
+                                    return false;
+                                }
+                                if (results.data[i][0]) failureTimes += results.data[i][0] + "\n";
+                                else failureTimes += 0 + "\n";
+                            }
+                            // Remove \n in the end of strings
+                            failureTimes = failureTimes.slice(0, failureTimes.length - 1);
+
+                            document.getElementById("textareaFailureTimes").value = failureTimes;
+                        }
+                    }
+                });
+            });
+
+        </script>
 </div>
 
+<div id="Text" class="tabcontent">
+    <h1>Teksta modelis</h1>
+    <button onclick="window.open('about/19.html', 'Teksta modelis', 'width=300,height=500')">Par Teksta modeli</button>
+    <button onclick="window.open('guide/19.html', 'Instrukcija Teksta modeļa lietošanai', 'width=300,height=500')">
+        Instrukcija
+    </button>
 
+    <div>
+        <label for="inputOperandsTotalCount">Programatūras garums, <i>N</i>:</label>
+        <input id="inputOperandsTotalCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
+    </div>
+    <div>
+        <label for="inputUnitsCount">Kopējais moduļu skaits, <i>n</i>:</label>
+        <input id="inputUnitsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th>[Koda garums],[Kļūdu skaits]</th>
+                <th>[Testēšanas pakāpe]</th>
+            </tr>
+            <tr>
+                <td>
+                    <textarea id="textareaData" onmousemove="resize();"></textarea>
+                </td>
+                <td>
+                    <textarea id="textareaTestCoverage" disabled="disabled"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <label id="labelInputAvgErrorsCount" for="inputAvgErrorsCount" style="display:none">Vidējais kļūdu skaits
+            moduļos, <i>B<sub>vid</sub></i>:</label>
+        <input id="inputAvgErrorsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)"
+               style="display:none">
+    </div>
+    <div>
+        <button style="display:block;" onclick="document.getElementById('inputUnitsDataFile').click()">Importēt no
+            .csv
+        </button>
+        <input type='file' id="inputUnitsDataFile" style="display:none" accept=".csv">
+    </div>
+    <div>
+        <button onclick="calcText()">Aprēķināt</button>
+    </div>
 
-<div id="divModel" class="wrap">
-    <iframe frameborder="0" id="iframeModel" width="100%" onload="resizeIframe(this)"></iframe>
+    <p id="pAvgCodeLength">
+    <p id="pAvgErrorsCount">
+    <p id="pInitialErrorsCount">
+
+        <!-- Put script after all DOM elements are initialized -->
+        <script>
+            var inputCodeLengthTotal = document.getElementById("inputOperandsTotalCount");
+            var inputUnitsCount = document.getElementById("inputUnitsCount");
+            var inputAvgErrorsCount = document.getElementById("inputAvgErrorsCount");
+            var labelInputAvgErrorsCount = document.getElementById("labelInputAvgErrorsCount");
+            var textareaData = document.getElementById("textareaData");
+            var textareaTestCoverage = document.getElementById("textareaTestCoverage");
+            var pAvgCodeLength = document.getElementById("pAvgCodeLength");
+            var pInitialErrorsCount = document.getElementById("pInitialErrorsCount");
+            var inputUnitsDataFile = document.getElementById("inputUnitsDataFile");
+
+            function resize() {
+                textareaTestCoverage.style.height = textareaData.style.height;
+            }
+
+            var textModel = TextModel;
+
+            function calcText(event) {
+                try {
+                    textModel.calc();
+                    // Data OK, show calculated data
+                    pAvgCodeLength.innerHTML = "Vidējais moduļu garums, Nvid: " + textModel.getAvgCodeLength();
+                    pInitialErrorsCount.innerHTML = "Sakumkļūdu skaits programmatūrā, B: " + textModel.getInitialErrorsCount();
+                    textareaTestCoverage.value = textModel.getTestCoverageString();
+                } catch (e) {
+                    alert(e.message);
+                    pAvgCodeLength.innerHTML = "";
+                    pInitialErrorsCount.innerHTML = "";
+                    textareaTestCoverage.value = "";
+                    return false;
+                }
+
+                updateTextResult();
+                return true;
+            }
+
+            function updateTextResult() {
+                results.Text = {
+                    initialErrorsCount: textModel.getInitialErrorsCount(),
+                    unitsData: textModel.getUnitsData()
+                }
+            }
+
+            inputCodeLengthTotal.addEventListener("change", function (evt) {
+                textModel.setCodeLengthTotal(parseInt(inputCodeLengthTotal.value));
+                updateAvgLengthUnitId();
+            });
+
+            inputUnitsCount.addEventListener("change", function (evt) {
+                textModel.setUnitsCount(parseInt(inputUnitsCount.value));
+                updateAvgLengthUnitId();
+            });
+
+            textareaData.addEventListener("change", function (ev) {
+                prepareUnitsData(textareaData.value);
+            });
+
+            function updateAvgLengthUnitId() {
+                var avgLengthUnitId = textModel.getAvgLengthUnitId();
+                if (avgLengthUnitId >= 0) {
+                    // labelInputAvgErrorsCount.innerText = "Vidējais kļūdu skaits moduļos, <i>B<sub>vid<//sub><//i> (atklāto kļūdu skaits " + avgLengthUnitId + "-tā modulī pēc \'trieciena\' metodes lietošanas):";
+                    labelInputAvgErrorsCount.innerHTML = "Atklāto kļūdu skaits " + avgLengthUnitId + ". modulī ar \'Trieciena\' metodi, B<sub>vid<\sub>:";
+                    labelInputAvgErrorsCount.style.display = "block";
+                    inputAvgErrorsCount.style.display = "block";
+                    pAvgCodeLength.innerHTML = "";
+                    pInitialErrorsCount.innerHTML = "";
+                    textareaTestCoverage.value = "";
+                } else {
+                    labelInputAvgErrorsCount.style.display = "none";
+                    inputAvgErrorsCount.style.display = "none";
+                    pAvgCodeLength.innerHTML = "";
+                    pInitialErrorsCount.innerHTML = "";
+                    textareaTestCoverage.value = "";
+                }
+            }
+
+            inputAvgErrorsCount.addEventListener("change", function (evt) {
+                textModel.setAvgErrorsCount(parseInt(inputAvgErrorsCount.value));
+            });
+
+            // Read units data from .csv
+            inputUnitsDataFile.addEventListener("change", function (evt) {
+                var unitsDataFile = evt.target.files[0];
+                if (unitsDataFile) {
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        if (prepareUnitsData(event.target.result)) {
+                            textareaData.value = event.target.result;
+                        } else {
+                            textareaData.value = "";
+                        }
+                    };
+                    reader.readAsText(unitsDataFile);
+                }
+            });
+
+            function prepareUnitsData(strData) {
+                var unitsData = parseTextData(strData);
+                if (unitsData === -1) {
+                    textModel.setTestedUnits(-1);
+                    return false;
+                } else {
+                    textModel.setTestedUnits(unitsData);
+                    updateAvgLengthUnitId();
+                    return true;
+                }
+            }
+
+            function parseTextData(dataStr) {
+                var unitsData = [];
+
+                Papa.parse(dataStr, {
+                    complete: function (results) {
+                        if (results.errors.length === 0) { // data ok
+
+                            for (var i = 0; i < results.data.length; i++) {
+                                if (results.data[i].length !== 2) {
+                                    alert(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
+                                    unitsData = -1;
+                                    return false;
+                                }
+                                try {
+                                    unitsData.push(new UnitData(results.data[i][0], results.data[i][1]));
+                                } catch (e) {
+                                    alert(e.message);
+                                    unitsData = -1;
+                                    return false;
+                                }
+                            }
+                        } else {
+                            alert(".csv datnes struktūra neatbilst šablonām: [koda garums, kļūdu skaits]");
+                            unitsData = -1;
+                            return false;
+                        }
+                    },
+                    delimiter: ",",
+                    header: false
+                });
+
+                return unitsData;
+            }
+
+        </script>
 </div>
 
-<!--<iframe class="fill" id="iframeModel" frameborder="0"></iframe>-->
+<div id="divResults" class="tabcontent">
+    <h1 id="headingResults"></h1>
+
+    <div>
+        <h2>Musa-Okumoto modeļa rezultāti</h2>
+        <p id="pMusaOkumoto"></p>
+        <h2>Modeļa programmas pabeigšanas laika noteikšanai rezultāti</h2>
+        <p id="pEndTime"></p>
+        <h2>Lipova rezultāti</h2>
+        <p id="pLipov"></p>
+        <h2>Šneidevinda modeļa rezultāti</h2>
+        <p id="pSchneidewind"></p>
+        <h2>Veibula modeļa rezultāti</h2>
+        <p id="pWeibull"></p>
+        <h2>Teksta modeļa rezultāti</h2>
+        <p id="pText"></p>
+    </div>
+</div>
 
 <script>
-    function openTab(evt, pageName) {
-        document.getElementById("iframeModel").src = pageName;
+    function openTab(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
     }
 
-    // Get the element with id="defaultOpen" and click on it
-    document.getElementById("defaultOpen").click();
+    document.getElementById("defaultTab").click();
 
-    window.addEventListener("resize", function () {
-        resizeIframe(document.getElementById("iframeModel"))
-    });
+    document.getElementById("buttonResults").addEventListener("click", function () {
+        document.getElementById("headingResults").innerHTML = "Rezultātu kopsavilkums programmatūrai: " + results.title;
+
+        document.getElementById("pMusaOkumoto").innerHTML = "Kļūdu rādīšanas koeficienta samazināšanas intensitāte, <i>λ</i>: " + results.MusaOkumoto.failureRate;
+        document.getElementById("pEndTime").innerHTML = "Laika patēriņš moduļu atkļūdošanai: <br>" + results.EndTime.debugTime;
+        document.getElementById("pLipov").innerHTML = "Darbīgu <i>n</i> un mākslīgu <i>m</i> kļūdu atrašanas varbūtība, <i>Q(n,m)</i>: " + results.Lipov.failureProbability;
+        document.getElementById("pSchneidewind").innerHTML = "Kopējais kļūdu skaits: " + results.Schneidewind.failuresCount;
+        document.getElementById("pWeibull").innerHTML = "Drošums, <i>R</i>:" + results.Weibull.reliability + "<br> Atteiču intensitāte, <i>λ</i>: " + results.Weibull.failureRate;
+
+        var pText = document.getElementById("pText");
+        pText.innerHTML = "Sākumkļūdu skaits, <i>B</i>: " + results.Text.initialErrorsCount + " <br>";
+        pText.innerHTML += "Moduļu testēšanas pakāpe: <br>";
+        for (var i = 0; i < results.Text.unitsData.length; i++) {
+            pText.innerHTML += "" + i + ". modulis: ";
+            if (results.Text.unitsData[i].testCoverageLow) {
+                pText.innerHTML += "zema <br>";
+            } else {
+                pText.innerHTML += "augsta <br>";
+            }
+        }
+    })
 </script>
 
 </body>

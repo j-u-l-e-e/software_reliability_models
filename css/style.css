@@ -1,6 +1,4 @@
-body {
-    font-family: Arial;
-}
+body {font-family: Arial;}
 
 /* Style the tab */
 .tab {
@@ -31,22 +29,10 @@ body {
     background-color: #ccc;
 }
 
-.wrap {
-    width: 100%;
-    height: 100%;
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
 }
-
-#iframeModel {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-/*
-.fill {
-    !*width: 100vw;*!
-    !*height: 100vh;*!
-    width: 98em;!*calc(100% - 40px);*!
-    height: calc(100% - 80px);
-    padding: 15px;
-}*/
