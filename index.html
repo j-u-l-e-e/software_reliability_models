@@ -365,25 +365,12 @@
     </script>
 
     <h1>Lipova modelis</h1>
-    <br/>
-    <div>Dabīgu <b>n</b> un mākslīgu <b>m</b> kļūdu atrašanas varbūtība:</div>
-    <div lang="latex">Q(n,m) = ( \frac{k}{n+m} ) * q^{n+m} * (1-q)^{k-n-m} * \frac{ \frac{N}{n} \times \frac{M}{m}
-        }{\frac{N+M}{n+m}}
-    </div>
-    <h2>Modeļa lietošanai ir jāievēro nosacījumi:</h2>
-    <ol>
-        <li>
-            <div lang="latex">N \geq n \geq 0,</div>
-        </li>
-        <li>
-            <div lang="latex">M \geq m \geq 0,</div>
-        </li>
-        <li>
-            <div lang="latex">k \geq n + m \geq 0</div>
-        </li>
-    </ol>
-    <br/>
-    <h3>Lūdzu, ievadiet datus izskaitļošanai:</h3>
+
+    <button onclick="window.open('about/11.html', 'Lipova modeis', 'width=300,height=500')">Lipova modeis
+    </button>
+    <button onclick="window.open('guide/11.html', 'Instrukcijas Lipova modeļa lietošanai', 'width=300,height=500')">Instrukcija
+    </button>
+
     <table>
         <tr>
             <td><label for="errCountInProg">N - Dabīgo kļūdu skaits programmā:</label></td>
@@ -416,7 +403,7 @@
         </tr>
     </table>
     <br/>
-    <button onclick="Lipova()">Atrisināt</button>
+    <button onclick="Lipova()">Aprēķināt</button>
     <br/>
     <br/>
     Dabīgu n un mākslīgu m kļūdu atrašanas varbūtība, Q(n, m): <span id="result3"></span>
@@ -517,7 +504,9 @@
         modeli
     </button>
 
-    <h3>Lūdzu, ievadiet datus izskaitļošanai:</h3>
+    <button onclick="window.open('guide/12.html', 'Instrukcijas Šneidevinda modeļa lietošanai', 'width=300,height=500')">Instrukcija
+    </button>
+
     <table>
         <tr>
 
@@ -527,14 +516,12 @@
         </tr>
 
         <tr>
-            <td><label for="fi" lang="latex">f_i</label><label> - kļūdu skaits laika intervālos (diena, nedeļa,
-                utt.): </label></td>
+            <td><label for="fi">Kļūdu skaits laika intervālos, <i>f<sub>i</sub></i>: </label></td>
             <td><textarea id="fi"></textarea></td>
         </tr>
     </table>
 
-    <br>
-    <button onclick="Sneid()">Atrisināt</button>
+    <button onclick="Sneid()">Aprēķināt</button>
     <br>
     <br>
     <label for="betaTXT">β:</label>
@@ -558,31 +545,45 @@
         Instrukcija
     </button>
 
-    <div>
-        <label for="inputTimeCurr">Laiks prognozēšanai, t</label>
-        <input id="inputTimeCurr" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
-    </div>
+    <table>
+        <tr>
+            <td>
+                <label for="inputTimeCurr">Laiks prognozēšanai, t</label>
+            </td>
+            <td>
+                <input id="inputTimeCurr" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
+            </td>
+        <tr>
+            <td><label for="textareaFailureTimes">Kļudu atklāšanas laiki, <i>t<sub>i</sub></i>;</label></td>
+            <td><textarea id="textareaFailureTimes"></textarea>
+                <button style="display:block;" onclick="document.getElementById('inputFailuresDataFile').click()">
+                    Importēt no
+                    .csv
+                </button>
+                <input type='file' id="inputFailuresDataFile" style="display:none" accept=".csv">
+            </td>
+        </tr>
+
+        <tr >
+            <td colspan="2">
+                <label for="inputManualParameters">Patstāvīgi izvēlēties parametru vērtības</label>
+                <input type="checkbox" id="inputManualParameters">
+            </td>
+        </tr>
+
+        <tr>
+            <td><label for="inputScale">α</label>
+                <input id="inputScale" type="number" min="0.001" step="0.001" disabled="disabled"
+                       onblur="this.value = Math.abs(this.value)">
+            </td>
+            <td><label for="inputShape">β</label>
+                <input id="inputShape" type="number" min="0.001" step="0.001" disabled="disabled"
+                       onblur="this.value = Math.abs(this.value)">
+            </td>
+        </tr>
+    </table>
 
 
-    <label for="textareaFailureTimes">Kļudu atklāšanas laiki, <i>t<sub>i</sub></i>;</label>
-    <textarea id="textareaFailureTimes"></textarea>
-
-    <div>
-        <button style="display:block;" onclick="document.getElementById('inputFailuresDataFile').click()">Importēt no
-            .csv
-        </button>
-        <input type='file' id="inputFailuresDataFile" style="display:none" accept=".csv">
-    </div>
-    <label for="inputManualParameters">Patstāvīgi izvēlēties parametru vērtības</label>
-    <input type="checkbox" id="inputManualParameters">
-    <div>
-        <label for="inputScale">α</label>
-        <input id="inputScale" type="number" min="0.001" step="0.001" disabled="disabled"
-               onblur="this.value = Math.abs(this.value)">
-        <label for="inputShape">β</label>
-        <input id="inputShape" type="number" min="0.001" step="0.001" disabled="disabled"
-               onblur="this.value = Math.abs(this.value)">
-    </div>
     <div>
         <button onclick="calcWeibull()">Aprēķināt</button>
     </div>
@@ -682,15 +683,25 @@
     </button>
 
     <div>
-        <label for="inputOperandsTotalCount">Programatūras garums, <i>N</i>:</label>
-        <input id="inputOperandsTotalCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
-    </div>
-    <div>
-        <label for="inputUnitsCount">Kopējais moduļu skaits, <i>n</i>:</label>
-        <input id="inputUnitsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
-    </div>
-    <div>
         <table>
+            <tr>
+                <td>
+                    <label for="inputOperandsTotalCount">Programatūras garums, <i>N</i>:</label>
+                </td>
+                <td>
+                    <input id="inputOperandsTotalCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="inputUnitsCount">Kopējais moduļu skaits, <i>n</i>:</label>
+                </td>
+                <td>
+                    <input id="inputUnitsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
+                </td>
+            </tr>
+
             <tr>
                 <th>[Koda garums],[Kļūdu skaits]</th>
                 <th>[Testēšanas pakāpe]</th>
@@ -703,6 +714,14 @@
                     <textarea id="textareaTestCoverage" disabled="disabled"></textarea>
                 </td>
             </tr>
+            <tr>
+                <td colspan="2">
+                    <button style="display:block;" onclick="document.getElementById('inputUnitsDataFile').click()">Importēt no
+                        .csv
+                    </button>
+                    <input type='file' id="inputUnitsDataFile" style="display:none" accept=".csv">
+                </td>
+            </tr>
         </table>
     </div>
     <div>
@@ -710,12 +729,6 @@
             moduļos, <i>B<sub>vid</sub></i>:</label>
         <input id="inputAvgErrorsCount" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)"
                style="display:none">
-    </div>
-    <div>
-        <button style="display:block;" onclick="document.getElementById('inputUnitsDataFile').click()">Importēt no
-            .csv
-        </button>
-        <input type='file' id="inputUnitsDataFile" style="display:none" accept=".csv">
     </div>
     <div>
         <button onclick="calcText()">Aprēķināt</button>
