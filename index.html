@@ -8,7 +8,6 @@
     <script src="js/textmodel.js"></script>
     <script src="js/util.js"></script>
     <script src="js/papaparse.min.js"></script>
-    <script src="js/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="js/latexit.js"></script>
 
 </head>
@@ -25,10 +24,10 @@
         // Object with current results for current software tested
         var results = {
             title: null,
-            MusaOkumoto: {failureRate : null},
+            MusaOkumoto: {failureRate: null},
             EndTime: {debugTime: null},
             Lipov: {failureProbability: null},
-            Schneidewind:  {failuresCount: null},
+            Schneidewind: {failuresCount: null},
             Weibull: {
                 reliability: null,
                 failureRate: null
@@ -427,24 +426,26 @@
     <script type="text/javascript">
         function Sneid() {
             document.getElementById("totNumFail").style.color = "black";
-            beta = document.getElementById("beta").value;
             fi = document.getElementById("fi").value.split(",");
             var fN = 0;
             for (i = 0; i < fi.length; i++) {
-                fN = +fN + +fi[i];
+                fN += parseInt(fi[i]);
             }
 
+            var t = parseNaturalNonNullNumber(document.getElementById("inputTime").value);
+
             n = fi.length;
-            if (beta < 0) {
-                document.getElementById("totNumFail").innerHTML = "beta nevar būt mazāk par nulli!!!";
-                document.getElementById("totNumFail").style.color = "red";
-                return;
-            }
             // if (fi < 0){
             // document.getElementById("totNumFail").innerHTML = "Kļūmes skaitu summa mazāk par nulli!!!";
             // document.getElementById("totNumFail").style.color = "red";
             // return;
             // }
+
+            if (isNaN(t)) {
+                document.getElementById("totNumFail").innerHTML = "Laiks prognozēšanai nevar būt mazāk par nulli!";
+                document.getElementById("totNumFail").style.color = "red";
+                return;
+            }
 
             if (n < 0) {
                 document.getElementById("totNumFail").innerHTML = "Laika intervāli nevar būt mazāk par nulli!!!";
@@ -452,24 +453,57 @@
                 return;
             }
 
-            if (n == 0) {
+            if (n === 0) {
                 document.getElementById("totNumFail").innerHTML = "Dalīšana uz nulli!!! Izvēlēties n, kurš lielāk par nulli!";
                 document.getElementById("totNumFail").style.color = "red";
                 return;
             }
 
-            if (beta == '' || fN == '' || n == '') {
+            if (fN === 0) {
                 document.getElementById("totNumFail").innerHTML = "Ievadiet visus nepieciešamus datus!!!";
                 document.getElementById("totNumFail").style.color = "red";
                 return;
             } else {
-                alpha = (beta * fN) / (1 - Math.exp(-1 * beta * n));
+                var s2 = 0;
+                for (var i = 0; i < fi.length - 1; i++) {
+                    s2 += i * (parseInt(fi[i + 1]) / fN)
+                }
 
-                document.getElementById("alphaTXT").innerHTML = alpha.toFixed(2);
+                beta = calcBeta(s2, n);
+
+                alpha = (beta * fN) / (1 - Math.exp(-beta * n));
+
+                var lambda = alpha * Math.exp(-beta * t);
+
+                document.getElementById("betaTXT").innerHTML = beta.toFixed(4);
+
+                document.getElementById("alphaTXT").innerHTML = alpha.toFixed(4);
                 totFail = alpha / beta;
                 document.getElementById("totNumFail").innerHTML = Math.floor(totFail);
+                document.getElementById("lambdaTXT").innerHTML = lambda.toFixed(4);
                 updateSchneidewindResult();
             }
+        }
+
+        var tolerance = 0.00001;
+
+        function calcBeta(s2, n) {
+            var step = tolerance;
+            var b = step;
+
+            while (true) {
+                var s1 = (1 / (Math.exp(b) - 1)) - (n / (Math.exp(b * n) - 1));
+
+                var diff = s1 - s2;
+
+                if (diff <= tolerance) {
+                    break;
+                }
+
+                b += step;
+            }
+
+            return b;
         }
 
         function updateSchneidewindResult() {
@@ -486,9 +520,10 @@
     <h3>Lūdzu, ievadiet datus izskaitļošanai:</h3>
     <table>
         <tr>
+
         <tr>
-            <td><label for="beta" lang="latex">\beta -</label><font> parametrs: </font></td>
-            <td><input id="beta" type="number" min="0"></td>
+            <td><label for="inputTime">Laiks prognozēšanai, <i>t</i></label></td>
+            <td><input type="number" id="inputTime"></td>
         </tr>
 
         <tr>
@@ -496,18 +531,22 @@
                 utt.): </label></td>
             <td><textarea id="fi"></textarea></td>
         </tr>
-
-        <tr>
-            <td><label for="alphaTXT" lang="latex">\alpha -</label><font> parametrs: </font></td>
-            <td><span id="alphaTXT"></span></td>
-        </tr>
     </table>
 
-    <br/>
+    <br>
     <button onclick="Sneid()">Atrisināt</button>
-    <br/>
-    <br/>
+    <br>
+    <br>
+    <label for="betaTXT">β:</label>
+    <span id="betaTXT"></span>
+    <br>
+    <label for="alphaTXT">α:</label>
+    <span id="alphaTXT"></span>
+    <br>
     Novērtēts kļūmes skaits: <span id="totNumFail"></span>
+    <br>
+    <label for="lambdaTXT">Atteiču intensitāte, <i>λ(t)</i>:</label>
+    <span id="lambdaTXT"></span>
 </div>
 
 <div id="Weibull" class="tabcontent">
