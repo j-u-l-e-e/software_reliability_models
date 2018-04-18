@@ -23,11 +23,15 @@ var WeibullModel = function () {
         return shape;
     }
 
+    function getTimeCurr() {
+        return timeCurr;
+    }
+
     function setup(failure_times, time_curr, scale_, shape_) {
         timeCurr = parseNaturalNumber(time_curr, true);
 
         if (isNaN(timeCurr)) {
-            throw new InconsistentModelDataException("Laiks var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+            throw new InconsistentModelDataException("Prognozāšanas laiks var būt tikai vesels pozitīvs skaitlis");
         }
 
 
@@ -61,6 +65,8 @@ var WeibullModel = function () {
             var s2 = 0;
             var s3 = 0;
 
+            var diffPrev = NaN;
+
             for (var i = 0; i < failureTimes.length; i++) {
                 s1 += (Math.pow(failureTimes[i], shape) * Math.log(failureTimes[i]));
             }
@@ -74,11 +80,19 @@ var WeibullModel = function () {
             }
             s3 /= failureTimes.length;
 
-            var diff = 1.0 / shape - s1 / s2 + s3;
+            var diff = Math.abs(1.0 / shape - s1 / s2 + s3);
 
             if (diff <= tolerance) {
                 break;
             }
+
+            if (!isNaN(diffPrev)) {
+                if (diff > diffPrev) {
+                    break;
+                }
+            }
+
+            diffPrev = diff;
 
             shape += step;
         }
@@ -94,53 +108,12 @@ var WeibullModel = function () {
         scale = Math.pow(scale, 1.0 / shape);
     }
 
-    // Least square method
-    // function calcShape() {
-    //     // todo: median ranks
-    //
-    //
-    //     var step = 0.1;
-    //     shape = step;
-    //
-    //     while (true) {
-    //         var sumX = 0;
-    //         var sumSqrX = 0;
-    //         var sumXSqr = 0;
-    //         var sumY = 0;
-    //         var sumXY = 0;
-    //
-    //         for (var i = 0; i < failureTimes.length; i++) {
-    //             sumX += Math.log(failureTimes[i]);
-    //
-    //             sumY += Math.log(-Math.log());
-    //
-    //         }
-    //
-    //         var diff = 1.0 / shape - s1 / s2 + s3;
-    //
-    //         if (diff <= tolerance) {
-    //             break;
-    //         }
-    //
-    //         shape += step;
-    //     }
-    // }
-    //
-    // function calcScale() {
-    //     scale = 0;
-    //
-    //     for (var i = 0; i < failureTimes.length; i++) {
-    //         scale += Math.pow(failureTimes[i], shape);
-    //     }
-    //     scale /= failureTimes.length;
-    //     scale = Math.pow(scale, 1.0 / shape);
-    // }
-
     return {
         setup: setup,
         getReliability: getReliability,
         getFailureRate: getFailureRate,
         getScale: getScale,
-        getShape: getShape
+        getShape: getShape,
+        getTimeCurr: getTimeCurr
     };
 };
