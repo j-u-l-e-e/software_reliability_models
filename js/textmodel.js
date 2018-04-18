@@ -11,7 +11,7 @@ var TextModel = (function () {
     var avgLengthUnitId = -1;
 
     function setCodeLengthTotal(code_length_total) {
-        codeLengthTotal = parseNaturalNonNullNumber(code_length_total);
+        codeLengthTotal = parseNaturalNumber(code_length_total, false);
         if (isNaN(codeLengthTotal)) {
             codeLengthTotal = -1;
             throw new InconsistentModelDataException("Programatūras garums var būt tikai vesels pozitīvs skaitlis lielāks par 0");
@@ -20,7 +20,7 @@ var TextModel = (function () {
     }
 
     function setUnitsCount(units_count) {
-        unitsCount = parseNaturalNonNullNumber(units_count);
+        unitsCount = parseNaturalNumber(units_count, false);
         if (isNaN(unitsCount)) {
             codeLengthTotal = -1;
             throw new InconsistentModelDataException("Kopējais moduļu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
@@ -156,8 +156,8 @@ var TextModel = (function () {
 })();
 
 function UnitData(unit_length, errors_count) {
-    this.codeLength = parseNaturalNonNullNumber(unit_length);
-    this.errorsCount = parseNaturalNonNullNumber(errors_count);
+    this.codeLength = parseNaturalNumber(unit_length, false);
+    this.errorsCount = parseNaturalNumber(errors_count, false);
     this.testCoverageLow = -1;
     if (isNaN(this.codeLength)) {
         throw new InconsistentModelDataException("Koda garums modulī var būt tikai vesels pozitīvs skaitlis lielāks par 0");

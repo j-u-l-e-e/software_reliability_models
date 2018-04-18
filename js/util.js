@@ -1,9 +1,11 @@
-function parseNaturalNonNullNumbers(str) {
-    var naturalNumbers = str.split('\n');
+function parseNaturalNumbers(str, nullAllowed, delimeter) {
+    var naturalNumbers = str.split(delimeter);
     for (var i = 0; i < naturalNumbers.length; i++) {
-        var naturalNumber = parseNaturalNonNullNumber(naturalNumbers[i]);
+        var numStr = naturalNumbers[i]; // remove whitespace
+        numStr = numStr.replace(' ','');
+        var naturalNumber = parseNaturalNumber(numStr, nullAllowed);
         if (isNaN(naturalNumber)) {
-            return false;
+            throw new InconsistentModelDataException("Nevar nolasīt skaitļus no rindas");
         } else {
             naturalNumbers[i] = naturalNumber;
         }
@@ -12,12 +14,12 @@ function parseNaturalNonNullNumbers(str) {
 }
 
 // from here: https://stackoverflow.com/questions/16799469/how-to-check-if-a-string-is-a-natural-number
-function parseNaturalNonNullNumber(n) {
+function parseNaturalNumber(n, nullAllowed) {
     var ns = n.toString();
     var n1 = Math.abs(ns),
         n2 = parseInt(ns, 10);
 
-    if (!isNaN(n1) && n2 === n1 && n1.toString() === ns && n1 > 0) {
+    if (!isNaN(n1) && n2 === n1 && n1.toString() === ns && ((!nullAllowed && n1 > 0) || (nullAllowed && n1 >= 0))) {
         return n1;
     } else {
         return NaN;

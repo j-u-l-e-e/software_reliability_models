@@ -11,6 +11,10 @@
     <script type="text/javascript" src="js/latexit.js"></script>
 
 </head>
+
+<script>
+    var delimeter = ",";
+</script>
 <body>
 
 <h1>Rīki programmatūras drošuma novērtēšanai</h1>
@@ -74,7 +78,12 @@
         }
 
         function MusaOkumoto() {
-            arrErrors = document.getElementById("arrErrors").value.split(",");
+            try {
+                arrErrors = parseNaturalNumbers(document.getElementById("arrErrors").value, false, delimeter);
+            } catch (e) {
+                alert("Kļūdu skaiti nav atdalīti ar ','");
+                return;
+            }
             intensity = document.getElementById("intensity").value;
             errorsperhour = document.getElementById("errorsperhour").value;
             arrresult = [];
@@ -175,7 +184,7 @@
         function parseCsv(dataStr) {
             Papa.parse(dataStr, {
                 complete: function (results) {
-                    if (results.errors.length == 0) { // data ok
+                    if (results.errors.length === 0) { // data ok
                         // Loop by rows
                         for (var i = 0; i < results.data.length; i++) {
                             arr.push([]);
@@ -185,6 +194,8 @@
                                 row.push(results.data[i][j]);
                             }
                         }
+                    } else {
+                        throw new InconsistentModelDataException("Dati neatbilst šablonam");
                     }
                 }
             });
@@ -192,8 +203,16 @@
         }
 
         function calc(event) {
-            var ErrorProbability = parseCsv(document.getElementById("textareaErrorProbability").value);
-            var ErrorsCount = document.getElementById("textareaErrorsCount").value.split(",");
+            var ErrorProbability;
+            var ErrorsCount;
+            try {
+                ErrorProbability = parseCsv(document.getElementById("textareaErrorProbability").value);
+                ErrorsCount = parseNaturalNumbers(document.getElementById("textareaErrorsCount").value, false, delimeter);
+            } catch (e) {
+                alert(e.message);
+                return;
+            }
+
             var TimePerError = document.getElementById("textareaTimePerError").value;
             var ErrorSum = [];
             var Summa = 0;
@@ -207,12 +226,12 @@
                     columns = j + 1;
                 }
             }
-            if (ErrorProbability.length != columns) {
+            if (ErrorProbability.length !== columns) {
                 alert("Nepareizi aizpildīts matrica, rindiņu un colonu skaits nav vienāds");
             }
 
             //Check typed Errors count
-            if (ErrorProbability.length != ErrorsCount.length) {
+            if (ErrorProbability.length !== ErrorsCount.length) {
                 alert("Ievadītais kļūdas vertības skaits - " + ErrorsCount.length + " nav vienads ar matricas izmēru - " + ErrorProbability.length);
             }
 
@@ -222,7 +241,7 @@
                 for (j = 0; j < ErrorProbability.length; j++) {
                     P = P + Number(ErrorProbability[i][j]);
                 }
-                if (P != 1) {
+                if (P !== 1) {
                     alert("Nepareizi aizpildīts varbūtības matrica " + Number(i + 1) + " rindā, varbūtības summa rindā jābūt vienāda 1=" + P);
                 }
             }
@@ -413,13 +432,19 @@
     <script type="text/javascript">
         function Sneid() {
             document.getElementById("totNumFail").style.color = "black";
-            fi = document.getElementById("fi").value.split(",");
-            var fN = 0;
-            for (i = 0; i < fi.length; i++) {
-                fN += parseInt(fi[i]);
+            try {
+                fi = parseNaturalNumbers(document.getElementById("fi").value, false, delimeter);
+            } catch (e) {
+                alert(e.message);
+                return;
             }
 
-            var t = parseNaturalNonNullNumber(document.getElementById("inputTime").value);
+            var fN = 0;
+            for (i = 0; i < fi.length; i++) {
+                fN += fi[i];
+            }
+
+            var t = parseNaturalNumber(document.getElementById("inputTime").value, true);
 
             n = fi.length;
             // if (fi < 0){
@@ -516,7 +541,7 @@
         </tr>
 
         <tr>
-            <td><label for="fi">Kļūdu skaits laika intervālos, <i>f<sub>i</sub></i>: </label></td>
+            <td><label for="fi">Atteiču skaits intervālos, <i>f<sub>i</sub></i>: </label></td>
             <td><textarea id="fi"></textarea></td>
         </tr>
     </table>
@@ -554,7 +579,7 @@
                 <input id="inputTimeCurr" type="number" min="0" step="1" onblur="this.value = parseInt(this.value)">
             </td>
         <tr>
-            <td><label for="textareaFailureTimes">Kļudu atklāšanas laiki, <i>t<sub>i</sub></i>;</label></td>
+            <td><label for="textareaFailureTimes">Atteičū laiki, <i>t<sub>i</sub></i>;</label></td>
             <td><textarea id="textareaFailureTimes"></textarea>
                 <button style="display:block;" onclick="document.getElementById('inputFailuresDataFile').click()">
                     Importēt no
@@ -607,7 +632,13 @@
             function calcWeibull(event) {
                 // Parse model data
                 var timeCurr = parseInt(document.getElementById("inputTimeCurr").value);
-                var failureTimes = parseNaturalNonNullNumbers(document.getElementById("textareaFailureTimes").value);
+                try {
+                    var failureTimes = parseNaturalNumbers(document.getElementById("textareaFailureTimes").value, false, delimeter);
+                } catch (e) {
+                    alert("Atteiču laiki nav atdalīti ar ','");
+                    return;
+                }
+
                 var scale = false;
                 var shape = false;
 
@@ -649,19 +680,19 @@
                 var failuresDataFile = evt.target.files[0];
 
                 Papa.parse(failuresDataFile, {
-                    delimiter: ",", // to avoid error "Unable to auto-detect delimiting character" when one column
+                    delimiter: delimeter, // to avoid error "Unable to auto-detect delimiting character" when one column
                     complete: function (results) {
                         if (results.errors.length === 0) { // data ok
                             var failureTimes = "";
 
                             for (var i = 0; i < results.data.length; i++) {
                                 if (results.data[i].length !== 1) {
-                                    alert(".csv datnes struktūra neatbilst šablonām: [kļūdu atklāšanas laiks]");
+                                    alert(".csv datnes struktūra neatbilst šablonām: [Atteices laiks]");
                                     document.getElementById("textareaFailureTimes").value = "";
                                     return false;
                                 }
-                                if (results.data[i][0]) failureTimes += results.data[i][0] + "\n";
-                                else failureTimes += 0 + "\n";
+                                if (results.data[i][0]) failureTimes += results.data[i][0] + delimeter;
+                                else failureTimes += 0 + delimeter;
                             }
                             // Remove \n in the end of strings
                             failureTimes = failureTimes.slice(0, failureTimes.length - 1);
@@ -851,6 +882,8 @@
                 var unitsData = [];
 
                 Papa.parse(dataStr, {
+                    delimiter: delimeter, // to avoid error "Unable to auto-detect delimiting character" when one column
+                    header: false,
                     complete: function (results) {
                         if (results.errors.length === 0) { // data ok
 
@@ -873,9 +906,7 @@
                             unitsData = -1;
                             return false;
                         }
-                    },
-                    delimiter: ",",
-                    header: false
+                    }
                 });
 
                 return unitsData;
@@ -932,12 +963,14 @@
         var pText = document.getElementById("pText");
         pText.innerHTML = "Sākumkļūdu skaits, <i>B</i>: " + results.Text.initialErrorsCount + " <br>";
         pText.innerHTML += "Moduļu testēšanas pakāpe: <br>";
-        for (var i = 0; i < results.Text.unitsData.length; i++) {
-            pText.innerHTML += "" + i + ". modulis: ";
-            if (results.Text.unitsData[i].testCoverageLow) {
-                pText.innerHTML += "zema <br>";
-            } else {
-                pText.innerHTML += "augsta <br>";
+        if (results.Text.unitsData != null) {
+            for (var i = 0; i < results.Text.unitsData.length; i++) {
+                pText.innerHTML += "" + i + ". modulis: ";
+                if (results.Text.unitsData[i].testCoverageLow) {
+                    pText.innerHTML += "zema <br>";
+                } else {
+                    pText.innerHTML += "augsta <br>";
+                }
             }
         }
     })
