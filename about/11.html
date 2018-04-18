@@ -9,23 +9,57 @@
 
 <h1>Par Lipova modeli</h1>
 
-<div>Dabīgu <b>n</b> un mākslīgu <b>m</b> kļūdu atrašanas varbūtība<sup id="cite-ref-1"><a href="#ref-1">[1]</a>:</div>
-<div lang="latex">Q(n,m) = ( \frac{k}{n+m} ) * q^{n+m} * (1-q)^{k-n-m} * \frac{ \frac{N}{n} \times \frac{M}{m}
+<p>Lipova modelis ir statiskais analītiskais modelis programmatūras drošuma novērtēšanai. Tas atšķiras ar to, ka pirms
+    testēšanas vairākas mākslīgas kļūdas tiek ieviestas programmatūrā. Drošuma novertēšanā tiek pielietots atrasto
+    dabīgo un ievesto kļūdu skaits. Modelī ir pieņemts, ka dabīgo un ieviesto kļūdu
+    atklāšanas varbūtība ir vienāda</p>
+
+<div>Dabīgu <i>n</i> un ienesto <i>m</i> kļūdu atrašanas varbūtība<sup id="cite-ref-1"><a
+        href="#ref-1">[1]</a></sup>:<br>
+    <span lang="latex">Q(n,m) = ( \frac{k}{n+m} ) * q^{n+m} * (1-q)^{k-n-m} * \frac{ \frac{N}{n} \times \frac{M}{m}
     }{\frac{N+M}{n+m}}
+</span><br>
+    kur <i>N</i> - dabīgo kļūdu skaits,<br>
+    <i>M</i> - ienesto kļūdu skaits,<br>
+    <i>n</i> - atrasto dabīgo kļūdu skaits,<br>
+    <i>m</i> - atrasto ienesto kļūdu skaits,<br>
+    <i>k</i> - testēšanai lietoto testu skaits,<br>
+    <i>q</i> - kļūdas atrašanas varbūtība katrā no k testiem<br>
+</div>
+<div>
+Kļūdas atrašanas varbūtību katrā no k testiem jeb <i>q</i> aprēķina pēc formulas:
+    <span lang="latex">\frac{n + m}{n}</span>
 </div>
 
-<ol>
-    Modeļa lietošanai ir jāievēro nosacījumi:
-    <li>
-        <div lang="latex">N \geq n \geq 0,</div>
-    </li>
-    <li>
-        <div lang="latex">M \geq m \geq 0,</div>
-    </li>
-    <li>
-        <div lang="latex">k \geq n + m \geq 0</div>
-    </li>
-</ol>
+<div>
+    <ol>
+        Modeļa lietošanai ir jāievēro nosacījumi:
+        <li>
+            N ≥ n ≥ 0
+        </li>
+        <li>
+            M ≥ m ≥ 0
+        </li>
+        <li>
+            k ≥ n + m ≥ 0
+        </li>
+    </ol>
+</div>
+
+<div>
+    <ol>
+        Visiespējamākais dabīgu kļūdu skaits jab N ir vienāds:
+        <li>
+            <span>M*n/m, ja n ≥ 1, m ≥ 1</span>
+        </li>
+        <li>
+            <span>n*M, ja m = 0</span>
+        </li>
+        <li>
+            <span>0, ja n = 0</span>
+        </li>
+    </ol>
+</div>
 
 <p>Resūrsi:
 <ol>
@@ -33,7 +67,6 @@
         L. Zaiceva. Programmatūras drošuma teorija (prezentācija). Latvija, Rīgas Tehniskā Universitāte, 2018.
     </li>
 </ol>
-
 
 </body>
 </html>
