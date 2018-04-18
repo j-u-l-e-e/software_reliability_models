@@ -1,16 +1,11 @@
-function parseNaturalNumbers(str, nullAllowed, delimeter) {
-    var naturalNumbers = str.split(delimeter);
-    for (var i = 0; i < naturalNumbers.length; i++) {
-        var numStr = naturalNumbers[i]; // remove whitespace
-        numStr = numStr.replace(' ','');
-        var naturalNumber = parseNaturalNumber(numStr, nullAllowed);
-        if (isNaN(naturalNumber)) {
-            throw new InconsistentModelDataException("Nevar nolasīt skaitļus no rindas");
-        } else {
-            naturalNumbers[i] = naturalNumber;
-        }
+function parseArray(str, delimeter) {
+    var arr = str.split(delimeter);
+    for (var i = 0; i < arr.length; i++) {
+        var elem = arr[i]; // remove whitespace
+        elem = elem.replace(' ', '');
+        arr[i] = elem;
     }
-    return naturalNumbers;
+    return arr;
 }
 
 // from here: https://stackoverflow.com/questions/16799469/how-to-check-if-a-string-is-a-natural-number

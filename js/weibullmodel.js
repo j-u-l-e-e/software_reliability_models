@@ -37,9 +37,19 @@ var WeibullModel = function () {
 
         if (!(scale_ || shape_)) {
             if (!failure_times || !Array.isArray(failure_times)) {
-                throw new InconsistentModelDataException("Kļūdas atklāšanas laiks var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+                throw new InconsistentModelDataException("Atteiču laiki var būt tikai veseli skaitļi lielāki par 0");
             }
-            failureTimes = failure_times;
+
+            failureTimes = [];
+            for (var i = 0; i < failure_times.length; i++) {
+                var time = parseFloat(failure_times[i]);
+                if (time > 0) {
+                    failureTimes.push(time);
+                } else {
+                    throw new InconsistentModelDataException("Atteiču laiki var būt tikai veseli skaitļi lielāki par 0");
+                }
+            }
+
             failureTimes.sort(); // sort ascending
             failureTimes = withoutCopies(failureTimes); // remove copies
 
@@ -48,6 +58,9 @@ var WeibullModel = function () {
         } else {
             scale = scale_;
             shape = shape_;
+            if (scale < 0 || shape_ < 0) {
+                throw new InconsistentModelDataException("Parametri α un β var būt tikai skaitļi lielāki par 0");
+            }
         }
 
         reliability = Math.exp(-Math.pow(timeCurr / scale, shape));
