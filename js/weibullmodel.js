@@ -59,13 +59,17 @@ var WeibullModel = function () {
         var step = tolerance;
         shape = step;
 
+        var s3 = 0;
+        for (var i = 0; i < failureTimes.length; i++) {
+            s3 += Math.log(failureTimes[i]);
+        }
+
+        var diffPrev = NaN;
+
         // Use Newton method to estimate shape
         while (true) {
             var s1 = 0;
             var s2 = 0;
-            var s3 = 0;
-
-            var diffPrev = NaN;
 
             for (var i = 0; i < failureTimes.length; i++) {
                 s1 += (Math.pow(failureTimes[i], shape) * Math.log(failureTimes[i]));
@@ -75,9 +79,6 @@ var WeibullModel = function () {
                 s2 += Math.pow(failureTimes[i], shape);
             }
 
-            for (var i = 0; i < failureTimes.length; i++) {
-                s3 += Math.log(failureTimes[i]);
-            }
             s3 /= failureTimes.length;
 
             var diff = Math.abs(1.0 / shape - s1 / s2 + s3);
