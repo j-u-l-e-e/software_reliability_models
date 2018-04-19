@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <title>Par programmas pabeigšanas laika noteikšanai modeli</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+</head>
+<body>
+
+<h1>Par programmas pabeigšanas laika noteikšanai modeli</h1>
+<p>
+Programmas pabeigšanas laika noteikšanai modelis izmanto priekš programmatūrai kurai piemīt modulitāte. 
+Tas nozīme kā sistēmu ir iespējams sadalīt pēc moduļiem, kuri var būt saistīti starp sēvi vai būt neatkarīgi.
+Izmaiņas vienā sistēmas moduli var izraisīt izmaiņas arī citos moduļos. Izmantojot formulu zēmāk ir iespējams noteikt
+cik daudz izmaniņas izraisīs izmaiņas viena moduli un cik daudz laika būs noterēts priekš katra moduļa labošanai.
+</p>
+
+<img src="time model.png" alt="Programmas pabeigšanas laika noteikšanai modelis">
+
+<p>kur:</p>
+<ul>
+    <li>
+        E<sub>i</sub> - izmaiņu summas skaits <i>i</i> modulī atkarība no citiem moduļiem
+    </li>
+    <li>
+        P<sub>ij</sub> - varbūtība kā izmaniņas <i>i</i> modulī izraisīs izmaiņas <i>j</i> modulī
+    </li>
+    <li>
+        A<sub>i</sub> - sakuma izmaiņu skaits <i>i</i> modulī
+    </li>
+    <li>
+		n - moduļu skaits
+    </li>
+	<li>
+		t<sub>0</sub> - vienas kļūdas labošanas laiks
+    </li>
+	<li>
+		t<sub>i</sub> - kļūdas labošanas laiks priekš <i>i</i> modulim
+    </li>
+</ul>
+
+<p>
+Lai izmantotu šo formūlu nepieciešams izveidot kvadratīsko matricu, kuras izmērs būs vienāds ar sistēmas moduļu skaitu. Matricā jāievada varbūtības kā <i>j</i> modulis izraisīs izmaniņas <i>i</i> moduli. Matricas galvenai diagonālei jābūt aizpildītai ar 0.  
+Vienas rindas varbutības summai jābūt vienāds ar 1. Pēc tam jaizveido vektoru kuras izmērs ir vienāds ar sistēmas moduļu skaitu. Vektora jāievada cik daudz sakuma izmaiņas būs <i>i</i> moduļī.
+Pēc tam jānoteic cik daudz laiku būs noterēts priekš vienai izmaiņai modulī. Izmantojot šo informāciju ir iespējams apreķināt kopējo izmaiņas skaitu katrā modulī un cik daudz laika būs nepieciešams priekš kļūdas labošanai <i>i</i> modulī.
+Apskatīsim risinājumu uz piemēra:
+</p>
+<p>Mums ir matrica P<sub>ij</sub></p>
+<img src="matrica.PNG">
+<p>Mums ir vektors A<sub>i</sub></p>
+<img src="vectors.PNG">
+<p>Lai noteiktu cik daudz izmaiņas būs katrā <i>i</i> modulī atkarība no <i>j</i> moduli, katru matricas rindas elementu, janoreizina ar vektora elementu. Tas izskatīsies sekojoši, mēs reizinām pirmo matricas rindu ar pirmo elementu no vektora, otro ar otro u.t.t. Rezultātā mēs sanemam jauno matricu A<sub>ij</sub> kurā noradīts cik daudz izmaiņas būs katrā <i>i</i> modulī atkarība no <i>j</i> moduli.</p>
+<img src="resultmatrica.PNG">
+<p>Tagad lai noteikt kopejo izmaniņu skaitu jāapreķina matricas A<sub>ij</sub> kolonas summu un pieskaitīt katra moduļa sakuma izmaiņu skaitu. Rezultāta saņemsim izmaņas skaitu katra <i>i</i> modulī.</p>
+<img src="errorcount.PNG">
+<p>Kad tiek aprekināts kopejais izmaiņu skaits, reizinām katra <i>i</i> moduļa izmaiņu skaitu ar t<sub>0</sub>, kas bus vienas ar 2 un saņemam cik daudz laika būs nepieciešams priekš izmaiņam katrā modulī.</p>
+<img src="timepermod.PNG">
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <title>Veibula modeļa izmantošanas instrukcija</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+</head>
+<body>
+
+<h1>Veibula modeļa izmantošanas instrukcija</h1>
+
+<ul>
+    Veibula modeļa izmantošanas soļi:
+    <li>ja vēlaties, lai parametri tiktu aprēķināti automātiski
+        <ol>
+            <li>
+                Atstājiet ‘Patstāvīgi izvēlēties parametru vērtības’ izvēles rūtiņu tukšu
+            </li>
+            <li>
+                Ievadiet laukā ‘Laiks prognozēšanai, t’ laika momentu <i>t</i>, kuram jāaprēķina drošuma rādītāji. <i>t</i> ∈ [0, + ∞)
+            </li>
+            <li>
+                Ievadiet atteiču laikus <i>t<sub>i</sub></i> ievadlaukā ‘Atteiču laiki’, atdalot tos ar komatu. <i>t<sub>i</sub></i> ∈ [1, + ∞)
+            </li>
+            <li>
+                Nospiediet uz pogu “Aprēķināt”. Tad lauki ar <i>α</i> un  <i>β</i> parametriem tiks automātiski aizpildīti un zem
+                formas parādīsies aprēķināti drošuma rādītāji: drošums un atteiču intensitāte
+            </li>
+        </ol>
+    </li>
+    <li>ja vēlaties manuāli izvelēties α un β parametrus
+        <ol>
+            <li>
+                Atzīmējiet ‘Patstāvīgi izvēlēties parametru vērtības’ izvēles rūtiņu
+            </li>
+            <li>
+                Ievadiet laukā ‘Laiks prognozēšanai, t’ laika momentu, kuram jāaprēķina drošuma rādītāji. <i>t</i> ∈ [0, + ∞)
+            </li>
+            <li>
+                Ievadiet <i>α</i> un <i>β</i> parametrus atbilstošos laukos: ‘α’ un ‘β’. <i>α</i> ∈ (0, + ∞). <i>β</i> ∈ (0, + ∞).
+            </li>
+            <li>
+                Nospiediet uz pogu “Aprēķināt”. Tad zem formas parādīsies aprēķināti drošuma rādītāji: drošums un
+                atteiču intensitāte
+            </li>
+        </ol>
+    </li>
+</ul>
+<p>
+    RPDN nav izvelēta noteikta laika mērvienība, tāpēc lietotājs var izvelēties to patstāvīgi (piem. minūtes vai
+    stundas). Laiku prognozēšanai un atteiču laikus obligāti jāievada, pielietojot vienu un to pati laika
+    mērvienību.
+</p>
+<p>
+    Kad lietotājs noklikšķina uz pogu “Apreķināt”, bet ievadītie dati neatbilst nosacījumiem, tiek atvērts
+    ziņojumlodziņš ar kļūdas aprakstu.
+</p>
+
+</body>
+</html>

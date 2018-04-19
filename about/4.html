@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <title>Par Musa-Okumoto modeli</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+</head>
+<body>
+
+<h1>Par Musa-Okumoto modeli</h1>
+<p>Musa-Okumoto modelis ir arī saukts par logoritmiskā Puasona izpildes laika modeli. Modeļa darbības pamatā tiek pieņemts, ka kļūdas notiek ar vienādu iespējamību un ir viena no otras neatkarīgas. 
+Priekš Musa-Okumoto modeles izmantošanai izmanto formulu:</p>
+<img src="musa-okumoto formula.png" alt="Musu-Okumoto modelis">
+
+<p>kur:</p>
+<ul>
+    <li>
+        λ - atteiču intensitāte
+    </li>
+    <li>
+        λ<sub>0</sub> - sākotnējā atteiču intensitāte
+    </li>
+    <li>
+        θ - atteiču instensitātes samazināšanas parametrs
+    </li>
+    <li>
+		µ - kļūdu skaits
+    </li>
+</ul>
+
+<p>Musu-Okumoto modelis ir logaritmisks modelis, kuras rezultātā tiek saņemta logoritmiska funkcija, kura rada attiecibu starp laiku un kļūdas rādīšanas intensitātes samazināšas intensitāti.
+Izmantojot to ir iespējams noteikt kā uzlabosies kļūdas rādīšanas intensitāte, jo mazāk rezultāts, jo lēnāk samazināsies kļūdas rādīšanas koeficients.</p>
+
+
+<table border="1">
+    <caption>Drošuma kvantitatīvo rādītāju formulas<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup></caption>
+    <tr>
+        <th width="30%">Nosaukums</th>
+        <th width="30%">Formula</th>
+        <th width="40%">Piezīmes</th>
+    </tr>
+    <tr>
+        <td>Atteiču intensitāte</td>
+        <td>
+            <span lang="latex">\lambda(t) = \frac{\lambda_0}{\lambda_0 \theta t + 1} =
+                \frac{\beta_0 \beta_1}{\beta_1 t + 1}</span>
+        <td>
+        <span lang="latex">\beta_0 = \frac{1}{\theta}</span><br>
+        <span lang="latex">\beta_1 = \lambda_0 \theta</span>
+        </td>
+    </tr>
+    <tr>
+        <td>Atteiču instensitātes samazināšanas parametrs, θ</td>
+        <td>
+            <span lang="latex">\theta = \frac{1}{\beta_0}</span><br>
+        </td>
+        <td>
+
+        </td>
+    </tr>
+    <tr>
+        <td>Sākotnēja instensitāte, <i>λ<sub>0</sub></i></td>
+        <td>
+            <span lang="latex">\lambda_0 = \frac{\beta_1}{\theta}</span><br>
+        </td>
+        <td>
+
+        </td>
+    </tr>
+    <tr>
+        <td><i>β<sub>0</sub></i> un <i>β<sub>1</sub></i> parametru aprēķins</td>
+        <td>
+            <div lang="latex">\beta_0 = \frac{n}{ln(1+\beta_1 t_n)} </div>
+            <div lang="latex">\frac{1}{\beta_1} \sum_{i=1}^{n}\frac{1}{1+\beta_1 t_i} =
+                \frac{n t_n}{(1+\beta_1 t_n)ln(1+\beta_1 t_n)}
+            </div>
+        <td>
+        <i>n</i> - atteiču skaits
+        <br>Parametrus var aprēķināt, pielietojot Ņūtona metodi</td>
+    </tr>
+</table>
+
+</body>
+</html>

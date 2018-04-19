@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <title>Par Veibula divu parametru modeli</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+</head>
+<body>
+
+<h1>Par Veibula divu parametru modeli</h1>
+
+Veibula modelis ir dinamiskais nepārtrauktais programmatūras drošuma novērtēšanas modelis.
+Dati, kurus prasa Veibula modelis, ir atteiču laika momenti <i>t<sub>i</sub></i>.
+<ol>
+    Modeļa pieņēmumi<sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:
+    <li>
+        Atteices ir neatkarīgas un tām ir vienāda varbūtība;
+    </li>
+    <li>
+        Testēšanas sākumā programmatūrā eksistē galīgais kļūdu skaits <i>n</i>;
+    </li>
+    <li>
+        <i>α</i>-tās atteices laiks <i>t</i> atbilst Veibula sadalījumam ar parametriem <i>α</i> un <i>β</i>. Varbūtību
+        blīvuma funkcija <i>f(t)</i> parāda, cik daudz atteču notiks laika momentā <i>t</i>. To aprēķina pēc sekojošas
+        formulas:
+        <div lang="latex">f(t) = \frac {\beta}{\alpha} (\frac{t}{\alpha})^{\beta - 1} e^{-(\frac{t}{\alpha})^{\beta}} =
+            R(t) \lambda (t)
+        </div>
+        Šeit <i>α</i> ir mēroga parametrs un <i>β</i> ir formas parametrs. <i>α</i> > 0, <i>β</i> > 0 un <i>t</i> ≥ 0;
+    </li>
+    <li>
+        Kļūdu labošana notiek momentāni un neizraisa jaunas kļūdas.
+    </li>
+</ol>
+
+<table border="1">
+    <caption>Drošuma kvantitatīvo rādītāju formulas<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup></caption>
+    <tr>
+        <th width="30%">Nosaukums</th>
+        <th width="30%">Formula</th>
+        <th width="40%">Piezīmes</th>
+    </tr>
+    <tr>
+        <td>Drošums jeb bezatteices darba varbūtība</td>
+        <td>
+            <div lang="latex">R(t) = e^{-(\frac{t}{\alpha})^{\beta}}</div>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Atteices varbūtība</td>
+        <td>
+            <div lang="latex">Q(t) = 1 - R(t)</div>
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Atteiču intensitāte</td>
+        <td>
+            <div lang="latex">\lambda(t) = \frac {\beta}{\alpha} (\frac{t}{\alpha})^{\beta - 1}</div>
+        <td>Kad 0 < <i>β</i> < 1, atteiču intensitāte monotoni dilst.
+            Kad <i>β</i> = 1, atteiču intensitāte ir konstanta.
+            Kad <i>β</i> > 1, atteiču intensitāte monotoni aug.
+            Ir ieteicams eksperimentāli piemeklēt <i>α</i> un <i>β</i> parametrus lai blīvuma funkcija dotu precīzākus
+            rezultātus
+        </td>
+    </tr>
+    <tr>
+        <td><i>α</i> un <i>β</i> parametru aprēķins ar maksimālās paticamības metodi</td>
+        <td>
+            <div lang="latex">\alpha = (\frac{1}{n} \sum_{i=1}^{n} t_i)^{\frac{1}{\beta}}</div>
+            <div lang="latex">\frac{1}{\beta} - \frac{ \sum_{i=1}^{n}t_i^{\beta} ln(t_i)}{\sum_{i=1}^{n}t_i^{\beta}} +
+                \frac{1}{n} \sum_{i=1}^{n}ln(t_i) = 0
+            </div>
+        <td>Parametrus var aprēķināt, pielietojot Ņūtona metodi</td>
+    </tr>
+    <tr>
+        <td>Vidējais laiks starp atteicēm</td>
+        <td>
+            <div lang="latex">MTTF = \beta \Gamma(\frac{1}{\alpha})</div>
+        <td>
+        </td>
+    </tr>
+</table>
+
+<p>Resūrsi:
+<ol>
+    <li id="ref-1"><a href="#cite-ref-1">↩</a>
+        Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
+    </li>
+    <li id="ref-2"><a href="#cite-ref-2">↩</a>
+        F. Nwobi1, C. Ugomma. A Comparison of Methods for the Estimation of Weibull Distribution Parameterseliability.
+        Metodološki zvezki, Vol. 11, No. 1, 2014, 65-78p.
+    </li>
+</ol>
+</p>
+</body>
+</html>
