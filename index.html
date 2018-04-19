@@ -8,6 +8,7 @@
     <script src="js/textmodel.js"></script>
     <script src="js/util.js"></script>
     <script src="js/papaparse.min.js"></script>
+    <script type="text/javascript" src="js/math.js"></script>
     <script type="text/javascript" src="js/latexit.js"></script>
 
 </head>
@@ -512,11 +513,15 @@
 <div id="Schneidewind" class="tabcontent">
     <script type="text/javascript">
         var failureRate;
-        var predictionTime;
-        var failureTimes;
+        var intervalNumber;
+        var intervalLength;
+        var failureCounts;
         var alpha;
         var beta;
         var fn;
+        var mi;
+        var m;
+        var predictionTime;
 
         function Sneid() {
             function clearResults() {
@@ -527,42 +532,52 @@
             }
 
             document.getElementById("totNumFail").style.color = "black";
-            failureTimes = parseArray(document.getElementById("fi").value, delimeter);
+            failureCounts = parseArray(document.getElementById("fi").value, delimeter);
 
-            if (!failureTimes) {
+            if (!failureCounts) {
                 alert("Atteiču skaiti laika intervālos var būt tikai pozitīvi veseli skaitļi");
             }
 
-            for (var i = 0; i < failureTimes.length; i++) {
-                var count = parseNaturalNumber(failureTimes[i], true);
+            for (var i = 0; i < failureCounts.length; i++) {
+                var count = parseNaturalNumber(failureCounts[i], true);
                 if (isNaN(count)) {
                     alert("Atteiču skaiti laika intervālos var būt tikai pozitīvi veseli skaitļi");
                 } else {
-                    failureTimes[i] = count;
+                    failureCounts[i] = count;
                 }
             }
 
-            predictionTime = parseNaturalNumber(document.getElementById("inputTime").value, true);
+            intervalNumber = parseNaturalNumber(document.getElementById("inputInterval").value, true);
+            intervalLength = parseFloat(document.getElementById("inputIntervalLength").value);
 
-            if (isNaN(predictionTime)) {
+            if (isNaN(intervalNumber)) {
                 clearResults();
-                alert("Nav norādīts laiks prognozēšanai");
+                alert("Nav norādīts intervāla numurs prognozēšanai");
                 return;
             }
 
-            if (failureTimes.length < 2) {
+            if (intervalLength <= 0) {
+                clearResults();
+                alert("Intervāla garums var būt tikai pozitīvs skaitlis lielāks par 0");
+                return;
+            }
+
+            if (failureCounts.length < 2) {
                 clearResults();
                 alert("Jābūt vismaz 2 atteiču laikiem");
                 return;
             }
 
             fn = 0;
-            for (var i = 0; i < failureTimes.length; i++) {
-                fn += failureTimes[i];
+            for (var i = 0; i < failureCounts.length; i++) {
+                fn += failureCounts[i];
             }
 
             calParametersSchneidewind();
+            predictionTime = intervalNumber * intervalLength;
             failureRate = alpha * Math.exp(-beta * predictionTime);
+            mi = alpha / beta * (1 - Math.exp(-beta * intervalNumber));
+            m = alpha / beta * (Math.exp(-beta * (intervalNumber - 1)) - Math.exp(-beta * intervalNumber));
 
             document.getElementById("betaTXT").innerHTML = beta.toFixed(decimals);
 
@@ -570,19 +585,32 @@
             totFail = alpha / beta;
             document.getElementById("totNumFail").innerHTML = Math.round(totFail);
             document.getElementById("lambdaTXT").innerHTML = failureRate.toFixed(decimals);
+            document.getElementById("miTXT").innerHTML = Math.round(mi);
+            document.getElementById("mTXT").innerHTML = Math.round(m);
+            document.getElementById("subInteval").innerHTML = intervalNumber;
+
+            var spansTime = document.getElementsByClassName("spanTime");
+            for (var i = 0; i < spansTime.length; i++) {
+                spansTime[i].innerHTML = predictionTime;
+            }
+
             updateSchneidewindResult();
         }
 
         function updateSchneidewindResult() {
             results.Schneidewind = {
                 failuresCount: Math.round(totFail),
+                intervalNumber: intervalNumber,
+                intervalLength: intervalLength,
                 predictionTime: predictionTime,
-                failureRate: failureRate
+                failureRate: failureRate,
+                mi: mi,
+                m: m
             }
         }
 
         function calParametersSchneidewind() {
-            var n = failureTimes.length - 1;
+            var n = failureCounts.length - 1;
 
             function calcBeta() {
                 var step = tolerance;
@@ -590,7 +618,7 @@
 
                 var s3 = 0;
                 for (var i = 0; i < n; i++) {
-                    s3 += i * (failureTimes[i + 1] / fn);
+                    s3 += i * (failureCounts[i + 1] / fn);
                 }
 
                 var diffPrev = NaN;
@@ -641,8 +669,13 @@
 
     <table>
         <tr>
-            <td><label for="inputTime">Laiks prognozēšanai, <i>t</i></label></td>
-            <td><input type="number" id="inputTime"></td>
+            <td><label for="inputInterval">Intervāla numurs prognozēšanai, <i>i</i></label></td>
+            <td><input type="number" id="inputInterval"></td>
+        </tr>
+
+        <tr>
+            <td><label for="inputInterval">Intervāla garums, <i>l</i></label></td>
+            <td><input type="number" id="inputIntervalLength" step="0.0001" min="0.0001"></td>
         </tr>
 
         <tr>
@@ -656,8 +689,10 @@
     <br>
     β = <span id="betaTXT"></span><br><br>
     α = <span id="alphaTXT"></span><br><br>
-    Kopējais atteiču skaits, <i>F</i> = <span id="totNumFail"></span><br><br>
-    Atteiču intensitāte, <i>λ(t)</i> = <span id="lambdaTXT"></span><br><br>
+    Kopējais atteiču skaits, <i>M</i> = <span id="totNumFail"></span><br><br>
+    Atteiču intensitāte, <i>λ(<span class="spanTime"></span>)</i> = <span id="lambdaTXT"></span><br><br>
+    Kumulatīvais vidējais atteiču skaits, <i>μ(<span class="spanTime"></span>)</i> = <span id="miTXT"></span><br><br>
+    Atteiču skaits, <i>m<sub id="subInteval"></sub></i> = <span id="mTXT"></span><br><br>
 </div>
 
 <div id="Weibull" class="tabcontent">
@@ -708,14 +743,14 @@
         </tr>
     </table>
 
-
     <div>
         <button onclick="calcWeibull()">Aprēķināt</button>
     </div>
 
     <br><br>
-    Drošums, <i>R</i> = <span id="pReliability"></span><br><br>
+    Drošums, <i>R(t)</i> = <span id="pReliability"></span><br><br>
     Atteiču intensitāte, <i>λ(t)</i> = <span id="pFailureRate"></span><br><br>
+    Vidējais laiks starp atteicēm, <i>MTTF</i> = <span id="pMTTF"></span><br><br>
 
     <script>
         var weibullModel = WeibullModel();
@@ -754,6 +789,8 @@
             // Data OK, show calculated data
             document.getElementById("pReliability").innerHTML = weibullModel.getReliability().toFixed(decimals);
             document.getElementById("pFailureRate").innerHTML = weibullModel.getFailureRate().toFixed(decimals);
+            document.getElementById("pMTTF").innerHTML = weibullModel.getMTTF().toFixed(decimals);
+
             if (!manualParameters) {
                 document.getElementById("inputScale").value = weibullModel.getScale().toFixed(decimals);
                 document.getElementById("inputShape").value = weibullModel.getShape().toFixed(decimals);
@@ -766,7 +803,8 @@
             results.Weibull = {
                 reliability: weibullModel.getReliability(),
                 failureRate: weibullModel.getFailureRate(),
-                predictionTime: weibullModel.getTimeCurr()
+                predictionTime: weibullModel.getTimeCurr(),
+                MTTF: weibullModel.getMTTF()
             }
         }
 
@@ -1069,12 +1107,17 @@
             "";
 
         document.getElementById("pSchneidewind").innerHTML = (results.Schneidewind != null) ?
-            "Kopējais kļūdu skaits: " + results.Schneidewind.failuresCount +
+            "Intervāla garums, <i>l</i>: " + results.Schneidewind.intervalLength +
+            "<br>Kopējais atteiču skaits, <i>F</i>: " + results.Schneidewind.failuresCount +
+            "<br>Kumulatīvais vidējais atteiču skaits, <i>μ(" + results.Schneidewind.predictionTime + ")</i>: " + results.Schneidewind.mi +
+            "<br>Atteiču skaits, <i>m<sub>" + results.Schneidewind.intervalNumber + "</sub></i>: " + results.Schneidewind.m +
             "<br>Atteiču intensitāte, <i>λ(" + results.Schneidewind.predictionTime + ")</i>: " + results.Schneidewind.failureRate.toFixed(decimals) :
             "";
 
         document.getElementById("pWeibull").innerHTML = (results.Weibull != null) ?
-            "Drošums, <i>R</i>:" + results.Weibull.reliability.toFixed(decimals) + "<br> Atteiču intensitāte, <i>λ(" + results.Weibull.predictionTime + ")</i>: " + results.Weibull.failureRate.toFixed(decimals) :
+            "Drošums, <i>R(" + results.Weibull.predictionTime + ")</i>: " + results.Weibull.reliability.toFixed(decimals) +
+            "<br> Atteiču intensitāte, <i>λ(" + results.Weibull.predictionTime + ")</i>: " + results.Weibull.failureRate.toFixed(decimals) +
+            "<br> Vidējais laiks starp atteicēm, <i>MTTF</i>: " + results.Weibull.MTTF.toFixed(decimals) :
             "";
 
         var pText = document.getElementById("pText");

@@ -6,13 +6,18 @@ var WeibullModel = function () {
     var reliability;
     var failureRate;
     var tolerance = 0.001;
-
-    function getReliability() {
-        return reliability;
-    }
+    var MTTF; // Mean Time to Failure – MTTF
 
     function getFailureRate() {
         return failureRate;
+    }
+
+    function getMTTF() {
+        return MTTF;
+    }
+
+    function getReliability() {
+        return reliability;
     }
 
     function getScale() {
@@ -65,6 +70,7 @@ var WeibullModel = function () {
 
         reliability = Math.exp(-Math.pow(timeCurr / scale, shape));
         failureRate = (shape / scale) * Math.pow(timeCurr / scale, shape - 1);
+        MTTF = (shape === 1) ? scale : scale * math.gamma(1 / shape + 1);
     }
 
     // Use MLE method
@@ -76,6 +82,7 @@ var WeibullModel = function () {
         for (var i = 0; i < failureTimes.length; i++) {
             s3 += Math.log(failureTimes[i]);
         }
+        s3 /= failureTimes.length;
 
         var diffPrev = NaN;
 
@@ -92,7 +99,6 @@ var WeibullModel = function () {
                 s2 += Math.pow(failureTimes[i], shape);
             }
 
-            s3 /= failureTimes.length;
 
             var diff = Math.abs(1.0 / shape - s1 / s2 + s3);
 
@@ -124,8 +130,9 @@ var WeibullModel = function () {
 
     return {
         setup: setup,
-        getReliability: getReliability,
+        getMTTF: getMTTF,
         getFailureRate: getFailureRate,
+        getReliability: getReliability,
         getScale: getScale,
         getShape: getShape,
         getTimeCurr: getTimeCurr
