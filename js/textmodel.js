@@ -63,9 +63,15 @@ var TextModel = (function () {
     function setAvgErrorsCount(avg_module_errors_count) {
         if (avgLengthUnitId >= 0) {
             avgModuleErrorsCount = avg_module_errors_count;
+            if (avg_module_errors_count >= 0) {
+                avgModuleErrorsCount = avg_module_errors_count;
+            } else {
+                throw new Exception("Kļūdu skaits nevar būt negatīvs skaitlis");
+            }
         } else {
             throw new Exception("Nav zināms vidēja garuma modulis");
         }
+
     }
 
     function getAvgLengthUnitId() {

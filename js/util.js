@@ -15,6 +15,10 @@ function parseArray(str, delimeter) {
     }
 }
 
+function isInt(n) {
+    return n % 1 === 0;
+}
+
 // from here: https://stackoverflow.com/questions/16799469/how-to-check-if-a-string-is-a-natural-number
 function parseNaturalNumber(n, nullAllowed) {
     var ns = n.toString();

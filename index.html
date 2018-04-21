@@ -280,18 +280,19 @@
             return arr;
         }
 
-        function clearMO() {
-            document.getElementById("result2").innerHTML = "";
-        }
-
         function calc(event) {
+            function clearMO() {
+                document.getElementById("result2").innerHTML = "";
+            }
+
+            clearMO();
+
             var ErrorProbability = [];
             var ErrorsCount;
             try {
                 ErrorProbability = parseCsv(document.getElementById("textareaErrorProbability").value);
             } catch (e) {
                 alert(e.message);
-                clearMO();
                 return;
             }
 
@@ -299,7 +300,6 @@
                 ErrorsCount = parseArray(document.getElementById("textareaErrorsCount").value, delimeter);
             } catch (e) {
                 alert(e.message);
-                clearMO();
                 return;
             }
 
@@ -312,7 +312,6 @@
                 var count = parseNaturalNumber(ErrorsCount[i], true);
                 if (isNaN(count)) {
                     alert("Kļūdu skaiti moduļos var būt tikai veseli pozitivi skaitļi");
-                    clearMO();
                     return;
                 } else {
                     ErrorsCount[i] = count;
@@ -331,7 +330,6 @@
                     var variability = ErrorProbability[i][j];
                     if (variability < 0) {
                         alert("Nepareizi aizpildīta matrica, varbūtība nevar būt negatīva");
-                        clearMO();
                         return;
                     }
                     P = P + Number(variability);
@@ -346,7 +344,6 @@
             //Check typed Errors count
             if (ErrorProbability.length !== ErrorsCount.length) {
                 alert("Ievadītais kļūdas vertības skaits - " + ErrorsCount.length + " nav vienads ar matricas izmēru - " + ErrorProbability.length);
-                clearMO();
                 return;
             }
 
@@ -358,7 +355,6 @@
                 }
                 if (P !== 1) {
                     alert("Nepareizi aizpildīta varbūtības matrica " + Number(i + 1) + " rindā, varbūtības summa rindā jābūt vienāda 1");
-                    clearMO();
                     return;
                 }
             }
@@ -366,7 +362,6 @@
             //Check that Time Per Error not null
             if (isNaN(TimePerError) || Number(TimePerError) <= 0) {
                 alert("Stundu skaitam jābūt lielākam par 0!");
-                clearMO();
                 return;
             }
 
@@ -432,6 +427,28 @@
                 results.Lipov = {failureProbability: res.toFixed(decimals)};
             }
 
+            clearResults();
+
+            if (!isInt(document.getElementById("overallBroughtErrorCount").value)) {
+                alert("Ienesto kļūdu skaits nevar būt daļskaitlis");
+                return;
+            }
+
+            if (!isInt(document.getElementById("testsCountUsedForTesting").value)) {
+                alert("Testēšanai lietoto testu skaits nevar būt daļskaitlis");
+                return;
+            }
+
+            if (!isInt(document.getElementById("ownErrorCount").value)) {
+                alert("Atrasto dabīgo kļūdu skaits nevar būt daļskaitlis");
+                return;
+            }
+
+            if (!isInt(document.getElementById("broughtErrorCount").value)) {
+                alert("Atrasto mākslīgo kļūdu skaits nevar būt daļskaitlis");
+                return;
+            }
+
             var N;
             var M = parseInt(document.getElementById("overallBroughtErrorCount").value);
             var k = parseInt(document.getElementById("testsCountUsedForTesting").value);
@@ -443,31 +460,26 @@
             document.getElementById("result3").style.color = "black";
 
             if (M < 0) {
-                clearResults();
                 alert("Ienesto kļūdu skaits mazāk par 0");
                 return;
             }
 
             if (n <= 0) {
-                clearResults();
-                alert("Dabīgo kļūdu skaits nevar būt vienāds vai mazāk par 0");
+                alert("Atrasto dabīgo kļūdu skaits nevar būt vienāds vai mazāk par 0");
                 return;
             }
 
             if (m < 0) {
-                clearResults();
-                alert("Mākslīgo kļūdu skaits nevar būt mazāk par 0");
+                alert("Atrasto mākslīgo kļūdu skaits nevar būt mazāk par 0");
                 return;
             }
 
             if (k < 0) {
-                clearResults();
                 alert("Testēšanai lietoto testu skaits nevar būt mazāk par 0");
                 return;
             }
 
             if (M === '' || k === '' || n === '' || m === '' || k === '') {
-                clearResults();
                 alert("Ievadiet visus nepieciešamus datus");
                 return;
             }
@@ -481,17 +493,14 @@
             }
 
             if (!checkOne(N, n)) {
-                clearResults();
                 alert("Nav izpildīts nosacījums: N >= n >= 0");
                 return;
             }
             if (!checkTwo(M, m)) {
-                clearResults();
                 alert("Nav izpildīts nosacījums: M >= m >= 0");
                 return;
             }
             if (!checkThree(k, n, m)) {
-                clearResults();
                 alert("Nav izpildīts nosacījums: k >= n + m >= 0 ");
                 return;
             }
@@ -811,6 +820,10 @@
         });
 
         function calcWeibull(event) {
+            document.getElementById("pReliability").innerHTML = "";
+            document.getElementById("pFailureRate").innerHTML = "";
+            document.getElementById("pMTTF").innerHTML = "";
+
             // Parse model data
             var timeCurr = parseInt(document.getElementById("inputTimeCurr").value);
             var failureTimes;
@@ -972,6 +985,12 @@
             textareaTestCoverage.style.height = textareaData.style.height;
         }
 
+        function clearT() {
+            pAvgCodeLength.innerHTML = "";
+            pInitialErrorsCount.innerHTML = "";
+            textareaTestCoverage.value = "";
+        }
+
         var textModel = TextModel;
 
         function calcText(event) {
@@ -983,9 +1002,7 @@
                 textareaTestCoverage.value = textModel.getTestCoverageString();
             } catch (e) {
                 alert(e.message);
-                pAvgCodeLength.innerHTML = "";
-                pInitialErrorsCount.innerHTML = "";
-                textareaTestCoverage.value = "";
+                clearT();
                 return false;
             }
 
@@ -1042,7 +1059,12 @@
         }
 
         inputAvgErrorsCount.addEventListener("change", function (evt) {
-            textModel.setAvgErrorsCount(parseInt(inputAvgErrorsCount.value));
+            clearT();
+            try {
+                textModel.setAvgErrorsCount(parseInt(inputAvgErrorsCount.value));
+            } catch (e) {
+                alert(e.message);
+            }
         });
 
         // Read units data from .csv
