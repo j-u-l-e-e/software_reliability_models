@@ -1,14 +1,18 @@
 function parseArray(str, delimeter) {
-    var arr = str.split(delimeter);
-    for (var i = 0; i < arr.length; i++) {
-        var elem = arr[i]; // remove whitespace
-        elem = elem.replace(' ', '');
-        if (elem === '') {
-            throw new Exception("Rindā ir lieki '" + delimeter + "'");
+    if (str !== "") {
+        var arr = str.split(delimeter);
+        for (var i = 0; i < arr.length; i++) {
+            var elem = arr[i]; // remove whitespace
+            elem = elem.replace(' ', '');
+            if (elem === '') {
+                throw new Exception("Rindā ir lieki '" + delimeter + "'");
+            }
+            arr[i] = elem;
         }
-        arr[i] = elem;
+        return arr;
+    } else {
+        throw new Exception("Rinda ir tukša");
     }
-    return arr;
 }
 
 // from here: https://stackoverflow.com/questions/16799469/how-to-check-if-a-string-is-a-natural-number
