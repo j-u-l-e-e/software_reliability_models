@@ -3,6 +3,9 @@ function parseArray(str, delimeter) {
     for (var i = 0; i < arr.length; i++) {
         var elem = arr[i]; // remove whitespace
         elem = elem.replace(' ', '');
+        if (elem === '') {
+            throw new Exception("Rindā ir lieki '" + delimeter + "'");
+        }
         arr[i] = elem;
     }
     return arr;
@@ -21,8 +24,8 @@ function parseNaturalNumber(n, nullAllowed) {
     }
 }
 
-function InconsistentModelDataException(message) {
-    this.name = "InconsistentModelDataException";
+function Exception(message) {
+    this.name = "Exception";
     this.message = message;
 }
 

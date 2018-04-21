@@ -36,13 +36,13 @@ var WeibullModel = function () {
         timeCurr = parseNaturalNumber(time_curr, true);
 
         if (isNaN(timeCurr)) {
-            throw new InconsistentModelDataException("Prognozāšanas laiks var būt tikai vesels pozitīvs skaitlis");
+            throw new Exception("Prognozāšanas laiks var būt tikai vesels pozitīvs skaitlis");
         }
 
 
         if (!(scale_ || shape_)) {
             if (!failure_times || !Array.isArray(failure_times)) {
-                throw new InconsistentModelDataException("Atteiču laiki var būt tikai veseli skaitļi lielāki par 0");
+                throw new Exception("Atteiču laiki var būt tikai veseli skaitļi lielāki par 0");
             }
 
             failureTimes = [];
@@ -51,7 +51,7 @@ var WeibullModel = function () {
                 if (time > 0) {
                     failureTimes.push(time);
                 } else {
-                    throw new InconsistentModelDataException("Atteiču laiki var būt tikai veseli skaitļi lielāki par 0");
+                    throw new Exception("Atteiču laiki var būt tikai veseli skaitļi lielāki par 0");
                 }
             }
 
@@ -64,7 +64,7 @@ var WeibullModel = function () {
             scale = scale_;
             shape = shape_;
             if (scale < 0 || shape_ < 0) {
-                throw new InconsistentModelDataException("Parametri α un β var būt tikai skaitļi lielāki par 0");
+                throw new Exception("Parametri α un β var būt tikai skaitļi lielāki par 0");
             }
         }
 

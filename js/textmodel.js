@@ -14,7 +14,7 @@ var TextModel = (function () {
         codeLengthTotal = parseNaturalNumber(code_length_total, false);
         if (isNaN(codeLengthTotal)) {
             codeLengthTotal = -1;
-            throw new InconsistentModelDataException("Programatūras garums var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+            throw new Exception("Programatūras garums var būt tikai vesels pozitīvs skaitlis lielāks par 0");
         }
         chooseAvgLengthUnitId();
     }
@@ -23,7 +23,7 @@ var TextModel = (function () {
         unitsCount = parseNaturalNumber(units_count, false);
         if (isNaN(unitsCount)) {
             codeLengthTotal = -1;
-            throw new InconsistentModelDataException("Kopējais moduļu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+            throw new Exception("Kopējais moduļu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
         }
         chooseAvgLengthUnitId();
     }
@@ -64,7 +64,7 @@ var TextModel = (function () {
         if (avgLengthUnitId >= 0) {
             avgModuleErrorsCount = avg_module_errors_count;
         } else {
-            throw new InconsistentModelDataException("Nav zināms vidēja garuma modulis");
+            throw new Exception("Nav zināms vidēja garuma modulis");
         }
     }
 
@@ -103,23 +103,23 @@ var TextModel = (function () {
 
     function calc() {
         if (codeLengthTotal === -1) {
-            throw new InconsistentModelDataException("N jābūt lielākam par 0");
+            throw new Exception("N jābūt lielākam par 0");
         }
 
         if (unitsCount === -1) {
-            throw new InconsistentModelDataException("n jābūt lielākam par 0");
+            throw new Exception("n jābūt lielākam par 0");
         }
 
         if (codeLengthTotal < unitsCount) {
-            throw new InconsistentModelDataException("Moduļu skaitam jābūt mazākam par programmatūras garumu");
+            throw new Exception("n jābūt mazākam par N");
         }
 
         if (unitsData.length > unitsCount) {
-            throw new InconsistentModelDataException("Notestēto moduļu skaits nevar būt lielāks par kopējo moduļu skaitu");
+            throw new Exception("Notestēto moduļu skaits nevar būt lielāks par n");
         }
 
         if (avgModuleErrorsCount === -1) {
-            throw new InconsistentModelDataException("Bvid jābūt lielākam par 0");
+            throw new Exception("Bvid jābūt lielākam par 0");
         }
 
         avgFaultRate = avgModuleErrorsCount / avgCodeLength;
@@ -128,7 +128,7 @@ var TextModel = (function () {
 
         if (initialFoundErrorsCount >= 0) {
             if (isNaN(initialFoundErrorsCount)) {
-                throw new InconsistentModelDataException("Sākotnēji atrasto kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0 un mazāks par vidējo kļūdu skaitu");
+                throw new Exception("Sākotnēji atrasto kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0 un mazāks par vidējo kļūdu skaitu");
             } else {
                 testCoefficient = initialFoundErrorsCount / avgModuleErrorsCount;
 
@@ -160,9 +160,9 @@ function UnitData(unit_length, errors_count) {
     this.errorsCount = parseNaturalNumber(errors_count, false);
     this.testCoverageLow = -1;
     if (isNaN(this.codeLength)) {
-        throw new InconsistentModelDataException("Koda garums modulī var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+        throw new Exception("Koda garums modulī var būt tikai vesels pozitīvs skaitlis lielāks par 0");
     }
     if (isNaN(this.errorsCount)) {
-        throw new InconsistentModelDataException("Kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
+        throw new Exception("Kļūdu skaits var būt tikai vesels pozitīvs skaitlis lielāks par 0");
     }
 }

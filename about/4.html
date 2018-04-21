@@ -8,29 +8,23 @@
 <body>
 
 <h1>Par Musa-Okumoto modeli</h1>
-<p>Musa-Okumoto modelis ir arī saukts par logoritmiskā Puasona izpildes laika modeli. Modeļa darbības pamatā tiek pieņemts, ka kļūdas notiek ar vienādu iespējamību un ir viena no otras neatkarīgas. 
-Priekš Musa-Okumoto modeles izmantošanai izmanto formulu:</p>
-<img src="musa-okumoto formula.png" alt="Musu-Okumoto modelis">
-
-<p>kur:</p>
-<ul>
+<p>Musa-Okumoto modelis ir dinamiskais nepārtrauktais programmatūras drošuma novērtēšanas modelis. To vēl sauc par
+    logaritmisko Puasona izpildes laika modeli, jo gaidāmais atteiču skaits atbilst logaritmiskai funkcijai
+    <sup id="cite-ref-1"><a href="#ref-1">[1]</a></sup>:</p>
+<span lang="latex">\lambda(t)=\lambda_0 e^{-\theta \mu(t)}</span>
+<ul>kur:
     <li>
-        λ - atteiču intensitāte
+        µ(t) ir vidējas vērtības funkcija;
     </li>
     <li>
-        λ<sub>0</sub> - sākotnējā atteiču intensitāte
+        θ ir atteiču intensitātes samazināšanas parametrs, θ > 0;
     </li>
     <li>
-        θ - atteiču instensitātes samazināšanas parametrs
-    </li>
-    <li>
-		µ - kļūdu skaits
+        λ<sub>0</sub> - sākotnējā atteiču intensitāte, λ<sub>0</sub> > 0.
     </li>
 </ul>
 
-<p>Musu-Okumoto modelis ir logaritmisks modelis, kuras rezultātā tiek saņemta logoritmiska funkcija, kura rada attiecibu starp laiku un kļūdas rādīšanas intensitātes samazināšas intensitāti.
-Izmantojot to ir iespējams noteikt kā uzlabosies kļūdas rādīšanas intensitāte, jo mazāk rezultāts, jo lēnāk samazināsies kļūdas rādīšanas koeficients.</p>
-
+<p>Modelis pielieto sekojošus datus: atteiču laika momenti jeb  <i>t<sub>i</sub></i>.</p>
 
 <table border="1">
     <caption>Drošuma kvantitatīvo rādītāju formulas<sup id="cite-ref-2"><a href="#ref-2">[2]</a></sup></caption>
@@ -45,12 +39,12 @@ Izmantojot to ir iespējams noteikt kā uzlabosies kļūdas rādīšanas intensi
             <span lang="latex">\lambda(t) = \frac{\lambda_0}{\lambda_0 \theta t + 1} =
                 \frac{\beta_0 \beta_1}{\beta_1 t + 1}</span>
         <td>
-        <span lang="latex">\beta_0 = \frac{1}{\theta}</span><br>
-        <span lang="latex">\beta_1 = \lambda_0 \theta</span>
+            <span lang="latex">\beta_0 = \frac{1}{\theta}</span><br>
+            <span lang="latex">\beta_1 = \lambda_0 \theta</span>
         </td>
     </tr>
     <tr>
-        <td>Atteiču instensitātes samazināšanas parametrs, θ</td>
+        <td>Atteiču intensitātes samazināšanas parametrs</td>
         <td>
             <span lang="latex">\theta = \frac{1}{\beta_0}</span><br>
         </td>
@@ -59,7 +53,7 @@ Izmantojot to ir iespējams noteikt kā uzlabosies kļūdas rādīšanas intensi
         </td>
     </tr>
     <tr>
-        <td>Sākotnēja instensitāte, <i>λ<sub>0</sub></i></td>
+        <td>Sākotnēja intensitātē</td>
         <td>
             <span lang="latex">\lambda_0 = \frac{\beta_1}{\theta}</span><br>
         </td>
@@ -68,17 +62,26 @@ Izmantojot to ir iespējams noteikt kā uzlabosies kļūdas rādīšanas intensi
         </td>
     </tr>
     <tr>
-        <td><i>β<sub>0</sub></i> un <i>β<sub>1</sub></i> parametru aprēķins</td>
+        <td><i>β<sub>0</sub></i> un <i>β<sub>1</sub></i> parametru aprēķins ar maksimālās paticamības metodi</td>
         <td>
-            <div lang="latex">\beta_0 = \frac{n}{ln(1+\beta_1 t_n)} </div>
+            <div lang="latex">\beta_0 = \frac{n}{ln(1+\beta_1 t_n)}</div>
             <div lang="latex">\frac{1}{\beta_1} \sum_{i=1}^{n}\frac{1}{1+\beta_1 t_i} =
                 \frac{n t_n}{(1+\beta_1 t_n)ln(1+\beta_1 t_n)}
             </div>
         <td>
-        <i>n</i> - atteiču skaits
-        <br>Parametrus var aprēķināt, pielietojot Ņūtona metodi</td>
+            <i>n</i> - atteiču skaits
+            <br>Parametrus var aprēķināt, pielietojot Ņūtona metodi
+        </td>
     </tr>
 </table>
+
+<p>Resūrsi:
+<ol>
+    <li id="ref-1"><a href="#cite-ref-1">↩</a>
+        Lyu MR, editor. Handbook of software reliability engineering. New York: McGraw-Hill, 1996. 850 p.
+    </li>
+</ol>
+</p>
 
 </body>
 </html>

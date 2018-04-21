@@ -15,7 +15,7 @@
 
 <script>
     var delimeter = ",";
-    var tolerance = 0.00001;
+    var tolerance = 0.0001;
     var decimals = 4;
 </script>
 <body>
@@ -85,7 +85,12 @@
                 return;
             }
 
-            failureTimes = parseArray(document.getElementById("inputFailureTimeMO").value, delimeter);
+            try {
+                failureTimes = parseArray(document.getElementById("inputFailureTimeMO").value, delimeter);
+            } catch (e) {
+                alert(e.message);
+                return;
+            }
 
             if (!failureTimes) {
                 alert("Atteiču laiki var būt tikai veseli skaitļi lielāki par 0");
@@ -93,10 +98,11 @@
 
             for (var i = 0; i < failureTimes.length; i++) {
                 var time = parseFloat(failureTimes[i]);
-                if (time >= 0) {
+                if (time > 0) {
                     failureTimes[i] = time;
                 } else {
                     alert("Atteiču laiki var būt tikai veseli skaitļi lielāki par 0");
+                    return;
                 }
             }
 
@@ -176,7 +182,7 @@
     <button onclick="window.open('about/4.html', 'Musa-Okumoto modelis', 'width=300,height=500')">Par Musa-Okumoto
         modeli
     </button>
-    <button onclick="window.open('guide/4.html', 'Instrukcija Musa-Okumoto modeļa lietošanai', 'width=300,height=500')">
+    <button onclick="window.open('guide/4.html', 'Instrukcijas Musa-Okumoto modeļa lietošanai', 'width=300,height=500')">
         Instrukcijas
     </button>
     <br>
@@ -198,7 +204,7 @@
     <br>
     <br>
     Atteiču intensitātes samazināšanas parametrs, <i>θ</i> = <span id="failureRateDecayMO"></span><br><br>
-    Sākotneja atteiču, <i>λ<sub>0</sub></i> = <span id="initialFailureRateMO"></span><br><br>
+    Sākotnēja atteiču intensitāte, <i>λ<sub>0</sub></i> = <span id="initialFailureRateMO"></span><br><br>
     Atteiču intensitāte, <i>λ(t)</i> = <span id="failureRateMO"></span><br><br>
 </div>
 
@@ -216,7 +222,7 @@
     <table>
         <tr>
             <td>
-                <label for="textareaErrorProbability">Moduļa ķlūdas labošanas varbūtības (2D matrica):</label>
+                <label for="textareaErrorProbability">Moduļa kļūdas labošanas varbūtības (2D matrica), <i>P<sub>i,j</sub></i>:</label>
             </td>
             <td>
                 <textarea id="textareaErrorProbability"></textarea>
@@ -224,7 +230,7 @@
         </tr>
         <tr>
             <td>
-                <label for="textareaErrorsCount">Kļūdu skaits moduļos (vektors)</label>
+                <label for="textareaErrorsCount">Kļūdu skaits moduļos (vektors), <i>A<sub>i</sub></i>:</label>
             </td>
             <td>
                 <textarea id="textareaErrorsCount"></textarea>
@@ -232,7 +238,7 @@
         </tr>
         <tr>
             <td>
-                <label for="inputTimePerError">Stundu skaits priekš vienas kļūdas labošanai</label>
+                <label for="inputTimePerError">Stundu skaits priekš vienas kļūdas labošanai, <i>t<sub>0</sub></i></label>
             </td>
             <td>
                 <input type="number" step="0.0001" min="0" id="inputTimePerError">
@@ -262,7 +268,7 @@
                             }
                         }
                     } else {
-                        throw new InconsistentModelDataException("Dati neatbilst šablonam");
+                        throw new Exception("Dati neatbilst šablonam");
                     }
                 }
             });
@@ -279,7 +285,12 @@
                 return;
             }
 
-            ErrorsCount = parseArray(document.getElementById("textareaErrorsCount").value, delimeter);
+            try {
+                ErrorsCount = parseArray(document.getElementById("textareaErrorsCount").value, delimeter);
+            } catch (e) {
+                alert(e.message);
+                return;
+            }
 
             if (!ErrorsCount) {
                 alert("Kļūdu skaiti moduļos var būt tikai veseli pozitivi skaitļi");
@@ -381,7 +392,7 @@
         }
 
         function checkThree(k, n, m) {
-            return k >= 0 && k >= parseInt(n) + parseInt(m);
+            return k >= 0 && k >= n + m;
         }
 
         function Lipova() {
@@ -444,17 +455,17 @@
 
             if (!checkOne(N, n)) {
                 clearResults();
-                alert("Pirmais nosacījums nav izpildīts");
+                alert("Nav izpildīts nosacījums: N >= n >= 0");
                 return;
             }
             if (!checkTwo(M, m)) {
                 clearResults();
-                alert("Otrais nosacījums nav izpildīts");
+                alert("Nav izpildīts nosacījums: M >= m >= 0");
                 return;
             }
             if (!checkThree(k, n, m)) {
                 clearResults();
-                alert("Trešais nosacījums nav izpildīts");
+                alert("Nav izpildīts nosacījums: k >= n + m >= 0 ");
                 return;
             }
             q = (n + m) / n;
@@ -481,22 +492,22 @@
 
     <table>
         <tr>
-            <td><label for="overallBroughtErrorCount">M - Ienesto kļūdu skaits:</label></td>
+            <td><label for="overallBroughtErrorCount">Ienesto kļūdu skaits, <i>M</i>:</label></td>
             <td><input id="overallBroughtErrorCount" type="number" min="0" step="1"></td>
         </tr>
 
         <tr>
-            <td><label for="testsCountUsedForTesting">k - Testēšanai lietoto testu skaits:</label></td>
+            <td><label for="testsCountUsedForTesting">Testēšanai lietoto testu skaits, <i>k</i>:</label></td>
             <td><input id="testsCountUsedForTesting" type="number" min="0" step="1"></td>
         </tr>
 
         <tr>
-            <td><label for="ownErrorCount">n - Atklāto dabīgo kļūdu skaits:</label></td>
+            <td><label for="ownErrorCount">Atklāto dabīgo kļūdu skaits, <i>n</i>:</label></td>
             <td><input id="ownErrorCount" type="number" min="0" step="1"></td>
         </tr>
 
         <tr>
-            <td><label for="broughtErrorCount">m - Atklāto ienesto kļūdu skaits:</label></td>
+            <td><label for="broughtErrorCount">Atklāto ienesto kļūdu skaits, <i>m</i>:</label></td>
             <td><input id="broughtErrorCount" type="number" min="0" step="1"></td>
         </tr>
 
@@ -532,7 +543,13 @@
             }
 
             document.getElementById("totNumFail").style.color = "black";
-            failureCounts = parseArray(document.getElementById("fi").value, delimeter);
+
+            try {
+                failureCounts = parseArray(document.getElementById("fi").value, delimeter);
+            } catch (e) {
+                alert(e.message);
+                return;
+            }
 
             if (!failureCounts) {
                 alert("Atteiču skaiti laika intervālos var būt tikai pozitīvi veseli skaitļi");
@@ -769,7 +786,14 @@
         function calcWeibull(event) {
             // Parse model data
             var timeCurr = parseInt(document.getElementById("inputTimeCurr").value);
-            var failureTimes = parseArray(document.getElementById("textareaFailureTimes").value, delimeter);
+            var failureTimes;
+
+            try {
+                failureTimes = parseArray(document.getElementById("textareaFailureTimes").value, delimeter);
+            } catch (e) {
+                alert(e.message);
+                return;
+            }
 
             var scale = false;
             var shape = false;
@@ -869,7 +893,7 @@
             </tr>
 
             <tr>
-                <td>[Koda garums],[Kļūdu skaits]</td>
+                <td>[Koda garums, N<i>i</i>],[Kļūdu skaits, B<i>i</i>]</td>
                 <td>[Testēšanas pakāpe]</td>
             </tr>
             <tr>
@@ -950,12 +974,20 @@
         }
 
         inputCodeLengthTotal.addEventListener("change", function (evt) {
-            textModel.setCodeLengthTotal(parseInt(inputCodeLengthTotal.value));
+            try {
+                textModel.setCodeLengthTotal(parseInt(inputCodeLengthTotal.value));
+            } catch (e) {
+                alert(e.message);
+            }
             updateAvgLengthUnitId();
         });
 
         inputUnitsCount.addEventListener("change", function (evt) {
-            textModel.setUnitsCount(parseInt(inputUnitsCount.value));
+            try {
+                textModel.setUnitsCount(parseInt(inputUnitsCount.value));
+            } catch (e) {
+                alert(e.message);
+            }
             updateAvgLengthUnitId();
         });
 
@@ -1004,6 +1036,7 @@
 
         function prepareUnitsData(strData) {
             var unitsData = parseTextData(strData);
+
             if (unitsData === -1) {
                 textModel.setTestedUnits(-1);
                 return false;
@@ -1030,7 +1063,10 @@
                                 return false;
                             }
                             try {
-                                unitsData.push(new UnitData(results.data[i][0], results.data[i][1]));
+                                var unitLength = results.data[i][0], errorsCount = results.data[i][1];
+                                unitLength = unitLength.replace(' ', '');
+                                errorsCount = errorsCount.replace(' ', '');
+                                unitsData.push(new UnitData(unitLength, errorsCount));
                             } catch (e) {
                                 alert(e.message);
                                 unitsData = -1;
