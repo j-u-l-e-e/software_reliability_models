@@ -222,7 +222,8 @@
     <table>
         <tr>
             <td>
-                <label for="textareaErrorProbability">Moduļa kļūdas labošanas varbūtības (2D matrica), <i>P<sub>i,j</sub></i>:</label>
+                <label for="textareaErrorProbability">Moduļa kļūdas labošanas varbūtības (2D matrica),
+                    <i>P<sub>i,j</sub></i>:</label>
             </td>
             <td>
                 <textarea id="textareaErrorProbability"></textarea>
@@ -238,7 +239,8 @@
         </tr>
         <tr>
             <td>
-                <label for="inputTimePerError">Stundu skaits priekš vienas kļūdas labošanai, <i>t<sub>0</sub></i></label>
+                <label for="inputTimePerError">Stundu skaits priekš vienas kļūdas labošanai,
+                    <i>t<sub>0</sub></i></label>
             </td>
             <td>
                 <input type="number" step="0.0001" min="0" id="inputTimePerError">
@@ -253,8 +255,8 @@
     <span id="result2"></span>
 
     <script>
-        var arr = []; // 2D array
         function parseCsv(dataStr) {
+            var arr = []; // 2D array
             Papa.parse(dataStr, {
                 complete: function (results) {
                     if (results.errors.length === 0) { // data ok
@@ -264,7 +266,10 @@
                             var row = arr[arr.length - 1];
                             // Loop by columns
                             for (var j = 0; j < results.data[i].length; j++) {
-                                row.push(results.data[i][j]);
+                                var variability = results.data[i][j];
+                                variability.replace(' ', '');
+                                variability = parseFloat(variability);
+                                row.push(variability);
                             }
                         }
                     } else {
@@ -275,13 +280,18 @@
             return arr;
         }
 
+        function clearMO() {
+            document.getElementById("result2").innerHTML = "";
+        }
+
         function calc(event) {
-            var ErrorProbability;
+            var ErrorProbability = [];
             var ErrorsCount;
             try {
                 ErrorProbability = parseCsv(document.getElementById("textareaErrorProbability").value);
             } catch (e) {
                 alert(e.message);
+                clearMO();
                 return;
             }
 
@@ -289,17 +299,21 @@
                 ErrorsCount = parseArray(document.getElementById("textareaErrorsCount").value, delimeter);
             } catch (e) {
                 alert(e.message);
+                clearMO();
                 return;
             }
 
             if (!ErrorsCount) {
                 alert("Kļūdu skaiti moduļos var būt tikai veseli pozitivi skaitļi");
+                return;
             }
 
             for (var i = 0; i < ErrorsCount.length; i++) {
                 var count = parseNaturalNumber(ErrorsCount[i], true);
                 if (isNaN(count)) {
                     alert("Kļūdu skaiti moduļos var būt tikai veseli pozitivi skaitļi");
+                    clearMO();
+                    return;
                 } else {
                     ErrorsCount[i] = count;
                 }
@@ -312,19 +326,28 @@
             var columns = 0;
 
             //Check Matrix stucture correction
-            for (i = 0; i < ErrorProbability.length; i++) {
-                for (j = 0; j < ErrorProbability.length; j++) {
-                    P = P + Number(ErrorProbability[i][j]);
+            for (var i = 0; i < ErrorProbability.length; i++) {
+                for (var j = 0; j < ErrorProbability.length; j++) {
+                    var variability = ErrorProbability[i][j];
+                    if (variability < 0) {
+                        alert("Nepareizi aizpildīta matrica, varbūtība nevar būt negatīva");
+                        clearMO();
+                        return;
+                    }
+                    P = P + Number(variability);
                     columns = j + 1;
                 }
             }
             if (ErrorProbability.length !== columns) {
-                alert("Nepareizi aizpildīts matrica, rindiņu un colonu skaits nav vienādi");
+                alert("Nepareizi aizpildīta matrica, rindiņu un colonu skaits nav vienādi");
+                return;
             }
 
             //Check typed Errors count
             if (ErrorProbability.length !== ErrorsCount.length) {
                 alert("Ievadītais kļūdas vertības skaits - " + ErrorsCount.length + " nav vienads ar matricas izmēru - " + ErrorProbability.length);
+                clearMO();
+                return;
             }
 
             //Check that Matrix was filled correctly
@@ -334,13 +357,17 @@
                     P = P + Number(ErrorProbability[i][j]);
                 }
                 if (P !== 1) {
-                    alert("Nepareizi aizpildīts varbūtības matrica " + Number(i + 1) + " rindā, varbūtības summa rindā jābūt vienāda 1=" + P);
+                    alert("Nepareizi aizpildīta varbūtības matrica " + Number(i + 1) + " rindā, varbūtības summa rindā jābūt vienāda 1");
+                    clearMO();
+                    return;
                 }
             }
 
             //Check that Time Per Error not null
             if (isNaN(TimePerError) || Number(TimePerError) <= 0) {
-                alert("Stundu skaitam jābūt lielākam par 0!")
+                alert("Stundu skaitam jābūt lielākam par 0!");
+                clearMO();
+                return;
             }
 
             //Calculate error cound per Module depending from another Modules
