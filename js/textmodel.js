@@ -141,7 +141,7 @@ var TextModel = (function () {
                 for (var i = 0; i < unitsData.length; i++) {
                     var bk = unitsData[i].errorsCount / testCoefficient;
                     var cn = avgFaultRate * unitsData[i].codeLength;
-                    unitsData[i].testCoverageLow = bk < cn;
+                    unitsData[i].testCoverageLow = bk >= cn;
                 }
             }
         }
