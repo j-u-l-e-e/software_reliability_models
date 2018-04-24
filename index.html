@@ -578,6 +578,8 @@
                 document.getElementById("lambdaTXT").innerHTML = "";
             }
 
+            clearResults();
+
             document.getElementById("totNumFail").style.color = "black";
 
             try {
@@ -589,12 +591,14 @@
 
             if (!failureCounts) {
                 alert("Atteiču skaiti laika intervālos var būt tikai pozitīvi veseli skaitļi");
+                return;
             }
 
             for (var i = 0; i < failureCounts.length; i++) {
                 var count = parseNaturalNumber(failureCounts[i], true);
                 if (isNaN(count)) {
                     alert("Atteiču skaiti laika intervālos var būt tikai pozitīvi veseli skaitļi");
+                    return;
                 } else {
                     failureCounts[i] = count;
                 }
@@ -604,19 +608,16 @@
             intervalLength = parseFloat(document.getElementById("inputIntervalLength").value);
 
             if (isNaN(intervalNumber)) {
-                clearResults();
                 alert("Nav norādīts intervāla numurs prognozēšanai");
                 return;
             }
 
             if (intervalLength <= 0) {
-                clearResults();
                 alert("Intervāla garums var būt tikai pozitīvs skaitlis lielāks par 0");
                 return;
             }
 
             if (failureCounts.length < 2) {
-                clearResults();
                 alert("Jābūt vismaz 2 atteiču laikiem");
                 return;
             }
@@ -624,6 +625,11 @@
             fn = 0;
             for (var i = 0; i < failureCounts.length; i++) {
                 fn += failureCounts[i];
+            }
+
+            if (fn === 0) {
+                alert("Vismaz vienā testēšanas laika intervālā atteiču skaitam jābūt lielākam par 0");
+                return;
             }
 
             calParametersSchneidewind();
